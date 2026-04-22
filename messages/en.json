@@ -1,0 +1,555 @@
+{
+  "nav": {
+    "about": "About Us",
+    "events": "Events & Impact",
+    "community": "Community",
+    "contact": "Contact"
+  },
+  "hero": {
+    "headline": "Empower Communities Through Cyber Safety & Digital Inclusion",
+    "subtext": "Your support brings essential technology education and cybersecurity awareness to underserved communities across Africa.",
+    "volunteer": "Volunteer",
+    "partner": "Partner"
+  },
+  "about": {
+    "subheading": "Who We Are",
+    "heading": "ABOUT US",
+    "description": "KAMLEWA Technologies is a technology organization focused on Cyber Safety. We foster technology-driven development and empower communities through cybersecurity advocacy, digital inclusion, and knowledge sharing. Our grassroots approach connects communities with essential technology education, cybersecurity awareness, and digital skills training across Africa.",
+    "missionLabel": "Our Mission",
+    "mission": "Foster Technology-driven development and empower communities through cybersecurity advocacy, digital inclusion, and knowledge sharing.",
+    "visionLabel": "Our Vision",
+    "vision": "Cyber Space where everyone feels safe, empowered, and connected.",
+    "button": "Know More",
+    "imageAlt1": "Community members learning technology",
+    "imageAlt2": "Impact and community support",
+    "impactStat": "50K+ Lives Impacted",
+    "page": {
+      "subheading": "Our Foundation",
+      "heading": "About KAMLEWA Technologies",
+      "description": "Learn about our mission, vision, operational pillars, leadership team, and future growth plans.",
+      "introduction": {
+        "heading": "Who We Are",
+        "description": "KAMLEWA Technologies is a technology organization focused on Cyber Safety. We foster technology-driven development and empower communities through cybersecurity advocacy, digital inclusion, and knowledge sharing. Our grassroots approach connects communities with essential technology education, cybersecurity awareness, and digital skills training across Africa.",
+        "detailedDescription": "Since our inception, KAMLEWA Technologies has been at the forefront of creating a safer digital environment for communities across Africa. We understand that in today's interconnected world, cybersecurity is not just a technical concern but a fundamental right. Our organization works tirelessly to bridge the gap between technology and accessibility, ensuring that every individual, regardless of their background or location, has the knowledge and tools to navigate the digital space safely and confidently.",
+        "approach": "Through our comprehensive programs, strategic partnerships, and community-driven initiatives, we have reached thousands of individuals, providing them with essential cybersecurity training, digital literacy skills, and access to technology resources. Our commitment extends beyond education—we build lasting relationships with communities, creating sustainable networks that continue to grow and support each other long after our programs conclude.",
+        "impact": "We believe that true digital empowerment comes from understanding both the opportunities and risks that technology presents. By combining hands-on training, real-world applications, and continuous support, we create an ecosystem where communities can thrive in the digital age while staying protected from cyber threats."
+      },
+      "pillars": {
+        "subheading": "Our Foundation",
+        "heading": "Operational Pillars",
+        "description": "Our work is built on three core pillars that guide everything we do.",
+        "cybersecurity": {
+          "title": "Cybersecurity Advocacy",
+          "description": "We promote cybersecurity awareness and best practices across Africa, empowering individuals and organizations to protect themselves in the digital space. Through workshops, training programs, and community outreach, we build a culture of cyber safety."
+        },
+        "digitalInclusion": {
+          "title": "Digital Inclusion",
+          "description": "We bridge the digital divide by bringing essential technology education and digital skills training to underserved communities. Our programs ensure that everyone, regardless of location or background, has access to digital opportunities."
+        },
+        "knowledgeSharing": {
+          "title": "Knowledge Sharing",
+          "description": "We believe in the power of shared knowledge. Through our communities, events, and training programs, we create platforms for learning, collaboration, and professional development in technology and cybersecurity."
+        }
+      },
+      "leadership": {
+        "subheading": "Our Team",
+        "heading": "Leadership & Team",
+        "description": "Meet the dedicated individuals driving KAMLEWA Technologies forward.",
+        "ceo": {
+          "name": "President/CEO",
+          "role": "President & Chief Executive Officer",
+          "bio": "Leading KAMLEWA Technologies with a vision to create a safer digital space for all. With extensive experience in cybersecurity and technology advocacy, our CEO drives strategic initiatives that empower communities across Africa.",
+          "imageAlt": "President/CEO of KAMLEWA Technologies"
+        },
+        "team": {
+          "heading": "Core Team",
+          "description": "Our diverse team of professionals brings together expertise in cybersecurity, education, community development, and technology innovation.",
+          "members": {
+            "member1": {
+              "name": "Sarah Johnson",
+              "role": "Cybersecurity Specialist",
+              "bio": "Expert in ethical hacking and security protocols with 8+ years of experience in protecting digital infrastructure."
+            },
+            "member2": {
+              "name": "Michael Chen",
+              "role": "Education Coordinator",
+              "bio": "Passionate educator developing curriculum and training programs to bridge the digital skills gap across Africa."
+            },
+            "member3": {
+              "name": "Amina Hassan",
+              "role": "Community Development Manager",
+              "bio": "Dedicated to building strong community networks and fostering grassroots technology adoption in underserved areas."
+            },
+            "member4": {
+              "name": "David Okafor",
+              "role": "Technology Innovation Lead",
+              "bio": "Driving innovation in digital solutions and creating scalable technology programs for community empowerment."
+            }
+          }
+        }
+      },
+      "futurePlans": {
+        "subheading": "Looking Ahead",
+        "heading": "Future Plans & Growth",
+        "description": "Our vision for expanding impact and reaching more communities across Africa.",
+        "regionalHubs": {
+          "title": "Regional Hubs",
+          "description": "We plan to establish regional hubs across Africa to bring our programs and services closer to communities. These hubs will serve as centers for training, collaboration, and local impact."
+        },
+        "nicheCommunities": {
+          "title": "Niche-Based Communities",
+          "description": "We're expanding our community network by creating specialized communities focused on specific areas like ethical hacking, secure software development, digital entrepreneurship, and more."
+        },
+        "growthObjectives": {
+          "title": "Growth Objectives",
+          "description": "Our goals include reaching 100,000+ youth by 2030, establishing partnerships with 50+ organizations, and creating sustainable programs that continue to impact communities long-term."
+        }
+      }
+    }
+  },
+  "impact": {
+    "subheading": "Our Impact",
+    "heading": "Transforming Lives Through Technology",
+    "youthReached": "Youth Reached",
+    "events": "Events Hosted",
+    "communities": "Communities Impacted",
+    "trainingHours": "Training Hours Delivered"
+  },
+  "donate": {
+    "heading": "Support Our Mission",
+    "description": "Your contribution helps us bring essential technology education and cybersecurity awareness to underserved communities across Africa. Every donation makes a difference.",
+    "button": "Donate Now"
+  },
+  "programs": {
+    "subheading": "Events & Impact",
+    "heading": "Our Programs & Events",
+    "description": "We offer comprehensive programs designed to bridge the digital divide and enhance cybersecurity awareness across Africa.",
+    "tabs": {
+      "programs": "Programs"
+    },
+    "steamClubs": "STEAM Clubs",
+    "steamClubsDesc": "Interactive clubs fostering Science, Technology, Engineering, Arts, and Mathematics skills among youth.",
+    "techBootcamps": "Tech Bootcamps",
+    "techBootcampsDesc": "Intensive training programs covering cybersecurity, software development, and digital skills.",
+    "cybersafetyTours": "Cybersafety Tours",
+    "cybersafetyToursDesc": "Community outreach programs bringing cybersecurity awareness directly to local communities.",
+    "startupIncubation": "Startup Incubation",
+    "startupIncubationDesc": "Supporting tech entrepreneurs with mentorship, resources, and networking opportunities.",
+    "viewAll": "View Events & Impact"
+  },
+  "community": {
+    "subheading": "Our Community",
+    "heading": "Join Our Communities",
+    "description": "We host and support various cybersecurity and technology communities across Africa, fostering collaboration and knowledge sharing.",
+    "kamcyber": "KAMCYBER",
+    "kamcyberDesc": "Our flagship cybersecurity community focused on awareness, training, and professional development in cybersecurity.",
+    "hackthebox": "HACK THE BOX",
+    "hacktheboxDesc": "A community dedicated to hands-on cybersecurity training and ethical hacking skills development.",
+    "owasp": "OWASP",
+    "owaspDesc": "Local chapter of the Open Web Application Security Project, promoting secure software development practices.",
+    "volunteer": "Volunteer",
+    "viewAll": "View Community",
+    "page": {
+      "subheading": "Community & Involvement",
+      "heading": "Join Our Communities",
+      "description": "Get involved with KAMLEWA Technologies through our communities, volunteering opportunities, and strategic partnerships.",
+      "communities": {
+        "subheading": "Our Communities",
+        "heading": "Active Communities",
+        "description": "We host and support various cybersecurity and technology communities, fostering collaboration and knowledge sharing across Africa.",
+        "kamcyber": {
+          "title": "KAMCYBER",
+          "description": "Our flagship cybersecurity community focused on awareness, training, and professional development. Join us for workshops, training sessions, and networking opportunities in cybersecurity.",
+          "activities": "Workshops, Training Sessions, Networking Events"
+        },
+        "hackthebox": {
+          "title": "HACK THE BOX",
+          "description": "A community dedicated to hands-on cybersecurity training and ethical hacking skills development. Participate in CTF competitions, lab exercises, and skill-building sessions.",
+          "activities": "CTF Competitions, Lab Exercises, Skill Building"
+        },
+        "owasp": {
+          "title": "OWASP",
+          "description": "Local chapter of the Open Web Application Security Project, promoting secure software development practices. Join discussions, contribute to projects, and learn about web application security.",
+          "activities": "Discussions, Project Contributions, Security Training"
+        }
+      },
+      "volunteering": {
+        "subheading": "Professional Support",
+        "heading": "Volunteer With Us",
+        "description": "Share your expertise in technology, education, and cybersecurity. Help us empower communities across Africa.",
+        "form": {
+          "name": "Full Name",
+          "email": "Email Address",
+          "phone": "Phone Number",
+          "expertise": "Area of Expertise",
+          "expertiseOptions": {
+            "cybersecurity": "Cybersecurity",
+            "education": "Education & Training",
+            "software": "Software Development",
+            "networking": "Networking & Infrastructure",
+            "project": "Project Management",
+            "other": "Other"
+          },
+          "availability": "Availability",
+          "availabilityOptions": {
+            "full": "Full Time",
+            "part": "Part Time",
+            "weekends": "Weekends Only",
+            "flexible": "Flexible"
+          },
+          "message": "Tell us about your background and how you'd like to contribute",
+          "submit": "Submit Application",
+          "submitting": "Submitting...",
+          "success": "Thank you! We'll be in touch soon.",
+          "error": "Something went wrong. Please try again."
+        }
+      },
+      "partnerships": {
+        "subheading": "Strategic Partnerships",
+        "heading": "Partner With Us",
+        "description": "We collaborate with organizations, institutions, and government bodies to expand our impact across Africa.",
+        "currentPartners": "Current Partners",
+        "partner1": {
+          "name": "UNDP",
+          "description": "United Nations Development Programme - Supporting digital inclusion initiatives"
+        },
+        "partner2": {
+          "name": "ANTIC",
+          "description": "National Agency for Information and Communication Technologies - Cybersecurity advocacy partnership"
+        },
+        "form": {
+          "name": "Contact Name",
+          "email": "Email Address",
+          "phone": "Phone Number",
+          "organization": "Organization Name",
+          "partnershipType": "Partnership Type",
+          "partnershipTypes": {
+            "financial": "Financial Support",
+            "technical": "Technical Collaboration",
+            "educational": "Educational Partnership",
+            "government": "Government Partnership",
+            "ngo": "NGO Collaboration",
+            "other": "Other"
+          },
+          "message": "Tell us about your organization and partnership goals",
+          "submit": "Submit Inquiry",
+          "submitting": "Submitting...",
+          "success": "Thank you! We'll review your partnership inquiry and get back to you.",
+          "error": "Something went wrong. Please try again."
+        }
+      }
+    }
+  },
+  "footer": {
+    "description": "Foster Technology-driven development and empower communities through cybersecurity advocacy, digital inclusion, and knowledge sharing.",
+    "quickLinks": "Quick Links",
+    "about": "About Us",
+    "events": "Events & Impact",
+    "community": "Community",
+    "contact": "Contact",
+    "email": "contact@kamlewa.com",
+    "phone": "+123 456 789",
+    "copyright": "© 2025 KAMLEWA Technologies. All rights reserved.",
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Service",
+    "newsletterTitle": "Newsletter",
+    "newsletterDescription": "Stay updated with our latest news and events.",
+    "newsletterPlaceholder": "Enter your email",
+    "newsletterSubscribe": "Subscribe",
+    "newsletterSubmitting": "Subscribing...",
+    "newsletterSuccess": "Successfully subscribed!",
+    "newsletterError": "Something went wrong. Please try again."
+  },
+  "notFound": {
+    "title": "Page Not Found",
+    "description": "The page you're looking for doesn't exist or has been moved.",
+    "subtitle": "Oops! Looks like you've wandered into uncharted territory.",
+    "suggestions": "Here are some helpful links:",
+    "goHome": "Go Home",
+    "goBack": "Go Back",
+    "exploreAbout": "Learn About Us",
+    "explorePrograms": "View Programs",
+    "exploreCommunity": "Join Community",
+    "exploreContact": "Contact Us",
+    "or": "or"
+  },
+  "featuredEvents": {
+    "subheading": "What's Happening",
+    "heading": "Featured Events & Programs",
+    "description": "Explore our featured events, upcoming activities, current projects, and professional training programs.",
+    "tabs": {
+      "featured": "Featured Events",
+      "upcoming": "Upcoming Events",
+      "projects": "Current Projects",
+      "trainings": "Trainings"
+    },
+    "featured": {
+      "event1": {
+        "title": "Cybersecurity Awareness Workshop",
+        "description": "A comprehensive workshop covering essential cybersecurity practices for individuals and small businesses.",
+        "date": "March 15, 2025",
+        "location": "Yaoundé, Cameroon"
+      },
+      "event2": {
+        "title": "Digital Skills Bootcamp",
+        "description": "Intensive training program designed to equip participants with essential digital skills for the modern workplace.",
+        "date": "April 10, 2025",
+        "location": "Douala, Cameroon"
+      },
+      "event3": {
+        "title": "STEAM Education Summit",
+        "description": "Bringing together educators and students to explore innovative approaches to STEAM education.",
+        "date": "May 5, 2025",
+        "location": "Buea, Cameroon"
+      }
+    },
+    "upcoming": {
+      "event1": {
+        "title": "Cybersafety Community Tour",
+        "description": "Traveling workshop bringing cybersecurity awareness to rural communities across Cameroon.",
+        "date": "June 2025",
+        "location": "Multiple Locations"
+      },
+      "event2": {
+        "title": "Tech Startup Incubation Program",
+        "description": "Supporting aspiring tech entrepreneurs with mentorship, resources, and networking opportunities.",
+        "date": "July 2025",
+        "location": "Online & In-Person"
+      }
+    },
+    "projects": {
+      "project1": {
+        "title": "Rural Digital Inclusion Initiative",
+        "description": "Expanding digital access and technology education to underserved rural communities across Africa.",
+        "status": "In Progress"
+      },
+      "project2": {
+        "title": "Youth Cybersecurity Training Program",
+        "description": "Comprehensive cybersecurity training program designed specifically for young professionals and students.",
+        "status": "Active"
+      }
+    },
+    "trainings": {
+      "training1": {
+        "title": "Cybersecurity Fundamentals",
+        "description": "Learn the basics of cybersecurity, threat detection, and security best practices.",
+        "duration": "40 Hours",
+        "level": "Beginner"
+      },
+      "training2": {
+        "title": "Ethical Hacking & Penetration Testing",
+        "description": "Advanced training in ethical hacking techniques, vulnerability assessment, and penetration testing.",
+        "duration": "60 Hours",
+        "level": "Advanced"
+      },
+      "training3": {
+        "title": "Digital Skills for Professionals",
+        "description": "Essential digital skills training covering productivity tools, cloud computing, and digital communication.",
+        "duration": "30 Hours",
+        "level": "Intermediate"
+      },
+      "training4": {
+        "title": "Secure Software Development",
+        "description": "Learn to build secure applications following industry best practices and security standards.",
+        "duration": "50 Hours",
+        "level": "Intermediate"
+      }
+    },
+    "learnMore": "Learn More",
+    "viewAll": "View All Events & Programs",
+    "swipeHint": "Swipe left or right to see more tabs"
+  },
+  "partners": {
+    "subheading": "Our Partners",
+    "heading": "Our Partners"
+  },
+  "eventsImpact": {
+    "subheading": "Events & Impact",
+    "heading": "Events & Impact",
+    "description": "Showcasing our programs, impact, and upcoming events that drive technology-driven development across Africa.",
+    "programCatalog": {
+      "heading": "Program Catalog",
+      "description": "Comprehensive programs designed to bridge the digital divide and enhance cybersecurity awareness.",
+      "viewDetails": "View Details"
+    },
+    "impactGallery": {
+      "heading": "Impact Gallery",
+      "description": "Showcasing past events, success stories, and the positive impact we've made in communities across Africa.",
+      "viewEvent": "View Event",
+      "participants": "Participants",
+      "feedback": "Positive Feedback",
+      "hours": "Training Hours"
+    },
+    "upcomingEvents": {
+      "heading": "Upcoming Events",
+      "description": "Join us for upcoming seminars, workshops, and community outreach programs.",
+      "register": "Register Now",
+      "learnMore": "Learn More",
+      "noEvents": "No upcoming events at the moment. Check back soon!"
+    }
+  },
+  "events": {
+    "modal": {
+      "register": "Register",
+      "participants": "Participants",
+      "registered": "registered",
+      "spotsLeft": "spots left",
+      "full": "Event Full",
+      "noParticipants": "No participants registered yet."
+    },
+    "form": {
+      "name": "Full Name",
+      "email": "Email Address",
+      "phone": "Phone Number",
+      "submit": "Register for Event",
+      "submitting": "Registering..."
+    },
+    "registration": {
+      "success": "Successfully registered! Check your email for confirmation.",
+      "error": "Registration failed. Please try again.",
+      "full": "This event is full. Please check other events.",
+      "closed": "Registration is currently closed for this event."
+    },
+    "share": {
+      "button": "Share Event",
+      "copied": "Link Copied!"
+    },
+    "calendar": {
+      "add": "Add to Calendar",
+      "noTime": "Event time information is not available.",
+      "downloaded": "Calendar file downloaded!"
+    },
+    "registerButton": "Register Now",
+    "viewParticipants": "View Participants",
+    "spotsAvailable": "spots available",
+    "full": "Full"
+  },
+  "contact": {
+    "subheading": "Get In Touch",
+    "heading": "Contact Us",
+    "description": "We'd love to hear from you. Reach out for inquiries, partnerships, or support.",
+    "contactInfo": "Contact Information",
+    "email": "Email",
+    "primaryPhone": "Primary Phone",
+    "secondaryPhone": "Secondary Phone",
+    "generalInquiry": "General Inquiry",
+    "generalInquiryDesc": "Have a question or need information? Send us a message.",
+    "collaborationRequest": "Collaboration Request",
+    "collaborationRequestDesc": "Interested in partnering with us? Fill out the form below.",
+    "name": "Name",
+    "namePlaceholder": "Your full name",
+    "emailLabel": "Email",
+    "emailPlaceholder": "your.email@example.com",
+    "phone": "Phone",
+    "phonePlaceholder": "Your phone number",
+    "subject": "Subject",
+    "subjectPlaceholder": "What is this regarding?",
+    "message": "Message",
+    "messagePlaceholder": "Your message...",
+    "organization": "Organization",
+    "organizationPlaceholder": "Your organization name",
+    "partnershipType": "Type of Partnership",
+    "partnershipTypePlaceholder": "Select partnership type",
+    "partnershipTypes": {
+      "corporate": "Corporate Partnership",
+      "ngo": "NGO Partnership",
+      "government": "Government Partnership",
+      "educational": "Educational Institution",
+      "technology": "Technology Company",
+      "sponsorship": "Sponsorship",
+      "other": "Other"
+    },
+    "send": "Send Message",
+    "sending": "Sending...",
+    "success": "Message sent successfully! We'll get back to you soon.",
+    "error": "Something went wrong. Please try again."
+  },
+  "dashboard": {
+    "heading": "Operations Dashboard",
+    "description": "Monitor programs, events, trainings, and strategic projects from a single view.",
+    "nav": {
+      "dashboard": "Dashboard",
+      "events": "Events",
+      "programs": "Programs",
+      "trainings": "Trainings",
+      "projects": "Projects",
+      "contact": "Contact Info",
+      "settings": "Settings"
+    },
+    "stats": {
+      "programs": {
+        "label": "Active Programs",
+        "meta": "Core initiatives currently running"
+      },
+      "events": {
+        "label": "Upcoming Events",
+        "meta": "Confirmed engagements"
+      },
+      "trainings": {
+        "label": "Training Tracks",
+        "meta": "Learning opportunities in progress"
+      },
+      "projects": {
+        "label": "Strategic Projects",
+        "meta": "Active & upcoming milestones"
+      }
+    },
+    "actions": {
+      "planEvent": "Plan Event",
+      "launchTraining": "Launch Training",
+      "updateProject": "Update Project"
+    },
+    "sections": {
+      "events": {
+        "title": "Event Pipeline",
+        "subtitle": "Stay ahead of featured and upcoming engagements."
+      },
+      "programs": {
+        "title": "Program Highlights",
+        "subtitle": "Quick snapshot of flagship programs."
+      },
+      "trainings": {
+        "title": "Training Calendar",
+        "subtitle": "Level, duration, and delivery format at a glance."
+      },
+      "projects": {
+        "title": "Project Tracker",
+        "subtitle": "Monitor status, timelines, and progress."
+      },
+      "activity": {
+        "title": "Activity Feed",
+        "subtitle": "Recent updates from events and impact stories."
+      }
+    },
+    "labels": {
+      "date": "Date",
+      "location": "Location",
+      "status": "Status",
+      "level": "Level",
+      "duration": "Duration",
+      "progress": "Progress",
+      "participants": "Participants"
+    },
+    "links": {
+      "viewEvents": "Open Events & Impact",
+      "viewPrograms": "View Programs",
+      "viewCommunity": "Community Hub"
+    },
+    "navbar": {
+      "search": "Search...",
+      "notifications": "Notifications",
+      "noNotifications": "No new notifications",
+      "profile": "Profile",
+      "settings": "Settings",
+      "logout": "Logout",
+      "viewPublicSite": "View Public Site",
+      "quickActions": "Quick Actions",
+      "addProgram": "Add Program",
+      "addEvent": "Add Event",
+      "addTraining": "Add Training",
+      "addProject": "Add Project"
+    },
+    "empty": "No records to show right now."
+  }
+}
+

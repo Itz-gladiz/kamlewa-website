@@ -1,0 +1,145 @@
+@import "tailwindcss";
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* Nourd - Bold Text */
+@font-face {
+  font-family: 'Nourd';
+  src: url('/fonts/Nourd Font/nourd_regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Nourd';
+  src: url('/fonts/Nourd Font/nourd_bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Nexa - Normal Text */
+@font-face {
+  font-family: 'Nexa';
+  src: url('/fonts/Nexa Pro/NexaPro_Trial-Regular.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Nexa';
+  src: url('/fonts/Nexa Pro/NexaPro_Trial-Bold.otf') format('opentype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Buffalo - Tagline */
+@font-face {
+  font-family: 'Buffalo';
+  src: url('/fonts/buffalo/Buffalo.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+  --font-nourd: 'Nourd', sans-serif;
+  --font-nexa: 'Nexa', sans-serif;
+  --font-buffalo: 'Buffalo', sans-serif;
+  --font-basement: 'Basement Grotesque', sans-serif;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-nexa), sans-serif;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-nourd), sans-serif;
+  font-weight: 700;
+}
+
+.tagline {
+  font-family: var(--font-buffalo), sans-serif;
+}
+
+/* Custom Scrollbar Styles */
+/* Webkit browsers (Chrome, Safari, Edge) */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 5px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(250, 204, 21, 0.4);
+  background-clip: padding-box;
+}
+
+::-webkit-scrollbar-thumb:active {
+  background: #facc1599;
+  background-clip: padding-box;
+}
+
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.2) rgba(0, 0, 0, 0.5);
+}
+
+*:hover {
+  scrollbar-color: rgba(250, 204, 21, 0.4) rgba(0, 0, 0, 0.5);
+}
+
+/* Hide scrollbar for tab scroller */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* Swiper styles */
+@import 'swiper/css';
+@import 'swiper/css/navigation';
+@import 'swiper/css/pagination';
+
+/* Partners Swiper Custom Styles */
+.partners-text-swiper .swiper-wrapper {
+  transition-timing-function: linear !important;
+}

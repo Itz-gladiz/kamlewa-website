@@ -1,0 +1,19 @@
+{
+  "id": "7ad054c4-ccca-4cf4-ac2c-c584482d2a64",
+  "name": "Quicksand",
+  "slug": "quicksand",
+  "category": "Sans",
+  "designers": [
+    "Andrew Paglinawan"
+  ],
+  "license_type": "sil_ofl",
+  "story": "<div>Quicksand is a sans serif typeface designed by Andrew Paglinawan in 2008 using geometric shapes as its core foundation. It is designed for display purposes but legible enough to use in small sizes as well. Quicksand family comes in five styles with variable support. <br><br>Quicksand is licensed under the SIL Open Font License. You can find more details about this project&nbsp;<a href=\"https://github.com/andrew-paglinawan/QuicksandFamily\">here</a>.<br><br></div><div><br></div>",
+  "website_url": "https://www.fontshare.com/fonts/quicksand",
+  "downloaded": "2025-11-01T19:34:11.750Z",
+  "stats": {
+    "total_styles": 6,
+    "downloaded": 0,
+    "skipped": 5,
+    "failed": 1
+  }
+}
