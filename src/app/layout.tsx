@@ -17,9 +17,9 @@ export const metadata: Metadata = {
   title: "KAMLEWA Technologies - Cyber Safety & Digital Inclusion",
   description: "Foster Technology-driven development and empower communities through cybersecurity advocacy, digital inclusion, and knowledge sharing. Cyber Space where everyone feels safe, empowered, and connected.",
   icons: {
-    icon: '/images/KAMLEWA_LOGO.png',
-    shortcut: '/images/KAMLEWA_LOGO.png',
-    apple: '/images/KAMLEWA_LOGO.png',
+    icon: '/images/logo.png',
+    shortcut: '/images/logo.png',
+    apple: '/images/logo.png',
   },
 };
 

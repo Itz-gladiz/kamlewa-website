@@ -56,7 +56,7 @@
         "heading": "Leadership & Team",
         "description": "Meet the dedicated individuals driving KAMLEWA Technologies forward.",
         "ceo": {
-          "name": "President/CEO",
+          "name": "Mbangi Quince",
           "role": "President & Chief Executive Officer",
           "bio": "Leading KAMLEWA Technologies with a vision to create a safer digital space for all. With extensive experience in cybersecurity and technology advocacy, our CEO drives strategic initiatives that empower communities across Africa.",
           "imageAlt": "President/CEO of KAMLEWA Technologies"
@@ -66,25 +66,126 @@
           "description": "Our diverse team of professionals brings together expertise in cybersecurity, education, community development, and technology innovation.",
           "members": {
             "member1": {
-              "name": "Sarah Johnson",
-              "role": "Cybersecurity Specialist",
-              "bio": "Expert in ethical hacking and security protocols with 8+ years of experience in protecting digital infrastructure."
+              "name": "Kevin Mbieleu",
+              "role": "Chief Strategy Officer",
+              "bio": "Cyber security| Robotics| Artificial intelligence (AI) | Peace Ambassador| Book Author|Award-winning Tech Entrepreneur| Certified Pedagogical Engineer."
             },
             "member2": {
-              "name": "Michael Chen",
-              "role": "Education Coordinator",
+              "name": "Nde Sylvarius",
+              "role": "Chief Information Security Officer",
               "bio": "Passionate educator developing curriculum and training programs to bridge the digital skills gap across Africa."
             },
             "member3": {
-              "name": "Amina Hassan",
-              "role": "Community Development Manager",
+              "name": "Endeley Enanga",
+              "role": "Program Manager",
               "bio": "Dedicated to building strong community networks and fostering grassroots technology adoption in underserved areas."
             },
             "member4": {
-              "name": "David Okafor",
-              "role": "Technology Innovation Lead",
+              "name": "Ramsey Ibe",
+              "role": "Offensive Security Lead",
               "bio": "Driving innovation in digital solutions and creating scalable technology programs for community empowerment."
+            },
+            "member5": {
+              "name": "Tangem Thierry",
+              "role": "Lead Penestation Tester",
+              "bio": "Specializing in threat detection and response, helping organizations secure their digital assets."
+            },
+            "member6": {
+              "name": "Gladys Oben",
+              "role": "Director of Operations",
+              "bio": "Building robust applications with a focus on security and user experience."
+            },
+            "member7": {
+              "name": "Blessed Nur",
+              "role": "Lead Developer",
+              "bio": "Connecting with local communities to promote digital literacy and cybersecurity awareness."
+            },
+            "member8": {
+              "name": "Charh Zion",
+              "role": "Junior Penestration Tester",
+              "bio": "Designing and implementing secure network infrastructures for modern enterprises."
+            },
+            "member9": {
+              "name": "Mesole Jenifer",
+              "role": "Research & Development Lead",
+              "bio": "Ensuring  with data protection regulations and best practices."
+            },
+            "member10": {
+              "name": "Nubityha Dinaline",
+              "role": "IT Support Specialist",
+              "bio": "Conducting penetration testing to identify and mitigate security vulnerabilities."
+            },
+            "member11": {
+              "name": "Ndesoh Atanga ",
+              "role": "Commnication Lead",
+              "bio": "Developing and delivering training programs to bridge the digital skills gap."
+            },
+            "member12": {
+              "name": "Nana Fidelia",
+              "role": "Data Analyst",
+              "bio": "Overseeing technology projects with a focus on security and efficiency."
+            },
+            "member13": {
+              "name": "Deuko Luprince",
+              "role": "Junior Developer",
+              "bio": "Exploring the intersection of artificial intelligence and cybersecurity."
+            },
+            "member14": {
+              "name": "Fonge Justice",
+              "role": "Full Stack Web Developer",
+              "bio": "Managing cybersecurity incidents and coordinating response efforts."
+            },
+            "member15": {
+              "name": "Kimberly Nwana",
+              "role": "Accountant",
+              "bio": "Creating user-friendly interfaces with security considerations in mind."
+            },
+            "member16": {
+              "name": "Foba Helena",
+              "role": "Community Liaison",
+              "bio": "Securing blockchain technologies and decentralized applications."
+            },
+            "member17": {
+              "name": "Egbe Stev",
+              "role": "kgf",
+              "bio": "Teaching the next generation about online safety and digital ethics."
+            },
+            "member18": {
+              "name": "Kum Remedy",
+              "role": "Creative Lead",
+              "bio": "Designing secure cloud infrastructures and migration strategies."
+            },
+            "member19": {
+              "name": "Abayo Joaram",
+              "role": "Backend Developer",
+              "bio": "Investigating cyber incidents and gathering digital evidence."
+            },
+            "member20": {
+              "name": "Ahmed Hassan",
+              "role": "Security Operations Center Lead",
+              "bio": "Leading SOC teams in monitoring and responding to security threats."
+            },
+            "member21": {
+              "name": "Chioma Okwu",
+              "role": "Mobile Security Specialist",
+              "bio": "Securing mobile applications and devices against emerging threats."
+            },
+            "member22": {
+              "name": "Rafael Silva",
+              "role": "IoT Security Consultant",
+              "bio": "Protecting Internet of Things devices and networks from vulnerabilities."
+            },
+            "member23": {
+              "name": "Leila Mahmoud",
+              "role": "Risk Assessment Analyst",
+              "bio": "Conducting security risk assessments and recommending mitigation strategies."
+            },
+            "member24": {
+              "name": "Emmanuel Nkomo",
+              "role": "DevSecOps Engineer",
+              "bio": "Integrating security practices into the software development lifecycle."
             }
+           
           }
         }
       },

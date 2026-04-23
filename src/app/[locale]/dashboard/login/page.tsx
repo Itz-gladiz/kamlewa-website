@@ -175,7 +175,7 @@ export default function LoginPage() {
         <div className="text-center mb-8">
           <div className="flex items-center justify-center gap-3 mb-4">
             <div className="relative w-12 h-16">
-              <Image src="/images/KAMLEWA_LOGO.png" alt="Kamlewa Logo" fill className="object-contain" />
+              <Image src="/images/logo.png" alt="Kamlewa Logo" fill className="object-contain" />
             </div>
             <div className="flex flex-col items-start">
               <h1 className="text-2xl font-bold text-white uppercase" style={{ fontFamily: 'var(--font-nourd), sans-serif' }}>

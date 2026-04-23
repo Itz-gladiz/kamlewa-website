@@ -6,6 +6,9 @@ import PageBanner from '@/components/PageBanner';
 import { useTranslations } from 'next-intl';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Autoplay } from 'swiper/modules';
+import 'swiper/css';
 import { 
   HiShieldCheck, 
   HiUsers, 
@@ -117,6 +120,146 @@ export default function AboutPage() {
       roleKey: 'leadership.team.members.member4.role',
       bioKey: 'leadership.team.members.member4.bio',
     },
+    {
+      id: 'member5',
+      imageSrc: 'https://dummyimage.com/400x400/1a1a1a/ffffff.png&text=Team+Member+5',
+      nameKey: 'leadership.team.members.member5.name',
+      roleKey: 'leadership.team.members.member5.role',
+      bioKey: 'leadership.team.members.member5.bio',
+    },
+    {
+      id: 'member6',
+      imageSrc: 'https://dummyimage.com/400x400/1a1a1a/ffffff.png&text=Team+Member+6',
+      nameKey: 'leadership.team.members.member6.name',
+      roleKey: 'leadership.team.members.member6.role',
+      bioKey: 'leadership.team.members.member6.bio',
+    },
+    {
+      id: 'member7',
+      imageSrc: 'https://dummyimage.com/400x400/1a1a1a/ffffff.png&text=Team+Member+7',
+      nameKey: 'leadership.team.members.member7.name',
+      roleKey: 'leadership.team.members.member7.role',
+      bioKey: 'leadership.team.members.member7.bio',
+    },
+    {
+      id: 'member8',
+      imageSrc: 'https://dummyimage.com/400x400/1a1a1a/ffffff.png&text=Team+Member+8',
+      nameKey: 'leadership.team.members.member8.name',
+      roleKey: 'leadership.team.members.member8.role',
+      bioKey: 'leadership.team.members.member8.bio',
+    },
+    {
+      id: 'member9',
+      imageSrc: 'https://dummyimage.com/400x400/1a1a1a/ffffff.png&text=Team+Member+9',
+      nameKey: 'leadership.team.members.member9.name',
+      roleKey: 'leadership.team.members.member9.role',
+      bioKey: 'leadership.team.members.member9.bio',
+    },
+    {
+      id: 'member10',
+      imageSrc: 'https://dummyimage.com/400x400/1a1a1a/ffffff.png&text=Team+Member+10',
+      nameKey: 'leadership.team.members.member10.name',
+      roleKey: 'leadership.team.members.member10.role',
+      bioKey: 'leadership.team.members.member10.bio',
+    },
+    {
+      id: 'member11',
+      imageSrc: 'https://dummyimage.com/400x400/1a1a1a/ffffff.png&text=Team+Member+11',
+      nameKey: 'leadership.team.members.member11.name',
+      roleKey: 'leadership.team.members.member11.role',
+      bioKey: 'leadership.team.members.member11.bio',
+    },
+    {
+      id: 'member12',
+      imageSrc: 'https://dummyimage.com/400x400/1a1a1a/ffffff.png&text=Team+Member+12',
+      nameKey: 'leadership.team.members.member12.name',
+      roleKey: 'leadership.team.members.member12.role',
+      bioKey: 'leadership.team.members.member12.bio',
+    },
+    {
+      id: 'member13',
+      imageSrc: 'https://dummyimage.com/400x400/1a1a1a/ffffff.png&text=Team+Member+13',
+      nameKey: 'leadership.team.members.member13.name',
+      roleKey: 'leadership.team.members.member13.role',
+      bioKey: 'leadership.team.members.member13.bio',
+    },
+    {
+      id: 'member14',
+      imageSrc: 'https://dummyimage.com/400x400/1a1a1a/ffffff.png&text=Team+Member+14',
+      nameKey: 'leadership.team.members.member14.name',
+      roleKey: 'leadership.team.members.member14.role',
+      bioKey: 'leadership.team.members.member14.bio',
+    },
+    {
+      id: 'member15',
+      imageSrc: 'https://dummyimage.com/400x400/1a1a1a/ffffff.png&text=Team+Member+15',
+      nameKey: 'leadership.team.members.member15.name',
+      roleKey: 'leadership.team.members.member15.role',
+      bioKey: 'leadership.team.members.member15.bio',
+    },
+    {
+      id: 'member16',
+      imageSrc: 'https://dummyimage.com/400x400/1a1a1a/ffffff.png&text=Team+Member+16',
+      nameKey: 'leadership.team.members.member16.name',
+      roleKey: 'leadership.team.members.member16.role',
+      bioKey: 'leadership.team.members.member16.bio',
+    },
+    {
+      id: 'member17',
+      imageSrc: 'https://dummyimage.com/400x400/1a1a1a/ffffff.png&text=Team+Member+17',
+      nameKey: 'leadership.team.members.member17.name',
+      roleKey: 'leadership.team.members.member17.role',
+      bioKey: 'leadership.team.members.member17.bio',
+    },
+    {
+      id: 'member18',
+      imageSrc: 'https://dummyimage.com/400x400/1a1a1a/ffffff.png&text=Team+Member+18',
+      nameKey: 'leadership.team.members.member18.name',
+      roleKey: 'leadership.team.members.member18.role',
+      bioKey: 'leadership.team.members.member18.bio',
+    },
+    {
+      id: 'member19',
+      imageSrc: 'https://dummyimage.com/400x400/1a1a1a/ffffff.png&text=Team+Member+19',
+      nameKey: 'leadership.team.members.member19.name',
+      roleKey: 'leadership.team.members.member19.role',
+      bioKey: 'leadership.team.members.member19.bio',
+    },
+    {
+      id: 'member20',
+      imageSrc: 'https://dummyimage.com/400x400/1a1a1a/ffffff.png&text=Team+Member+20',
+      nameKey: 'leadership.team.members.member20.name',
+      roleKey: 'leadership.team.members.member20.role',
+      bioKey: 'leadership.team.members.member20.bio',
+    },
+    {
+      id: 'member21',
+      imageSrc: 'https://dummyimage.com/400x400/1a1a1a/ffffff.png&text=Team+Member+21',
+      nameKey: 'leadership.team.members.member21.name',
+      roleKey: 'leadership.team.members.member21.role',
+      bioKey: 'leadership.team.members.member21.bio',
+    },
+    {
+      id: 'member22',
+      imageSrc: 'https://dummyimage.com/400x400/1a1a1a/ffffff.png&text=Team+Member+22',
+      nameKey: 'leadership.team.members.member22.name',
+      roleKey: 'leadership.team.members.member22.role',
+      bioKey: 'leadership.team.members.member22.bio',
+    },
+    {
+      id: 'member23',
+      imageSrc: 'https://dummyimage.com/400x400/1a1a1a/ffffff.png&text=Team+Member+23',
+      nameKey: 'leadership.team.members.member23.name',
+      roleKey: 'leadership.team.members.member23.role',
+      bioKey: 'leadership.team.members.member23.bio',
+    },
+    {
+      id: 'member24',
+      imageSrc: 'https://dummyimage.com/400x400/1a1a1a/ffffff.png&text=Team+Member+24',
+      nameKey: 'leadership.team.members.member24.name',
+      roleKey: 'leadership.team.members.member24.role',
+      bioKey: 'leadership.team.members.member24.bio',
+    },
   ];
 
   return (
@@ -182,12 +325,13 @@ export default function AboutPage() {
               variants={itemVariants}
             >
               <Image
-                src="https://dummyimage.com/800x600/1a1a1a/ffffff.png&text=KAMLEWA+Technologies"
+                src="/images/10.png"
                 alt={t('imageAlt1')}
                 fill
                 className="object-cover"
                 unoptimized
               />
+              
             </motion.div>
           </motion.div>
         </div>
@@ -300,10 +444,11 @@ export default function AboutPage() {
               {/* CEO Image */}
               <div className="relative w-full h-96 md:h-[500px] order-2 lg:order-1">
                 <Image
-                  src="https://dummyimage.com/800x600/1a1a1a/ffffff.png&text=CEO+Photo"
+                  src="/images/11.jpg"
                   alt={tPage('leadership.ceo.imageAlt')}
-                  fill
-                  className="object-cover"
+                  width={800}
+                  height={500}
+                  className="w-full h-full object-cover"
                   unoptimized
                 />
               </div>
@@ -331,39 +476,67 @@ export default function AboutPage() {
                 {tPage('leadership.team.description')}
               </p>
 
-              {/* Team Members Grid */}
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-2 md:gap-2">
-                {teamMembers.map((member) => (
-                  <motion.div
-                    key={member.id}
-                    className="relative h-full bg-white/5 border border-white/10 overflow-hidden group hover:border-yellow-400/50 transition-all duration-300"
-                    variants={itemVariants}
-                  >
-                    {/* Image */}
-                    <div className="relative w-full h-64 overflow-hidden">
-                      <Image
-                        src={member.imageSrc}
-                        alt={tPage(member.nameKey)}
-                        fill
-                        className="object-cover group-hover:scale-105 transition-transform duration-300"
-                        unoptimized
-                      />
-                    </div>
-                    {/* Content */}
-                    <div className="p-6">
-                      <h4 className="text-xl font-bold mb-2" style={{ fontFamily: 'var(--font-nourd), sans-serif' }}>
-                        {tPage(member.nameKey)}
-                      </h4>
-                      <p className="text-yellow-400 text-sm font-semibold mb-3">
-                        {tPage(member.roleKey)}
-                      </p>
-                      <p className="text-gray-300 text-sm leading-relaxed">
-                        {tPage(member.bioKey)}
-                      </p>
-                    </div>
-                  </motion.div>
-                ))}
-              </div>
+              {/* Team Members Carousel */}
+              <motion.div variants={itemVariants} className="relative overflow-hidden">
+                {/* Gradient fade on edges */}
+                <div className="absolute left-0 top-0 bottom-0 w-16 bg-gradient-to-r from-black to-transparent z-10"></div>
+                <div className="absolute right-0 top-0 bottom-0 w-16 bg-gradient-to-l from-black to-transparent z-10"></div>
+
+                <Swiper
+                  modules={[Autoplay]}
+                  spaceBetween={20}
+                  slidesPerView={1}
+                  autoplay={{
+                    delay: 4000,
+                    disableOnInteraction: false,
+                  }}
+                  loop={true}
+                  breakpoints={{
+                    640: {
+                      slidesPerView: 2,
+                    },
+                    768: {
+                      slidesPerView: 3,
+                    },
+                    1024: {
+                      slidesPerView: 4,
+                    },
+                  }}
+                  className="team-swiper"
+                >
+                  {teamMembers.map((member) => (
+                    <SwiperSlide key={member.id}>
+                      <motion.div
+                        className="relative h-full bg-white/5 border border-white/10 overflow-hidden group hover:border-yellow-400/50 transition-all duration-300"
+                        variants={itemVariants}
+                      >
+                        {/* Image */}
+                        <div className="relative w-full h-64 overflow-hidden">
+                          <Image
+                            src={member.imageSrc}
+                            alt={tPage(member.nameKey)}
+                            fill
+                            className="object-cover group-hover:scale-105 transition-transform duration-300"
+                            unoptimized
+                          />
+                        </div>
+                        {/* Content */}
+                        <div className="p-6">
+                          <h4 className="text-xl font-bold mb-2" style={{ fontFamily: 'var(--font-nourd), sans-serif' }}>
+                            {tPage(member.nameKey)}
+                          </h4>
+                          <p className="text-yellow-400 text-sm font-semibold mb-3">
+                            {tPage(member.roleKey)}
+                          </p>
+                          <p className="text-gray-300 text-sm leading-relaxed">
+                            {tPage(member.bioKey)}
+                          </p>
+                        </div>
+                      </motion.div>
+                    </SwiperSlide>
+                  ))}
+                </Swiper>
+              </motion.div>
             </motion.div>
           </motion.div>
         </div>

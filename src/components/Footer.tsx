@@ -40,7 +40,7 @@ export default function Footer() {
             <Link href="/" className="flex items-center mb-4 hover:opacity-90 transition-opacity">
               <div className="relative w-8 h-12 md:w-8 md:h-16 shrink-0">
                 <Image
-                  src="/images/KAMLEWA_LOGO.png"
+                  src="/images/logo.png"
                   alt="Kamlewa Logo"
                   fill
                   className="object-contain"

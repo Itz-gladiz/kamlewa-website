@@ -122,9 +122,9 @@ export default function Navbar() {
                   className="flex items-center hover:opacity-90 transition-opacity"
                   onClick={() => setIsMenuOpen(false)}
                 >
-                  <div className="relative w-8 h-12 shrink-0">
+                  <div className="relative w-16 h-20 shrink-0">
                     <Image
-                      src="/images/KAMLEWA_LOGO.png"
+                      src="/images/logo.png"
                       alt="Kamlewa Logo"
                       fill
                       className="object-contain"
@@ -323,9 +323,9 @@ export default function Navbar() {
       <div className="w-full max-w-7xl mx-auto px-6 py-6 md:px-12 lg:px-16 flex items-center justify-between">
         {/* Logo with Text */}
         <Link href="/" className="flex items-center hover:opacity-90 gap-2 transition-opacity">
-          <div className="relative w-8 h-12 md:w-8 md:h-16 shrink-0">
+          <div className="relative w-16 h-20 shrink-0">
             <Image
-              src="/images/KAMLEWA_LOGO.png"
+              src="/images/logo.png"
               alt="Kamlewa Logo"
               fill
               className="object-contain"

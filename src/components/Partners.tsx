@@ -129,7 +129,7 @@ export default function Partners({ className }: { className?: string } ) {
                       alt={partner.name}
                       width={200}
                       height={80}
-                      className="object-contain h-full w-auto max-w-[100px] md:max-w-[180px] grayscale brightness-100 transition-all duration-300"
+                      className="object-contain h-full w-auto max-w-[100px] md:max-w-[180px] brightness-100 transition-all duration-300"
                     />
                   </div>
                 </SwiperSlide>

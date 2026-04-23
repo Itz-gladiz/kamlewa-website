@@ -190,7 +190,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             <Link href="/" className="flex items-center gap-3">
               <div className="relative w-8 h-12">
                 <Image
-                  src="/images/KAMLEWA_LOGO.png"
+                  src="/images/logo.png"
                   alt="Kamlewa Logo"
                   fill
                   className="object-contain"
