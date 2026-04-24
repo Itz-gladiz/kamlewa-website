@@ -87,9 +87,10 @@
             },
             "member5": {
               "name": "Tangem Thierry",
-              "role": "Lead Penetration Tester",
+              "role": "Lead Penestation Tester",
               "bio": "Specializing in threat detection and response, helping organizations secure their digital assets."
-            },
+            }, 
+             
             "member6": {
               "name": "Gladys Oben",
               "role": "Director of Operations",
