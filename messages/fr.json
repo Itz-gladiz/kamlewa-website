@@ -66,54 +66,54 @@
           "description": "Notre équipe diversifiée de professionnels rassemble une expertise en cybersécurité, éducation, développement communautaire et innovation technologique.",
           "members": {
             "member1": {
-              "name": "Sarah Johnson",
-              "role": "Spécialiste en Cybersécurité",
-              "bio": "Experte en piratage éthique et protocoles de sécurité avec plus de 8 ans d'expérience dans la protection de l'infrastructure numérique."
+              "name": "Kevin Mbieleu",
+              "role": "Directeur de la stratégie",
+              "bio": "Cybersécurité | Robotique | Intelligence artificielle (IA) | Ambassadeur de la paix | Auteur | Entrepreneur tech primé | Ingénieur pédagogique certifié."
             },
             "member2": {
-              "name": "Michael Chen",
-              "role": "Coordinateur Éducatif",
-              "bio": "Éducateur passionné développant des programmes de formation pour combler le fossé des compétences numériques en Afrique."
-            },
+              "name": "Nde Sylvarius",
+              "role": "Directeur de la sécurité de l'information",
+              "bio": " Éducateur passionné développant des programmes d'études et de formation pour combler le fossé des compétences numériques à travers l'Afrique."
+         },
             "member3": {
-              "name": "Amina Hassan",
-              "role": "Responsable du Développement Communautaire",
-              "bio": "Dédiée à la construction de réseaux communautaires solides et à la promotion de l'adoption technologique de base dans les zones mal desservies."
+              "name": "Endeley Enanga",
+              "role": "Responsable de programme ",
+              "bio": "Dédié à la création de réseaux communautaires solides et à la promotion de l'adoption des technologies locales dans les zones mal desservies. "
             },
             "member4": {
-              "name": "David Okafor",
-              "role": "Responsable de l'Innovation Technologique",
-              "bio": "Dirige l'innovation dans les solutions numériques et crée des programmes technologiques évolutifs pour l'autonomisation des communautés."
+              "name": "Ramsey Ibe",
+              "role": "Responsable de la sécurité offensive ",
+              "bio": "Moteur d'innovation dans les solutions numériques et créateur de programmes technologiques évolutifs pour l'autonomisation des communautés."
             },
             "member5": {
-              "name": "Amara Nwosu",
-              "role": "Analyste en Cybersécurité",
+              "name": "Tangem Thierry",
+              "role": "Responsable des tests d'intrusion",
               "bio": "Spécialisé dans la détection et la réponse aux menaces, aidant les organisations à sécuriser leurs actifs numériques."
             },
             "member6": {
-              "name": "Jelani Kofi",
-              "role": "Développeur Logiciel",
-              "bio": "Construisant des applications robustes avec un focus sur la sécurité et l'expérience utilisateur."
-            },
+              "name": "Gladys Oben",
+              "role": "Directeur des opérations ",
+              "bio": "Construire des applications robustes avec un focus sur la sécurité et l'expérience utilisateur."
+},
             "member7": {
-              "name": "Zara Hassan",
-              "role": "Coordinateur de Sensibilisation Communautaire",
-              "bio": "Se connectant avec les communautés locales pour promouvoir la littératie numérique et la sensibilisation à la cybersécurité."
+              "name": "Blessed Nur",
+              "role": "Développeur principal ",
+              "bio": "Se connecter avec les communautés locales pour promouvoir la littératie numérique et la sensibilisation à la cybersécurité."
             },
             "member8": {
-              "name": "Kofi Mensah",
-              "role": "Ingénieur en Sécurité Réseau",
-              "bio": "Concevant et implémentant des infrastructures réseau sécurisées pour les entreprises modernes."
+              "name": "Charh Zion",
+              "role": "Testeur d'intrusion junior",
+              "bio": "Conception et mise en œuvre d'infrastructures réseau sécurisées pour les entreprises modernes."
             },
             "member9": {
-              "name": "Amina Diallo",
-              "role": "Spécialiste en Protection des Données",
-              "bio": "Assurant la conformité aux réglementations et meilleures pratiques de protection des données."
+              "name": "Mesole Jenifer",
+              "role": "Responsable Recherche et Développement",
+              "bio": "Assurer la conformité aux réglementations et meilleures pratiques de protection des données."
             },
             "member10": {
-              "name": "Simba Nkosi",
-              "role": "Pirate Éthique",
-              "bio": "Effectuant des tests de pénétration pour identifier et atténuer les vulnérabilités de sécurité."
+              "name": "Nubityha Dinaline",
+              "role": "Spécialiste du support informatique",
+              "bio": ""
             },
             "member11": {
               "name": "Nia Johnson",
