@@ -116,12 +116,12 @@ export default function Footer() {
             <h3 className="text-lg font-semibold mb-4">{t('contact')}</h3>
             <ul className="space-y-2 text-gray-400 text-sm md:text-base">
               <li>
-                <a href="mailto:contact@kamlewa.com" className="hover:text-yellow-400 transition-colors">
+                <a href="mailto:contact@kamlewa.org" className="hover:text-yellow-400 transition-colors">
                   {t('email')}
                 </a>
               </li>
               <li>
-                <a href="tel:+123456789" className="hover:text-yellow-400 transition-colors">
+                <a href="tel:+237 674 567 890" className="hover:text-yellow-400 transition-colors">
                   {t('phone')}
                 </a>
               </li>

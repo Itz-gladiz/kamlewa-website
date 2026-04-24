@@ -101,7 +101,7 @@ export default function ImpactMetrics() {
 
   const metrics = [
     {
-      value: 5000,
+      value: 20000,
       suffix: '+',
       label: t('youthReached'),
       delay: 0,

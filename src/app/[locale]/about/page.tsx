@@ -198,69 +198,6 @@ export default function AboutPage() {
       bioKey: 'leadership.team.members.member19.bio',
     },
   ];
-      id: 'member16',
-      imageSrc: 'https://dummyimage.com/400x400/1a1a1a/ffffff.png&text=Team+Member+16',
-      nameKey: 'leadership.team.members.member16.name',
-      roleKey: 'leadership.team.members.member16.role',
-      bioKey: 'leadership.team.members.member16.bio',
-    },
-    {
-      id: 'member17',
-      imageSrc: 'https://dummyimage.com/400x400/1a1a1a/ffffff.png&text=Team+Member+17',
-      nameKey: 'leadership.team.members.member17.name',
-      roleKey: 'leadership.team.members.member17.role',
-      bioKey: 'leadership.team.members.member17.bio',
-    },
-    {
-      id: 'member18',
-      imageSrc: 'https://dummyimage.com/400x400/1a1a1a/ffffff.png&text=Team+Member+18',
-      nameKey: 'leadership.team.members.member18.name',
-      roleKey: 'leadership.team.members.member18.role',
-      bioKey: 'leadership.team.members.member18.bio',
-    },
-    {
-      id: 'member19',
-      imageSrc: 'https://dummyimage.com/400x400/1a1a1a/ffffff.png&text=Team+Member+19',
-      nameKey: 'leadership.team.members.member19.name',
-      roleKey: 'leadership.team.members.member19.role',
-      bioKey: 'leadership.team.members.member19.bio',
-    },
-    {
-      id: 'member20',
-      imageSrc: 'https://dummyimage.com/400x400/1a1a1a/ffffff.png&text=Team+Member+20',
-      nameKey: 'leadership.team.members.member20.name',
-      roleKey: 'leadership.team.members.member20.role',
-      bioKey: 'leadership.team.members.member20.bio',
-    },
-    {
-      id: 'member21',
-      imageSrc: 'https://dummyimage.com/400x400/1a1a1a/ffffff.png&text=Team+Member+21',
-      nameKey: 'leadership.team.members.member21.name',
-      roleKey: 'leadership.team.members.member21.role',
-      bioKey: 'leadership.team.members.member21.bio',
-    },
-    {
-      id: 'member22',
-      imageSrc: 'https://dummyimage.com/400x400/1a1a1a/ffffff.png&text=Team+Member+22',
-      nameKey: 'leadership.team.members.member22.name',
-      roleKey: 'leadership.team.members.member22.role',
-      bioKey: 'leadership.team.members.member22.bio',
-    },
-    {
-      id: 'member23',
-      imageSrc: 'https://dummyimage.com/400x400/1a1a1a/ffffff.png&text=Team+Member+23',
-      nameKey: 'leadership.team.members.member23.name',
-      roleKey: 'leadership.team.members.member23.role',
-      bioKey: 'leadership.team.members.member23.bio',
-    },
-    {
-      id: 'member24',
-      imageSrc: 'https://dummyimage.com/400x400/1a1a1a/ffffff.png&text=Team+Member+24',
-      nameKey: 'leadership.team.members.member24.name',
-      roleKey: 'leadership.team.members.member24.role',
-      bioKey: 'leadership.team.members.member24.bio',
-    },
-  ];
 
   return (
     <main className="relative">

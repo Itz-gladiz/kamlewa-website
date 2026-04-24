@@ -12,7 +12,7 @@ export const contactData: ContactInfo[] = [
     id: '1',
     type: 'email',
     label: 'Email',
-    value: 'contact@kamlewa.com',
+    value: 'contact@kamlewa.org',
     isPrimary: true,
     order: 1,
   },

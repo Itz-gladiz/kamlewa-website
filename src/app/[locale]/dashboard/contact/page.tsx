@@ -189,7 +189,7 @@ export default function ContactPage() {
               onChange={(e) => setFormData({ ...formData, value: e.target.value })}
               required
               className="w-full bg-white/10 border-white/30 placeholder-gray-400"
-              placeholder="e.g., contact@kamlewa.com, +123 456 789"
+              placeholder="e.g., contact@kamlewa.org, +123 456 789"
             />
           </div>
           <div className="grid grid-cols-2 gap-4">
