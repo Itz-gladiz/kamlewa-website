@@ -69,7 +69,71 @@ export default function Partners({ className }: { className?: string } ) {
     {
       name: 'ANTIC',
       logo: '/images/partners/ANTIC.png',
-    }
+    },
+    {
+      name: 'University of Buea',
+      logo: '/images/partners/University-of-Buea_logo.png',
+    },
+    {
+      name: 'TAH News Network',
+      logo: '/images/partners/tah news network.jpg',
+    },
+    {
+      name: 'OWASP',
+      logo: '/images/partners/owasp-logo-png.png',
+    },
+    {
+      name: 'Orange',
+      logo: '/images/partners/orange.jpg',
+    },
+    {
+      name: 'OIC',
+      logo: '/images/partners/oic_logo.png',
+    },
+    {
+      name: 'Nervtek',
+      logo: '/images/partners/nervtek_logo.png',
+    },
+    {
+      name: 'Mboa Digital',
+      logo: '/images/partners/mboa digital.png',
+    },
+    {
+      name: 'Logo UDs',
+      logo: '/images/partners/Logo_UDs.png',
+    },
+    {
+      name: 'Katika',
+      logo: '/images/partners/katika.jpg',
+    },
+    {
+      name: 'Jongo',
+      logo: '/images/partners/jongo.jpg',
+    },
+    {
+      name: 'IUC',
+      logo: '/images/partners/iuc.jpg',
+    },
+    {
+      name: 'CYNC',
+      logo: '/images/partners/CYNC.jpg',
+    },
+    {
+      name: 'Codam Technologies',
+      logo: '/images/partners/codam_techologies_logo.jpg',
+    },
+    {
+      name: 'Codec',
+      logo: '/images/partners/codec.jpg',
+    },
+    {
+      name: 'Activspaces',
+      logo: '/images/partners/activspaces_logo.jpg',
+    },
+    {
+      name: 'AC',
+      logo: '/images/partners/AC.png',
+    },
   ];
 
   // Duplicate partners for seamless loop
