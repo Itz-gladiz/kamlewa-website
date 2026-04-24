@@ -73,97 +73,98 @@
             "member2": {
               "name": "Nde Sylvarius",
               "role": "Chief Information Security Officer",
-              "bio": "Passionate educator developing curriculum and training programs to bridge the digital skills gap across Africa."
+              "bio": "Defensive Security Lead | Cybersecurity Analyst."
             },
             "member3": {
               "name": "Endeley Enanga",
               "role": "Program Manager",
-              "bio": "Dedicated to building strong community networks and fostering grassroots technology adoption in underserved areas."
+              "bio": "Network security Engineer | Project Manager | Cisco | NSE3 | Checkpoint (CCSA, CCSE) | PSM1 | CompTIA S+ |AWS | AZURE | LINUX | Palo Alto | Diploma in Data analytics."
             },
             "member4": {
               "name": "Ramsey Ibe",
               "role": "Offensive Security Lead",
-              "bio": "Driving innovation in digital solutions and creating scalable technology programs for community empowerment."
+              "bio": "Penetration Tester || CyBlack Alumni || OWASP Buea Chapter Lead || CAP || CRTA."
             },
             "member5": {
               "name": "Tangem Thierry",
               "role": "Lead Penestation Tester",
-              "bio": "Specializing in threat detection and response, helping organizations secure their digital assets."
+              "bio": "Penetration Tester || Bachelor degree in IT || CTF player || TryHackme || HackTheBox || RootMe || Hackerone."
             },
             "member6": {
               "name": "Gladys Oben",
               "role": "Director of Operations",
-              "bio": "Building robust applications with a focus on security and user experience."
+              "bio": "Software Engineer | IT Manager | Robotics Enthusiast | Experienced in leading cross-functional teams and managing complex projects."
             },
             "member7": {
               "name": "Blessed Nur",
               "role": "Lead Developer",
-              "bio": "Connecting with local communities to promote digital literacy and cybersecurity awareness."
+              "bio": "Full-Stack Web Developer | MERN & PERN Stack | Next.js | NestJS | TypeScript | CI/CD | Cloud & DevOps Enthusiast | Problem Solver."
             },
             "member8": {
               "name": "Charh Zion",
               "role": "Junior Penestration Tester",
-              "bio": "Designing and implementing secure network infrastructures for modern enterprises."
+              "bio": "Penetration Tester || READTEAM || SPEAKER|| CTF PLAYER  || HACK THE BOX  for modern enterprises."
             },
             "member9": {
               "name": "Mesole Jenifer",
               "role": "Research & Development Lead",
-              "bio": "Ensuring  with data protection regulations and best practices."
+              
+              "bio": "Ensuring  with data protection regulations and best practices | Tech Enthusiast | Graphic Designer."
             },
             "member10": {
               "name": "Nubityha Dinaline",
               "role": "IT Support Specialist",
-              "bio": "Conducting penetration testing to identify and mitigate security vulnerabilities."
+              "bio": "Computer hardware and software maintenance specialists, content creator, tech support specialists.My YouTube handles@dinrecaptv@dinlivetech."
             },
             "member11": {
               "name": "Ndesoh Atanga ",
               "role": "Commnication Lead",
-              "bio": "Developing and delivering training programs to bridge the digital skills gap."
+              "bio": "Communicating the organization's message and values to various stakeholders."
             },
             "member12": {
               "name": "Nana Fidelia",
               "role": "Data Analyst",
-              "bio": "Overseeing technology projects with a focus on security and efficiency."
+              "bio": "Analyzing data to provide insights and support decision-making."
             },
             "member13": {
               "name": "Deuko Luprince",
               "role": "Junior Developer",
-              "bio": "Exploring the intersection of artificial intelligence and cybersecurity."
+              "bio": "Aspiring software developer with a passion for creating innovative solutions."
             },
             "member14": {
               "name": "Fonge Justice",
               "role": "Full Stack Web Developer",
-              "bio": "Managing cybersecurity incidents and coordinating response efforts."
+              "bio": "MERN Stack Developer | Next.js | NestJS | TypeScript | CI/CD | Cloud & DevOps Enthusiast."
             },
             "member15": {
               "name": "Kimberly Nwana",
               "role": "Accountant",
-              "bio": "Creating user-friendly interfaces with security considerations in mind."
+              "bio": "Financial management and accounting expertise."
             },
             "member16": {
               "name": "Foba Helena",
               "role": "Community Liaison",
-              "bio": "Securing blockchain technologies and decentralized applications."
+              "bio": "Connecting with local communities to promote digital literacy and cybersecurity awareness."
             },
             "member17": {
               "name": "Egbe Stev",
-              "role": "kgf",
-              "bio": "Teaching the next generation about online safety and digital ethics."
+              "role": "Compliance Officer",
+              "bio": "Ensuring compliance with data protection regulations and best practices."
             },
             "member18": {
               "name": "Kum Remedy",
               "role": "Creative Lead",
-              "bio": "Designing secure cloud infrastructures and migration strategies."
+              "bio": "Leading creative initiatives and developing engaging content for our audience."
             },
             "member19": {
               "name": "Abayo Joaram",
               "role": "Backend Developer",
-              "bio": "Investigating cyber incidents and gathering digital evidence."
+              "bio": "Developing scalable backend solutions with a focus on performance and security."
             },
             "member20": {
-              "name": "Ahmed Hassan",
-              "role": "Security Operations Center Lead",
-              "bio": "Leading SOC teams in monitoring and responding to security threats."
+              "name": "Tsongwang Kayliah",
+              "role": "Project Manager",
+              "bio": "Leading project initiatives and ensuring successful delivery of outcomes."
             },
             "member21": {
               "name": "Chioma Okwu",
