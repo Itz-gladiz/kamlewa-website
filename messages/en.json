@@ -149,7 +149,11 @@
             "member17": {
               "name": "Egbe Stev",
               "role": "Compliance Officer",
+<<<<<<< HEAD
               "bio": "Vulnerability Assessment and Penetration Testing (VAPT)| CEH Certified | IT SUPPORT | Audit and Forensic Ensuring our operations comply with relevant regulations and standards. Experienced in regulatory affairs and risk management."
+=======
+              "bio": "Teaching the next generation about online safety and digital ethics."
+>>>>>>> 3ef1268113903627a176c2797574a6f9864ca2f1
             },
             "member18": {
               "name": "Kum Remedy",
@@ -163,8 +167,13 @@
             },
             "member20": {
               "name": "Tsongwang Kayliah",
+<<<<<<< HEAD
               "role": "Project Manager",
               "bio": "Managing projects to ensure timely delivery and successful implementation of our programs. Experienced in project management methodologies and tools, committed to driving impactful initiatives that empower communities through technology."
+=======
+              "role": "Security Operations Center Lead",
+              "bio": "Leading SOC teams in monitoring and responding to security threats."
+>>>>>>> 3ef1268113903627a176c2797574a6f9864ca2f1
             },
             "member21": {
               "name": "Chioma Okwu",

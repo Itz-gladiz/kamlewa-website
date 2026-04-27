@@ -51,7 +51,7 @@ export default function Hero() {
         <div 
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"
           style={{
-            backgroundImage: 'url("/images/image_31.png")',
+            backgroundImage: 'url("/images/lead_photo.jpg")',
             filter: 'grayscale(100%) brightness(0.4)',
           }}
         />
