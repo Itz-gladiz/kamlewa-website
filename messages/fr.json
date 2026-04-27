@@ -73,7 +73,7 @@
             "member2": {
               "name": "Nde Sylvarius",
               "role": "Directeur de la sécurité de l'information",
-              "bio": " Éducateur passionné développant des programmes d'études et de formation pour combler le fossé des compétences numériques à travers l'Afrique."
+              "bio": "Responsable de la sécurité défensive | Analyste en cybersécurité | @yournextciso"
          },
             "member3": {
               "name": "Endeley Enanga",
@@ -83,17 +83,18 @@
             "member4": {
               "name": "Ramsey Ibe",
               "role": "Responsable de la sécurité offensive ",
-              "bio": "Moteur d'innovation dans les solutions numériques et créateur de programmes technologiques évolutifs pour l'autonomisation des communautés."
+              "bio": "Testeur d'intrusion | Ancien élève de CyBlack | Responsable du chapitre OWASP Buea | CAP | CRTA"
+
             },
             "member5": {
               "name": "Tangem Thierry",
               "role": "Responsable des tests d'intrusion",
-              "bio": "Spécialisé dans la détection et la réponse aux menaces, aidant les organisations à sécuriser leurs actifs numériques."
+              "bio": "Testeur d'intrusion | Joueur de CTF | TryHackMe | HackTheBox | RootMe | Hackerone"
             },
             "member6": {
               "name": "Gladys Oben",
               "role": "Directeur des opérations ",
-              "bio": "Construire des applications robustes avec un focus sur la sécurité et l'expérience utilisateur."
+              "bio": "Ingénieur Logiciel | Passionné de DevOps | Responsable IT expérimenté dans la gestion de projets technologiques à grande échelle et la coordination d'équipes pluridisciplinaires pour obtenir des résultats probants."
 },
             "member7": {
               "name": "Blessed Nur",
@@ -103,167 +104,67 @@
             "member8": {
               "name": "Charh Zion",
               "role": "Testeur d'intrusion junior",
-              "bio": "Conception et mise en œuvre d'infrastructures réseau sécurisées pour les entreprises modernes."
+              "bio": "Testeur d'intrusion | RED TEAM | CONFÉRENCIER | JOUEUR DE CTF | HACK THE BOX | Professionnel de la cybersécurité spécialisé en tests d'intrusion et hacking éthique. Désireux d'apprendre et de contribuer à la sécurisation des environnements numériques grâce à une expérience pratique et au développement continu de mes compétences."
             },
             "member9": {
               "name": "Mesole Jenifer",
               "role": "Responsable Recherche et Développement",
-              "bio": "Assurer la conformité aux réglementations et meilleures pratiques de protection des données."
+              "bio": "Directeur d'initiatives de recherche visant à explorer les technologies émergentes et leurs applications dans la cybersécurité et l'inclusion numérique. Passionné par l'innovation et la recherche de nouveaux moyens d'autonomiser les communautés grâce à la technologie. "
             },
             "member10": {
               "name": "Nubityha Dinaline",
               "role": "Spécialiste du support informatique",
-              "bio": ""
+              "bio": "Fourniture d'un support technique et garantie du bon fonctionnement de notre infrastructure technologique. Dédié à aider les communautés à surmonter les défis techniques et à accéder efficacement aux ressources numériques."
             },
             "member11": {
-              "name": "Nia Johnson",
-              "role": "Formateur en Éducation Numérique",
-              "bio": "Développant et dispensant des programmes de formation pour combler le fossé des compétences numériques."
+              "name": "Ndesoh Atanga",
+              "role": "Responsable de la Communication",
+              "bio": "Gérer les communications internes et externes pour assurer une diffusion efficace de notre mission, de nos programmes et de notre impact. Expérimenté dans la création de contenu engageant et la gestion des relations avec les médias pour renforcer notre présence et notre influence dans le domaine de la cybersécurité et de l'inclusion numérique."
             },
             "member12": {
-              "name": "Tunde Adebayo",
-              "role": "Chef de Projet Informatique",
-              "bio": "Supervisant des projets technologiques avec un focus sur la sécurité et l'efficacité."
+              "name": "Nana Fidelia",
+              "role": "Analyste de données",
+              "bio": "Analyser les données pour évaluer l'impact de nos programmes, identifier les tendances et informer les décisions stratégiques. Passionné par l'utilisation des données pour améliorer nos initiatives et maximiser notre impact sur les communautés que nous servons."
             },
             "member13": {
-              "name": "Lila Chen",
-              "role": "Chercheur en Sécurité IA",
-              "bio": "Explorant l'intersection entre l'intelligence artificielle et la cybersécurité."
+              "name": "Deuko Luprince",
+              "role": "Developpeur Junior",
+              "bio": "Construire des applications robustes avec un focus sur la sécurité et l'expérience utilisateur."
             },
             "member14": {
-              "name": "Omar El-Sayed",
-              "role": "Coordinateur de Réponse aux Incidents",
-              "bio": "Gérant les incidents de cybersécurité et coordonnant les efforts de réponse."
+              "name": "Fonge Justice",
+              "role": "Développeur web Full Stack",
+              "bio": "Concevant et développant des applications web sécurisées et conviviales pour soutenir nos initiatives et programmes."
             },
             "member15": {
-              "name": "Sofia Ramirez",
-              "role": "Designer UX/UI",
-              "bio": "Créant des interfaces conviviales en tenant compte des considérations de sécurité."
+              "name": "Kimberly Nwana",
+              "role": "Comptable",
+              "bio": "Gérer les finances de l'organisation, assurer la transparence et la conformité financière pour soutenir nos opérations et notre croissance."
             },
             "member16": {
-              "name": "Jomo Kenyatta",
-              "role": "Expert en Sécurité Blockchain",
-              "bio": "Sécurisant les technologies blockchain et les applications décentralisées."
+              "name": "Foba Helena",
+              "role": "Agent de liaison communautaire",
+              "bio": "Construire des relations solides avec les leaders et les membres de la communauté pour garantir que nos programmes répondent aux besoins locaux. Compétente en engagement communautaire, sensibilisation et promotion de partenariats qui renforcent notre impact sur le terrain."
             },
             "member17": {
-              "name": "Fatima Al-Zahra",
-              "role": "Éducateur en Cybersécurité",
-              "bio": "Enseignant à la prochaine génération la sécurité en ligne et l'éthique numérique."
+              "name": "Egbe Stev",
+              "role": "Responsable de la conformité",
+              "bio": "Évaluation de la vulnérabilité et tests d'intrusion (VAPT) | Certifié CEH | Support informatique | Audit et forensique. Veiller à ce que nos opérations respectent les réglementations et normes en vigueur. Expérimenté en affaires réglementaires et en gestion des risques. "
             },
             "member18": {
-              "name": "Diego Santos",
-              "role": "Architecte de Sécurité Cloud",
-              "bio": "Concevant des infrastructures cloud sécurisées et des stratégies de migration."
+              "name": "Kum Remedy",
+              "role": "Directrice de création ",
+              "bio": "Dirigeant les initiatives créatives pour développer des contenus et des matériaux visuels qui communiquent efficacement notre mission et notre impact."
             },
             "member19": {
-              "name": "Maya Patel",
-              "role": "Analyste Forensique",
-              "bio": "Enquêtant sur les incidents cyber et recueillant des preuves numériques."
+              "name": "Abayo Joaram",
+              "role": "Développeur Backend",
+              "bio": "Concevant et développant des applications backend sécurisées et évolutives."
             },
             "member20": {
-              "name": "Ahmed Hassan",
-              "role": "Responsable du Centre d'Opérations de Sécurité",
-              "bio": "Dirigeant les équipes SOC dans la surveillance et la réponse aux menaces de sécurité."
-            },
-            "member21": {
-              "name": "Chioma Okwu",
-              "role": "Spécialiste en Sécurité Mobile",
-              "bio": "Sécurisant les applications et appareils mobiles contre les menaces émergentes."
-            },
-            "member22": {
-              "name": "Rafael Silva",
-              "role": "Consultant en Sécurité IoT",
-              "bio": "Protégeant les appareils et réseaux Internet des Objets contre les vulnérabilités."
-            },
-            "member23": {
-              "name": "Leila Mahmoud",
-              "role": "Analyste d'Évaluation des Risques",
-              "bio": "Effectuant des évaluations des risques de sécurité et recommandant des stratégies d'atténuation."
-            },
-            "member24": {
-              "name": "Emmanuel Nkomo",
-              "role": "Ingénieur DevSecOps",
-              "bio": "Intégrant les pratiques de sécurité dans le cycle de vie du développement logiciel."
-            },
-            "member5": {
-              "name": "Amara Nwosu",
-              "role": "Analyste en Cybersécurité",
-              "bio": "Spécialisé dans la détection et la réponse aux menaces, aidant les organisations à sécuriser leurs actifs numériques."
-            },
-            "member6": {
-              "name": "Jelani Kofi",
-              "role": "Développeur Logiciel",
-              "bio": "Construisant des applications robustes avec un focus sur la sécurité et l'expérience utilisateur."
-            },
-            "member7": {
-              "name": "Zara Hassan",
-              "role": "Coordinateur de Sensibilisation Communautaire",
-              "bio": "Se connectant avec les communautés locales pour promouvoir la littératie numérique et la sensibilisation à la cybersécurité."
-            },
-            "member8": {
-              "name": "Kofi Mensah",
-              "role": "Ingénieur en Sécurité Réseau",
-              "bio": "Concevant et implémentant des infrastructures réseau sécurisées pour les entreprises modernes."
-            },
-            "member9": {
-              "name": "Amina Diallo",
-              "role": "Spécialiste en Protection des Données",
-              "bio": "Assurant la conformité aux réglementations et meilleures pratiques de protection des données."
-            },
-            "member10": {
-              "name": "Simba Nkosi",
-              "role": "Pirate Éthique",
-              "bio": "Effectuant des tests de pénétration pour identifier et atténuer les vulnérabilités de sécurité."
-            },
-            "member11": {
-              "name": "Nia Johnson",
-              "role": "Formateur en Éducation Numérique",
-              "bio": "Développant et dispensant des programmes de formation pour combler le fossé des compétences numériques."
-            },
-            "member12": {
-              "name": "Tunde Adebayo",
-              "role": "Chef de Projet Informatique",
-              "bio": "Supervisant des projets technologiques avec un focus sur la sécurité et l'efficacité."
-            },
-            "member13": {
-              "name": "Lila Chen",
-              "role": "Chercheur en Sécurité IA",
-              "bio": "Explorant l'intersection entre l'intelligence artificielle et la cybersécurité."
-            },
-            "member14": {
-              "name": "Omar El-Sayed",
-              "role": "Coordinateur de Réponse aux Incidents",
-              "bio": "Gérant les incidents de cybersécurité et coordonnant les efforts de réponse."
-            },
-            "member15": {
-              "name": "Sofia Ramirez",
-              "role": "Designer UX/UI",
-              "bio": "Créant des interfaces conviviales en tenant compte des considérations de sécurité."
-            },
-            "member16": {
-              "name": "Jomo Kenyatta",
-              "role": "Expert en Sécurité Blockchain",
-              "bio": "Sécurisant les technologies blockchain et les applications décentralisées."
-            },
-            "member17": {
-              "name": "Fatima Al-Zahra",
-              "role": "Éducateur en Cybersécurité",
-              "bio": "Enseignant à la prochaine génération la sécurité en ligne et l'éthique numérique."
-            },
-            "member18": {
-              "name": "Diego Santos",
-              "role": "Architecte de Sécurité Cloud",
-              "bio": "Concevant des infrastructures cloud sécurisées et des stratégies de migration."
-            },
-            "member19": {
-              "name": "Maya Patel",
-              "role": "Analyste Forensique",
-              "bio": "Enquêtant sur les incidents cyber et recueillant des preuves numériques."
-            },
-            "member20": {
-              "name": "Ahmed Hassan",
-              "role": "Responsable du Centre d'Opérations de Sécurité",
-              "bio": "Dirigeant les équipes SOC dans la surveillance et la réponse aux menaces de sécurité."
+              "name": "Tsongwang Kayliah",
+              "role": "Chef de projet",
+              "bio": "Gestion de projets pour garantir une livraison en temps voulu et une mise en œuvre réussie de nos programmes. Expérimenté dans les méthodologies et les outils de gestion de projet, je m'engage à mener des initiatives percutantes qui autonomisent les communautés grâce à la technologie."
             },
             "member21": {
               "name": "Chioma Okwu",
