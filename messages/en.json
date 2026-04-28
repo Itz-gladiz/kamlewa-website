@@ -383,6 +383,7 @@
       "featured": "Featured Events",
       "upcoming": "Upcoming Events",
       "projects": "Current Projects",
+      "reports": "Impact Reports",
       "trainings": "Trainings"
     },
     "featured": {
@@ -468,6 +469,7 @@
   "eventsImpact": {
     "subheading": "Events & Impact",
     "heading": "Events & Impact",
+    "reports": "Impact Reports",
     "description": "Showcasing our programs, impact, and upcoming events that drive technology-driven development across Africa.",
     "programCatalog": {
       "heading": "Program Catalog",
@@ -575,6 +577,7 @@
       "programs": "Programs",
       "trainings": "Trainings",
       "projects": "Projects",
+      "reports": "Reports",
       "contact": "Contact Info",
       "settings": "Settings"
     },

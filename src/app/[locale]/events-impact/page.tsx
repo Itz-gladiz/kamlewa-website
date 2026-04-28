@@ -34,7 +34,7 @@ import { mapDbProgramToProgram } from '@/utils/programMapper';
 import toast from 'react-hot-toast';
 import Loader from '@/components/Loader';
 
-type TabType = 'programs' | 'featured' | 'upcoming' | 'projects' | 'trainings';
+type TabType = 'programs' | 'featured' | 'upcoming' | 'projects' | 'trainings' | 'reports';
 
 const ITEMS_PER_PAGE = 6;
 
@@ -193,6 +193,7 @@ export default function EventsImpactPage() {
     { id: 'upcoming' as const, label: tEvents('tabs.upcoming'), icon: HiOutlineCalendarDateRange },
     { id: 'projects' as const, label: tEvents('tabs.projects'), icon: HiOutlineClipboardDocumentList },
     { id: 'trainings' as const, label: tEvents('tabs.trainings'), icon: PiGraduationCapBold },
+    { id: 'reports' as const, label: t('reports'), icon: HiOutlineClipboardDocumentList },
   ];
 
   // Filter and paginate data based on active tab and search
@@ -214,6 +215,9 @@ export default function EventsImpactPage() {
         break;
       case 'trainings':
         data = trainings;
+        break;
+      case 'reports':
+        data = [];
         break;
     }
 
@@ -579,6 +583,18 @@ export default function EventsImpactPage() {
                   <div className="flex justify-center items-center py-12 min-h-[400px]">
                     <Loader />
                   </div>
+                ) : activeTab === 'reports' ? (
+                  <motion.div
+                    className="text-center py-12"
+                    variants={itemVariants}
+                  >
+                    <p className="text-gray-300 text-lg mb-4">
+                      {t('reports')} - Coming Soon
+                    </p>
+                    <p className="text-gray-400">
+                      We are preparing comprehensive impact reports for you. Stay tuned!
+                    </p>
+                  </motion.div>
                 ) : filteredData.length > 0 ? (
                   <>
                     <div 

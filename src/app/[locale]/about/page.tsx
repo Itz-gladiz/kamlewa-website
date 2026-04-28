@@ -262,7 +262,7 @@ export default function AboutPage() {
               variants={itemVariants}
             >
               <Image
-                src="/images/10.png"
+                src="/images/10.jpg"
                 alt={t('imageAlt1')}
                 fill
                 className="object-cover"

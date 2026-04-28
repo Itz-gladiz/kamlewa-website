@@ -59,7 +59,7 @@ export default function CommunityPage() {
       titleKey: 'communities.hackthebox.title',
       descriptionKey: 'communities.hackthebox.description',
       activitiesKey: 'communities.hackthebox.activities',
-      imageSrc: 'https://dummyimage.com/600x400/1a1a1a/ffffff.png&text=HACK+THE+BOX',
+      imageSrc: 'images/partners/hachthebox.png',
     },
     {
       id: 'owasp',
@@ -67,7 +67,7 @@ export default function CommunityPage() {
       titleKey: 'communities.owasp.title',
       descriptionKey: 'communities.owasp.description',
       activitiesKey: 'communities.owasp.activities',
-      imageSrc: 'https://dummyimage.com/600x400/1a1a1a/ffffff.png&text=OWASP',
+      imageSrc: 'images/partners/owasp_logo.png',
     },
   ];
 

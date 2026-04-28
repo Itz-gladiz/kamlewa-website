@@ -78,14 +78,8 @@ export default function Partners({ className }: { className?: string } ) {
       name: 'TAH News Network',
       logo: '/images/partners/tah news network.jpg',
     },
-    {
-      name: 'OWASP',
-      logo: '/images/partners/owasp-logo-png.png',
-    },
-    {
-      name: 'Orange',
-      logo: '/images/partners/orange.jpg',
-    },
+    
+   
     {
       name: 'OIC',
       logo: '/images/partners/oic_logo.png',
@@ -115,6 +109,10 @@ export default function Partners({ className }: { className?: string } ) {
       logo: '/images/partners/iuc.jpg',
     },
     {
+      name: 'Kamcyber',
+      logo: '/images/partners/kamcyber.jpg',
+    },
+    {
       name: 'CYNC',
       logo: '/images/partners/CYNC.jpg',
     },
@@ -133,6 +131,18 @@ export default function Partners({ className }: { className?: string } ) {
     {
       name: 'AC',
       logo: '/images/partners/AC.png',
+    },
+    {
+      name: 'CITs',
+      logo: '/images/partners/CITs.png',
+    },
+    {
+      name: 'JFN',
+      logo: '/images/partners/logo-jfn.png',
+    },
+    {
+      name: 'OWASP',
+      logo: '/images/partners/owasp_logo.png',
     },
   ];
 

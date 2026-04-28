@@ -566,6 +566,7 @@
   "eventsImpact": {
     "subheading": "Événements & Impact",
     "heading": "Événements & Impact",
+    "reports": "Rapports d'Impact",
     "description": "Présentation de nos programmes, de notre impact et des événements à venir qui favorisent le développement axé sur la technologie à travers l'Afrique.",
     "programCatalog": {
       "heading": "Catalogue de Programmes",
@@ -673,6 +674,7 @@
       "programs": "Programmes",
       "trainings": "Formations",
       "projects": "Projets",
+      "reports": "Rapports",
       "contact": "Informations de Contact",
       "settings": "Paramètres"
     },

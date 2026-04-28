@@ -37,6 +37,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     { href: '/dashboard/events', label: t('nav.events'), icon: HiOutlineCalendarDateRange },
     { href: '/dashboard/trainings', label: t('nav.trainings'), icon: PiGraduationCapBold },
     { href: '/dashboard/projects', label: t('nav.projects'), icon: HiLightBulb },
+    { href: '/dashboard/reports', label: t('nav.reports') || 'Reports', icon: HiOutlineClipboardDocumentList },
     { href: '/dashboard/contact', label: t('nav.contact'), icon: HiMail },
     { href: '/dashboard/settings', label: t('nav.settings'), icon: HiCog },
   ];
