@@ -83,93 +83,94 @@
             "member4": {
               "name": "Ramsey Ibe",
               "role": "Offensive Security Lead",
-              "bio": "Driving innovation in digital solutions and creating scalable technology programs for community empowerment."
+              "bio": "Penetration Tester | CyBlack Alumni | OWASP Buea Chapter Lead | CAP | CRTA"
             },
             "member5": {
               "name": "Tangem Thierry",
-              "role": "Lead Penestation Tester",
-              "bio": "Specializing in threat detection and response, helping organizations secure their digital assets."
+              "role": "Lead Penetration Tester",
+              "bio": "Penetration Tester | CTF player | TryHackme | HackTheBox | RootMe | Hackerone "
             }, 
              
             "member6": {
               "name": "Gladys Oben",
               "role": "Director of Operations",
-              "bio": "Building robust applications with a focus on security and user experience."
+              "bio": "Software Engineer| DevOps Enthusiast| IT Manager Experienced in managing large-scale technology projects and coordinating cross-functional teams to achieve impactful results."
             },
             "member7": {
               "name": "Blessed Nur",
               "role": "Lead Developer",
-              "bio": "Connecting with local communities to promote digital literacy and cybersecurity awareness."
+              "bio": "Full-Stack Web Developer | MERN & PERN Stack | Next.js | NestJS | TypeScript | CI/CD | Cloud & DevOps Enthusiast | Problem Solver Experienced in full-stack development and passionate about creating user-friendly applications that enhance cybersecurity awareness and digital inclusion."
             },
             "member8": {
               "name": "Charh Zion",
               "role": "Junior Penestration Tester",
-              "bio": "Designing and implementing secure network infrastructures for modern enterprises."
+              "bio": "Penetration Tester | READTEAM | SPEAKER| CTF PLAYER  | HACK THE BOX | Cybersecurity professional with a focus on penetration testing and ethical hacking. Eager to learn and contribute to securing digital environments through hands-on experience and continuous skill development."
             },
             "member9": {
               "name": "Mesole Jenifer",
               "role": "Research & Development Lead",
-              "bio": "Ensuring  with data protection regulations and best practices."
+              "bio": "Leading research initiatives to explore emerging technologies and their applications in cybersecurity and digital inclusion. Passionate about innovation and finding new ways to empower communities through technology."
             },
             "member10": {
               "name": "Nubityha Dinaline",
               "role": "IT Support Specialist",
-              "bio": "Conducting penetration testing to identify and mitigate security vulnerabilities."
+              "bio": "Providing technical support and ensuring smooth operation of our technology infrastructure. Dedicated to helping communities overcome technical challenges and access digital resources effectively."
             },
             "member11": {
               "name": "Ndesoh Atanga ",
               "role": "Commnication Lead",
-              "bio": "Developing and delivering training programs to bridge the digital skills gap."
+              "bio": "Crafting compelling narratives and managing our communication channels to share our impact and engage with our communities. Experienced in public relations, content creation, and digital marketing strategies to amplify our mission and reach a wider audience."
             },
             "member12": {
               "name": "Nana Fidelia",
               "role": "Data Analyst",
-              "bio": "Overseeing technology projects with a focus on security and efficiency."
+              "bio": "Analyzing data to measure the impact of our programs and inform strategic decisions. Skilled in data visualization, statistical analysis, and using insights to drive continuous improvement in our initiatives."
             },
             "member13": {
               "name": "Deuko Luprince",
               "role": "Junior Developer",
-              "bio": "Exploring the intersection of artificial intelligence and cybersecurity."
+              "bio": "Junior Developer with a passion for learning and contributing to projects that enhance cybersecurity awareness and digital inclusion. Eager to grow skills in software development and make a positive impact through technology."
             },
             "member14": {
               "name": "Fonge Justice",
               "role": "Full Stack Web Developer",
-              "bio": "Managing cybersecurity incidents and coordinating response efforts."
+              "bio": "Experienced in full-stack web development with a focus on creating secure and user-friendly applications. Skilled in various programming languages and frameworks, dedicated to building solutions that support our mission of cybersecurity advocacy and digital inclusion."
             },
             "member15": {
               "name": "Kimberly Nwana",
               "role": "Accountant",
-              "bio": "Creating user-friendly interfaces with security considerations in mind."
+              "bio": "Managing financial operations and ensuring transparency in our funding and expenditures. Experienced in nonprofit accounting and financial management, committed to supporting the sustainability of our organization through sound financial practices."
             },
             "member16": {
               "name": "Foba Helena",
               "role": "Community Liaison",
-              "bio": "Securing blockchain technologies and decentralized applications."
+              "bio": "Building strong relationships with community leaders and members to ensure our programs are responsive to local needs. Skilled in community engagement, outreach, and fostering partnerships that enhance our impact on the ground."
             },
+            
             "member17": {
               "name": "Egbe Stev",
-              "role": "Compliance Officer",
-              "bio": "Teaching the next generation about online safety and digital ethics."
+"role": "Compliance Officer",              "bio": "Vulnerability Assessment and Penetration Testing (VAPT)| CEH Certified | IT SUPPORT | Audit and Forensic Ensuring our operations comply with relevant regulations and standards. Experienced in regulatory affairs and risk management."
             },
             "member18": {
               "name": "Kum Remedy",
               "role": "Creative Lead",
-              "bio": "Designing secure cloud infrastructures and migration strategies."
+              "bio": "Leading creative initiatives to develop engaging content and visual materials that communicate our mission and impact effectively. Skilled in graphic design, multimedia production, and storytelling to enhance our outreach and engagement efforts."
             },
             "member19": {
               "name": "Abayo Joaram",
               "role": "Backend Developer",
-              "bio": "Investigating cyber incidents and gathering digital evidence."
+              "bio": "Experienced in backend development with a focus on building secure and scalable applications. Skilled in various programming languages and frameworks, dedicated to creating robust solutions that support our mission of cybersecurity advocacy and digital inclusion."
             },
             "member20": {
               "name": "Tsongwang Kayliah",
-              "role": "Security Operations Center Lead",
-              "bio": "Leading SOC teams in monitoring and responding to security threats."
+              "role": "Project Manager",
+              "bio": "Managing projects to ensure timely delivery and successful implementation of our programs. Experienced in project management methodologies and tools, committed to driving impactful initiatives that empower communities through technology."
+              
             },
             "member21": {
               "name": "Chioma Okwu",
               "role": "Mobile Security Specialist",
-              "bio": "Securing mobile applications and devices against emerging threats."
+              "bio": "Specializing in mobile security to ensure our applications and platforms are secure across all devices. Skilled in mobile application security testing, secure coding practices, and staying up-to-date with the latest mobile security threats and solutions."
             },
             "member22": {
               "name": "Rafael Silva",
