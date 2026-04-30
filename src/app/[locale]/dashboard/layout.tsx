@@ -11,7 +11,7 @@ import { PiGraduationCapBold } from 'react-icons/pi';
 import { HiLightBulb, HiMail } from 'react-icons/hi';
 import { VscChevronRight } from 'react-icons/vsc';
 import { TbLayoutDashboard } from 'react-icons/tb';
-import { supabase } from '@/lib/supabase/client';
+import { supabase } from '@/lib/supabase/supabaseClient';
 import toast from 'react-hot-toast';
 import Loader from '@/components/Loader';
 

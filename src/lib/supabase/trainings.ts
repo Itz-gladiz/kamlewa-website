@@ -1,4 +1,4 @@
-import { supabase } from './client';
+import { supabase } from './supabaseClient';
 import { Database } from './types';
 
 type Training = Database['public']['Tables']['trainings']['Row'];

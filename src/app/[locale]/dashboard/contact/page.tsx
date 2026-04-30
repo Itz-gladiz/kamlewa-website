@@ -1,27 +1,28 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useTranslations } from 'next-intl';
 import Button from '@/components/Button';
 import Input from '@/components/Input';
 import CustomSelect from '@/components/Select';
-import { contactData, ContactInfo } from '@/data/contact';
+import { ContactInfo } from '@/data/contact';
 import { HiPlus, HiPencil, HiTrash, HiMail, HiPhone, HiLocationMarker } from 'react-icons/hi';
-import { FaFacebook, FaTwitter, FaLinkedin, FaInstagram } from 'react-icons/fa';
+import { FaFacebook } from 'react-icons/fa';
 import toast from 'react-hot-toast';
 import DashboardModal from '@/components/DashboardModal';
+import { supabase } from '@/lib/supabase/supabaseClient';
 
 export default function ContactPage() {
   const t = useTranslations('dashboard');
-  const [contacts, setContacts] = useState<ContactInfo[]>(contactData);
+  const [contacts, setContacts] = useState<ContactInfo[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingContact, setEditingContact] = useState<ContactInfo | null>(null);
   const [formData, setFormData] = useState<Partial<ContactInfo>>({
     type: 'email',
     label: '',
     value: '',
-    isPrimary: false,
-    order: contacts.length + 1,
+    is_primary: false,       // match DB column
+    display_order: 1,        // avoid reserved keyword
   });
 
   const typeOptions = [
@@ -33,18 +34,26 @@ export default function ContactPage() {
 
   const getIcon = (type: ContactInfo['type']) => {
     switch (type) {
-      case 'email':
-        return <HiMail className="w-5 h-5" />;
-      case 'phone':
-        return <HiPhone className="w-5 h-5" />;
-      case 'address':
-        return <HiLocationMarker className="w-5 h-5" />;
-      case 'social':
-        return <FaFacebook className="w-5 h-5" />;
-      default:
-        return null;
+      case 'email': return <HiMail className="w-5 h-5" />;
+      case 'phone': return <HiPhone className="w-5 h-5" />;
+      case 'address': return <HiLocationMarker className="w-5 h-5" />;
+      case 'social': return <FaFacebook className="w-5 h-5" />;
+      default: return null;
     }
   };
+
+  // Load contacts from Supabase
+  useEffect(() => {
+    const fetchContacts = async () => {
+      const { data, error } = await supabase.from('contact_info').select('*').order('display_order');
+      if (error) {
+        toast.error(error.message);
+      } else {
+        setContacts(data || []);
+      }
+    };
+    fetchContacts();
+  }, []);
 
   const handleOpenModal = (contact?: ContactInfo) => {
     if (contact) {
@@ -56,8 +65,8 @@ export default function ContactPage() {
         type: 'email',
         label: '',
         value: '',
-        isPrimary: false,
-        order: contacts.length + 1,
+        is_primary: false,
+        display_order: contacts.length + 1,
       });
     }
     setIsModalOpen(true);
@@ -70,35 +79,55 @@ export default function ContactPage() {
       type: 'email',
       label: '',
       value: '',
-      isPrimary: false,
-      order: contacts.length + 1,
+      is_primary: false,
+      display_order: contacts.length + 1,
     });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
     if (editingContact) {
-      setContacts(contacts.map(c => c.id === editingContact.id ? { ...formData, id: editingContact.id } as ContactInfo : c));
+      const { error } = await supabase
+        .from('contact_info')
+        .update(formData)
+        .eq('id', editingContact.id);
+
+      if (error) {
+        toast.error(error.message);
+        return;
+      }
       toast.success('Contact info updated successfully');
     } else {
-      const newContact: ContactInfo = {
-        ...formData,
-        id: String(contacts.length + 1),
-      } as ContactInfo;
-      setContacts([...contacts, newContact].sort((a, b) => a.order - b.order));
+      const { error } = await supabase
+        .from('contact_info')
+        .insert([formData]);
+
+      if (error) {
+        toast.error(error.message);
+        return;
+      }
       toast.success('Contact info created successfully');
     }
+
     handleCloseModal();
+    const { data } = await supabase.from('contact_info').select('*').order('display_order');
+    setContacts(data || []);
   };
 
-  const handleDelete = (id: string) => {
+  const handleDelete = async (id: string) => {
     if (confirm('Are you sure you want to delete this contact info?')) {
-      setContacts(contacts.filter(c => c.id !== id));
+      const { error } = await supabase.from('contact_info').delete().eq('id', id);
+      if (error) {
+        toast.error(error.message);
+        return;
+      }
       toast.success('Contact info deleted successfully');
+      setContacts(contacts.filter(c => c.id !== id));
     }
   };
 
-  const sortedContacts = [...contacts].sort((a, b) => a.order - b.order);
+  const sortedContacts = [...contacts].sort((a, b) => a.display_order - b.display_order);
 
   return (
     <div className="space-y-6">
@@ -120,12 +149,10 @@ export default function ContactPage() {
           <div key={contact.id} className="bg-white/5 border border-white/10 p-6 space-y-4">
             <div className="flex items-start justify-between">
               <div className="flex items-center gap-3">
-                <div className="text-yellow-400">
-                  {getIcon(contact.type)}
-                </div>
+                <div className="text-yellow-400">{getIcon(contact.type)}</div>
                 <div>
                   <h3 className="text-lg font-bold">{contact.label}</h3>
-                  {contact.isPrimary && (
+                  {contact.is_primary && (
                     <span className="text-xs text-yellow-400 uppercase tracking-wide">Primary</span>
                   )}
                 </div>
@@ -147,10 +174,8 @@ export default function ContactPage() {
             </div>
             <p className="text-gray-300 text-sm break-words">{contact.value}</p>
             <div className="flex items-center gap-2 text-xs text-gray-400">
-              <span className="px-2 py-1 bg-white/10 uppercase tracking-wide">
-                {contact.type}
-              </span>
-              <span>Order: {contact.order}</span>
+              <span className="px-2 py-1 bg-white/10 uppercase tracking-wide">{contact.type}</span>
+              <span>Order: {contact.display_order}</span>
             </div>
           </div>
         ))}
@@ -189,44 +214,14 @@ export default function ContactPage() {
               onChange={(e) => setFormData({ ...formData, value: e.target.value })}
               required
               className="w-full bg-white/10 border-white/30 placeholder-gray-400"
-              placeholder="e.g., contact@kamlewa.org, +123 456 789"
+              placeholder="e.g., contact@example.com"
             />
           </div>
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium mb-2">Order</label>
-              <Input
-                type="number"
-                value={formData.order || ''}
-                onChange={(e) => setFormData({ ...formData, order: Number(e.target.value) })}
-                required
-                className="w-full bg-white/10 border-white/30 placeholder-gray-400"
-                min="1"
-              />
-            </div>
-            <div className="flex items-end">
-              <label className="flex items-center gap-2 cursor-pointer">
-                <input
-                  type="checkbox"
-                  checked={formData.isPrimary || false}
-                  onChange={(e) => setFormData({ ...formData, isPrimary: e.target.checked })}
-                  className="w-4 h-4 text-yellow-400 bg-white/10 border-white/30 rounded focus:ring-yellow-400"
-                />
-                <span className="text-sm">Primary Contact</span>
-              </label>
-            </div>
-          </div>
-          <div className="flex gap-4 pt-4">
-            <Button type="submit" variant="primary" className="flex-1">
-              {editingContact ? 'Update' : 'Create'}
-            </Button>
-            <Button type="button" variant="secondary" onClick={handleCloseModal} className="flex-1">
-              Cancel
-            </Button>
-          </div>
+          <Button type="submit" className="w-full">
+            {editingContact ? 'Update' : 'Create'}
+          </Button>
         </form>
       </DashboardModal>
     </div>
   );
 }
-

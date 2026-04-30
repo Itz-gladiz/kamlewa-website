@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { useTranslations } from 'next-intl';
 import Button from '@/components/Button';
 import Input from '@/components/Input';
-import { supabase } from '@/lib/supabase/client';
+import { supabase } from '@/lib/supabase/supabaseClient';
 import { HiUser, HiLockClosed, HiMail, HiKey, HiShieldCheck, HiEye, HiEyeOff, HiCheckCircle, HiXCircle } from 'react-icons/hi';
 import toast from 'react-hot-toast';
 import { motion } from 'framer-motion';

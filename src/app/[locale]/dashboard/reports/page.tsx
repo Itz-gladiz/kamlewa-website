@@ -10,20 +10,12 @@ import { HiPlus, HiPencil, HiTrash, HiDocumentText, HiEye } from 'react-icons/hi
 import toast from 'react-hot-toast';
 import DashboardModal from '@/components/DashboardModal';
 import Loader from '@/components/Loader';
+import { getReports, createReport, updateReport, deleteReport } from '@/lib/supabase/reports';
+import { Database } from '@/lib/supabase/types';
 
-// Report type definition
-interface Report {
-  id: string;
-  title: string;
-  description: string;
-  startYear: number;
-  endYear: number;
-  image: string;
-  category: string;
-  summary: string;
-  created_at: string;
-  updated_at: string;
-}
+type Report = Database['public']['Tables']['reports']['Row'];
+type ReportInsert = Database['public']['Tables']['reports']['Insert'];
+type ReportUpdate = Database['public']['Tables']['reports']['Update'];
 
 export default function ReportsPage() {
   const t = useTranslations('dashboard');
@@ -57,39 +49,23 @@ export default function ReportsPage() {
     { value: 'other', label: 'Other' },
   ];
 
-  // Mock data for demonstration (replace with Supabase calls)
+  // Load reports from Supabase
   useEffect(() => {
-    // Simulated data - replace with actual Supabase fetch
-    setTimeout(() => {
-      setReports([
-        {
-          id: '1',
-          title: 'Annual Impact Report 2024',
-          description: 'Comprehensive report detailing our impact across Africa in 2024, including programs delivered, communities served, and future initiatives.',
-          startYear: 2024,
-          endYear: 2024,
-          image: '/images/reports/annual-2024.jpg',
-          category: 'annual',
-          summary: 'A year of transformative impact across African communities.',
-          created_at: '2024-12-31',
-          updated_at: '2024-12-31',
-        },
-        {
-          id: '2',
-          title: 'Cybersecurity Training Impact 2023-2024',
-          description: 'Detailed analysis of our cybersecurity training programs, participant outcomes, and career placement statistics.',
-          startYear: 2023,
-          endYear: 2024,
-          image: '/images/reports/cyber-training.jpg',
-          category: 'impact',
-          summary: 'Empowering the next generation of cybersecurity professionals.',
-          created_at: '2024-06-15',
-          updated_at: '2024-06-15',
-        },
-      ]);
-      setLoading(false);
-    }, 500);
+    loadReports();
   }, []);
+
+  const loadReports = async () => {
+    try {
+      setLoading(true);
+      const data = await getReports();
+      setReports(data);
+    } catch (error) {
+      console.error('Error loading reports:', error);
+      toast.error('Failed to load reports');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleOpenModal = (report?: Report) => {
     if (report) {
@@ -97,11 +73,11 @@ export default function ReportsPage() {
       setFormData({
         title: report.title,
         description: report.description,
-        startYear: report.startYear,
-        endYear: report.endYear,
-        image: report.image,
+        startYear: report.start_year,
+        endYear: report.end_year,
+        image: report.image || '',
         category: report.category,
-        summary: report.summary,
+        summary: report.summary || '',
       });
     } else {
       setEditingReport(null);
@@ -146,28 +122,34 @@ export default function ReportsPage() {
     setSubmitting(true);
 
     try {
-      // Simulate API call - replace with actual Supabase insert/update
-      await new Promise(resolve => setTimeout(resolve, 1000));
-
       if (editingReport) {
-        setReports(prev => prev.map(r => 
-          r.id === editingReport.id 
-            ? { ...r, ...formData, updated_at: new Date().toISOString() }
-            : r
-        ));
+        const updateData: ReportUpdate = {
+          title: formData.title,
+          description: formData.description,
+          start_year: formData.startYear,
+          end_year: formData.endYear,
+          image: formData.image || null,
+          category: formData.category,
+          summary: formData.summary || null,
+        };
+        await updateReport(editingReport.id, updateData);
         toast.success('Report updated successfully');
       } else {
-        const newReport: Report = {
-          id: Date.now().toString(),
-          ...formData,
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString(),
+        const insertData: ReportInsert = {
+          title: formData.title,
+          description: formData.description,
+          start_year: formData.startYear,
+          end_year: formData.endYear,
+          image: formData.image || null,
+          category: formData.category,
+          summary: formData.summary || null,
         };
-        setReports(prev => [newReport, ...prev]);
+        await createReport(insertData);
         toast.success('Report created successfully');
       }
 
       handleCloseModal();
+      await loadReports();
     } catch (error) {
       console.error('Error saving report:', error);
       toast.error('Failed to save report');
@@ -179,14 +161,14 @@ export default function ReportsPage() {
   const handleDelete = async (id: string) => {
     if (!confirm('Are you sure you want to delete this report?')) return;
 
+    const loadingToast = toast.loading('Deleting report...');
     try {
-      // Simulate API call - replace with actual Supabase delete
-      await new Promise(resolve => setTimeout(resolve, 500));
-      setReports(prev => prev.filter(r => r.id !== id));
-      toast.success('Report deleted successfully');
+      await deleteReport(id);
+      toast.success('Report deleted successfully', { id: loadingToast });
+      await loadReports();
     } catch (error) {
       console.error('Error deleting report:', error);
-      toast.error('Failed to delete report');
+      toast.error('Failed to delete report', { id: loadingToast });
     }
   };
 
@@ -269,7 +251,7 @@ export default function ReportsPage() {
                   {report.description}
                 </p>
                 <div className="flex items-center justify-between text-sm text-gray-500 mb-4">
-                  <span>{report.startYear} - {report.endYear}</span>
+                  <span>{report.start_year} - {report.end_year}</span>
                   <span>{new Date(report.created_at).toLocaleDateString()}</span>
                 </div>
 
@@ -460,7 +442,7 @@ export default function ReportsPage() {
                 {getCategoryLabel(viewingReport.category)}
               </span>
               <span className="text-gray-400">
-                {viewingReport.startYear} - {viewingReport.endYear}
+                {viewingReport.start_year} - {viewingReport.end_year}
               </span>
             </div>
 
