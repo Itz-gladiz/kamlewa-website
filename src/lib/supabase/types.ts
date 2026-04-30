@@ -203,6 +203,44 @@ export type Database = {
           updated_at?: string;
         };
       };
+      reports: {
+        Row: {
+          id: string;
+          title: string;
+          description: string;
+          start_year: number;
+          end_year: number;
+          image: string;
+          category: string;
+          summary: string;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          title: string;
+          description: string;
+          start_year: number;
+          end_year: number;
+          image?: string;
+          category: string;
+          summary?: string;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          title?: string;
+          description?: string;
+          start_year?: number;
+          end_year?: number;
+          image?: string;
+          category?: string;
+          summary?: string;
+          created_at?: string;
+          updated_at?: string;
+        };
+      };
       contact_info: {
         Row: {
           id: string;

@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 import { supabase } from './client';
+=======
+import { supabase } from './supabaseClient';
+>>>>>>> ef458018bf23a402fd97351c95d17b92c8e6919e
 import { Database } from './types';
 
 type Report = Database['public']['Tables']['reports']['Row'];
@@ -56,4 +60,18 @@ export async function deleteReport(id: string) {
     .eq('id', id);
 
   if (error) throw error;
+<<<<<<< HEAD
+=======
+}
+
+export async function getReportsByCategory(category: string) {
+  const { data, error } = await supabase
+    .from('reports')
+    .select('*')
+    .eq('category', category)
+    .order('created_at', { ascending: false });
+
+  if (error) throw error;
+  return data as Report[];
+>>>>>>> ef458018bf23a402fd97351c95d17b92c8e6919e
 }

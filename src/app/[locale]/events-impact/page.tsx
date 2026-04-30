@@ -597,17 +597,60 @@ export default function EventsImpactPage() {
                     <Loader />
                   </div>
                 ) : activeTab === 'reports' ? (
-                  <motion.div
-                    className="text-center py-12"
-                    variants={itemVariants}
-                  >
-                    <p className="text-gray-300 text-lg mb-4">
-                      {t('reports')} - Coming Soon
-                    </p>
-                    <p className="text-gray-400">
-                      We are preparing comprehensive impact reports for you. Stay tuned!
-                    </p>
-                  </motion.div>
+                  reports.length > 0 ? (
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-12">
+                      {reports.map((report, index) => (
+                        <motion.div
+                          key={report.id}
+                          className="relative bg-white/5 border border-white/10 overflow-hidden group cursor-pointer hover:border-yellow-400/50 transition-all duration-300"
+                          variants={itemVariants}
+                          initial="hidden"
+                          whileInView="visible"
+                          viewport={{ once: true }}
+                        >
+                          <div className="relative h-64 overflow-hidden">
+                            {report.image ? (
+                              <Image
+                                src={report.image}
+                                alt={report.title}
+                                fill
+                                className="object-cover transition-transform duration-500 group-hover:scale-110"
+                              />
+                            ) : (
+                              <div className="w-full h-full bg-gray-800 flex items-center justify-center">
+                                <HiOutlineClipboardDocumentList className="w-16 h-16 text-gray-600" />
+                              </div>
+                            )}
+                            <div className="absolute inset-0 bg-black/40 group-hover:bg-black/60 transition-colors duration-300" />
+                          </div>
+                          <div className="p-6">
+                            <span className="px-3 py-1 bg-yellow-400/20 text-yellow-400 text-xs font-semibold rounded-full mb-3 inline-block">
+                              {report.category}
+                            </span>
+                            <h3 className="text-xl md:text-2xl font-bold text-white mb-3" style={{ fontFamily: 'var(--font-nourd), sans-serif' }}>
+                              {report.title}
+                            </h3>
+                            <p className="text-gray-300 text-sm md:text-base mb-4 line-clamp-2">
+                              {report.description}
+                            </p>
+                            <div className="flex items-center gap-2 text-gray-400 text-sm">
+                              <HiClock className="w-4 h-4" />
+                              <span>{report.start_year} - {report.end_year}</span>
+                            </div>
+                          </div>
+                        </motion.div>
+                      ))}
+                    </div>
+                  ) : (
+                    <motion.div
+                      className="text-center py-12"
+                      variants={itemVariants}
+                    >
+                      <p className="text-gray-400 text-lg">
+                        No reports available yet.
+                      </p>
+                    </motion.div>
+                  )
                 ) : filteredData.length > 0 ? (
                   <>
                     <div 

@@ -5,7 +5,7 @@ import { useRouter } from '@/i18n/routing';
 import { useTranslations } from 'next-intl';
 import Button from '@/components/Button';
 import Input from '@/components/Input';
-import { supabase } from '@/lib/supabase/client';
+import { supabase } from '@/lib/supabase/supabaseClient';
 import { HiLockClosed, HiMail, HiEye, HiEyeOff } from 'react-icons/hi';
 import Image from 'next/image';
 import toast from 'react-hot-toast';

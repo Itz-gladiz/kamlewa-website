@@ -16,7 +16,10 @@ import {
 import toast from 'react-hot-toast';
 import DashboardModal from '@/components/DashboardModal';
 import Loader from '@/components/Loader';
+import { getReports, createReport, updateReport, deleteReport } from '@/lib/supabase/reports';
+import { Database } from '@/lib/supabase/types';
 
+<<<<<<< HEAD
 
 import {
   getReports,
@@ -38,6 +41,11 @@ interface Report {
   created_at: string;
   updated_at: string;
 }
+=======
+type Report = Database['public']['Tables']['reports']['Row'];
+type ReportInsert = Database['public']['Tables']['reports']['Insert'];
+type ReportUpdate = Database['public']['Tables']['reports']['Update'];
+>>>>>>> ef458018bf23a402fd97351c95d17b92c8e6919e
 
 export default function ReportsPage() {
   const t = useTranslations('dashboard');
@@ -72,6 +80,7 @@ export default function ReportsPage() {
     { value: 'other', label: 'Other' },
   ];
 
+<<<<<<< HEAD
   // LOAD REPORTS FROM SUPABASE
   useEffect(() => {
     fetchReports();
@@ -94,6 +103,21 @@ export default function ReportsPage() {
         console.error('Error loading reports:', error);
         toast.error('Failed to load reports');
       }
+=======
+  // Load reports from Supabase
+  useEffect(() => {
+    loadReports();
+  }, []);
+
+  const loadReports = async () => {
+    try {
+      setLoading(true);
+      const data = await getReports();
+      setReports(data);
+    } catch (error) {
+      console.error('Error loading reports:', error);
+      toast.error('Failed to load reports');
+>>>>>>> ef458018bf23a402fd97351c95d17b92c8e6919e
     } finally {
       setLoading(false);
     }
@@ -105,11 +129,19 @@ export default function ReportsPage() {
 
       setFormData({
         title: report.title,
+<<<<<<< HEAD
         description: report.description || '',
         start_year: report.start_year,
         end_year: report.end_year,
         image: report.image || '',
         category: report.category || '',
+=======
+        description: report.description,
+        startYear: report.start_year,
+        endYear: report.end_year,
+        image: report.image || '',
+        category: report.category,
+>>>>>>> ef458018bf23a402fd97351c95d17b92c8e6919e
         summary: report.summary || '',
       });
     } else {
@@ -172,6 +204,7 @@ export default function ReportsPage() {
     setSubmitting(true);
 
     try {
+<<<<<<< HEAD
       // Format data for Supabase - convert empty strings to null
       const reportData = {
         title: formData.title,
@@ -200,10 +233,36 @@ export default function ReportsPage() {
 
         setReports((prev) => [created, ...prev]);
 
+=======
+      if (editingReport) {
+        const updateData: ReportUpdate = {
+          title: formData.title,
+          description: formData.description,
+          start_year: formData.startYear,
+          end_year: formData.endYear,
+          image: formData.image || null,
+          category: formData.category,
+          summary: formData.summary || null,
+        };
+        await updateReport(editingReport.id, updateData);
+        toast.success('Report updated successfully');
+      } else {
+        const insertData: ReportInsert = {
+          title: formData.title,
+          description: formData.description,
+          start_year: formData.startYear,
+          end_year: formData.endYear,
+          image: formData.image || null,
+          category: formData.category,
+          summary: formData.summary || null,
+        };
+        await createReport(insertData);
+>>>>>>> ef458018bf23a402fd97351c95d17b92c8e6919e
         toast.success('Report created successfully');
       }
 
       handleCloseModal();
+<<<<<<< HEAD
       fetchReports();
     } catch (error: unknown) {
   const err = error as { message?: string; code?: string; details?: string; hint?: string };
@@ -214,6 +273,12 @@ export default function ReportsPage() {
     hint: err?.hint,
   });
   toast.error(`Failed to save: ${err?.message || 'Unknown error'}`);
+=======
+      await loadReports();
+    } catch (error) {
+      console.error('Error saving report:', error);
+      toast.error('Failed to save report');
+>>>>>>> ef458018bf23a402fd97351c95d17b92c8e6919e
     } finally {
       setSubmitting(false);
     }
@@ -224,8 +289,10 @@ export default function ReportsPage() {
       return;
     }
 
+    const loadingToast = toast.loading('Deleting report...');
     try {
       await deleteReport(id);
+<<<<<<< HEAD
 
       setReports((prev) =>
         prev.filter((report) => report.id !== id)
@@ -235,6 +302,13 @@ export default function ReportsPage() {
     } catch (error) {
       console.error(error);
       toast.error('Failed to delete report');
+=======
+      toast.success('Report deleted successfully', { id: loadingToast });
+      await loadReports();
+    } catch (error) {
+      console.error('Error deleting report:', error);
+      toast.error('Failed to delete report', { id: loadingToast });
+>>>>>>> ef458018bf23a402fd97351c95d17b92c8e6919e
     }
   };
 
@@ -318,10 +392,48 @@ export default function ReportsPage() {
                 </div>
               )}
 
+<<<<<<< HEAD
               <div className="absolute top-2 right-2">
                 <span className="px-3 py-1 bg-yellow-400/20 text-yellow-400 text-xs font-semibold rounded-full">
                   {getCategoryLabel(report.category || '')}
                 </span>
+=======
+              {/* Content */}
+              <div className="p-4">
+                <h3 className="text-lg font-semibold text-white mb-2 line-clamp-1">
+                  {report.title}
+                </h3>
+                <p className="text-gray-400 text-sm mb-3 line-clamp-2">
+                  {report.description}
+                </p>
+                <div className="flex items-center justify-between text-sm text-gray-500 mb-4">
+                  <span>{report.start_year} - {report.end_year}</span>
+                  <span>{new Date(report.created_at).toLocaleDateString()}</span>
+                </div>
+
+                {/* Actions */}
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => setViewingReport(report)}
+                    className="flex-1 flex items-center justify-center gap-2 px-3 py-2 bg-white/10 text-white text-sm rounded hover:bg-white/20 transition-colors"
+                  >
+                    <HiEye className="w-4 h-4" />
+                    View
+                  </button>
+                  <button
+                    onClick={() => handleOpenModal(report)}
+                    className="p-2 text-gray-400 hover:text-yellow-400 transition-colors"
+                  >
+                    <HiPencil className="w-5 h-5" />
+                  </button>
+                  <button
+                    onClick={() => handleDelete(report.id)}
+                    className="p-2 text-gray-400 hover:text-red-400 transition-colors"
+                  >
+                    <HiTrash className="w-5 h-5" />
+                  </button>
+                </div>
+>>>>>>> ef458018bf23a402fd97351c95d17b92c8e6919e
               </div>
             </div>
 
@@ -578,7 +690,57 @@ export default function ReportsPage() {
             </p>
           </div>
 
+<<<<<<< HEAD
           {viewingReport.summary && (
+=======
+          <div className="flex justify-end gap-3 pt-4">
+            <Button
+              type="button"
+              variant="secondary"
+              onClick={handleCloseModal}
+            >
+              Cancel
+            </Button>
+            <Button
+              type="submit"
+              disabled={submitting}
+            >
+              {submitting ? 'Saving...' : editingReport ? 'Update Report' : 'Create Report'}
+            </Button>
+          </div>
+        </form>
+      </DashboardModal>
+
+      {/* View Modal */}
+      <DashboardModal
+        isOpen={!!viewingReport}
+        onClose={() => setViewingReport(null)}
+        title={viewingReport?.title || 'Report Details'}
+        size="lg"
+      >
+        {viewingReport && (
+          <div className="space-y-4">
+            {viewingReport.image && (
+              <div className="relative h-64 w-full rounded-lg overflow-hidden">
+                <Image
+                  src={viewingReport.image}
+                  alt={viewingReport.title}
+                  fill
+                  className="object-cover"
+                />
+              </div>
+            )}
+            
+            <div className="flex items-center gap-4">
+              <span className="px-3 py-1 bg-yellow-400/20 text-yellow-400 text-sm font-semibold rounded-full">
+                {getCategoryLabel(viewingReport.category)}
+              </span>
+              <span className="text-gray-400">
+                {viewingReport.start_year} - {viewingReport.end_year}
+              </span>
+            </div>
+
+>>>>>>> ef458018bf23a402fd97351c95d17b92c8e6919e
             <div>
               <h4 className="text-sm font-medium text-gray-400 mb-1">
                 Summary

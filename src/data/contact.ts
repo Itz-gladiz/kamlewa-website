@@ -3,7 +3,7 @@ export interface ContactInfo {
   type: 'email' | 'phone' | 'address' | 'social';
   label: string;
   value: string;
-  isPrimary?: boolean;
+  is_primary?: boolean;
   order: number;
 }
 
@@ -13,7 +13,7 @@ export const contactData: ContactInfo[] = [
     type: 'email',
     label: 'Email',
     value: 'contact@kamlewa.org',
-    isPrimary: true,
+    is_primary: true,
     order: 1,
   },
   {
@@ -21,7 +21,7 @@ export const contactData: ContactInfo[] = [
     type: 'phone',
     label: 'Primary Phone',
     value: '+123 456 789',
-    isPrimary: true,
+    is_primary: true,
     order: 2,
   },
   {
@@ -29,7 +29,7 @@ export const contactData: ContactInfo[] = [
     type: 'phone',
     label: 'Secondary Phone',
     value: '+123 456 789',
-    isPrimary: false,
+    is_primary: false,
     order: 3,
   },
   {
@@ -37,7 +37,7 @@ export const contactData: ContactInfo[] = [
     type: 'address',
     label: 'Address',
     value: 'Yaoundé, Cameroon',
-    isPrimary: false,
+    is_primary: false,
     order: 4,
   },
 ];
