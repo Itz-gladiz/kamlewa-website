@@ -127,6 +127,7 @@ export default function Navbar() {
                       src="/images/logo.png"
                       alt="Kamlewa Logo"
                       fill
+                      sizes="100vw"
                       className="object-contain"
                     />
                   </div>

@@ -4,6 +4,10 @@ html {
   scroll-behavior: smooth;
 }
 
+html[data-scroll-behavior="smooth"] {
+  scroll-behavior: smooth;
+}
+
 /* Nourd - Bold Text */
 @font-face {
   font-family: 'Nourd';

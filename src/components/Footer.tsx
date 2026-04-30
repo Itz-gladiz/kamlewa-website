@@ -43,6 +43,7 @@ export default function Footer() {
                   src="/images/logo.png"
                   alt="Kamlewa Logo"
                   fill
+                  sizes="100vw"
                   className="object-contain"
                 />
               </div>

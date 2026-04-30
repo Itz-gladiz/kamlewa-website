@@ -27,6 +27,7 @@ import { getEvents } from '@/lib/supabase/events';
 import { getProjects } from '@/lib/supabase/projects';
 import { getTrainings } from '@/lib/supabase/trainings';
 import { getPrograms } from '@/lib/supabase/programs';
+import { getReports } from '@/lib/supabase/reports';
 import { mapDbEventToEvent } from '@/utils/eventMapper';
 import { mapDbProjectToProject } from '@/utils/projectMapper';
 import { mapDbTrainingToTraining } from '@/utils/trainingMapper';
@@ -51,6 +52,7 @@ export default function EventsImpactPage() {
   const [events, setEvents] = useState<Event[]>([]);
   const [projects, setProjects] = useState<Project[]>([]);
   const [trainings, setTrainings] = useState<Training[]>([]);
+  const [reports, setReports] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [isMobile, setIsMobile] = useState(false);
   const [showSwipeHint, setShowSwipeHint] = useState(false);
@@ -117,6 +119,15 @@ export default function EventsImpactPage() {
         } catch (error) {
           console.error('Error loading trainings:', error);
           setTrainings([]);
+        }
+        
+        // Load reports
+        try {
+          const dbReports = await getReports();
+          setReports(dbReports);
+        } catch (error) {
+          console.error('Error loading reports:', error);
+          setReports([]);
         }
       } catch (error) {
         console.error('Error loading data:', error);
@@ -198,7 +209,7 @@ export default function EventsImpactPage() {
 
   // Filter and paginate data based on active tab and search
   const { filteredData, totalPages } = useMemo(() => {
-    let data: (Program | Event | Project | Training)[] = [];
+    let data: (Program | Event | Project | Training | any)[] = [];
 
     switch (activeTab) {
       case 'programs':
@@ -217,7 +228,7 @@ export default function EventsImpactPage() {
         data = trainings;
         break;
       case 'reports':
-        data = [];
+        data = reports;
         break;
     }
 
@@ -235,7 +246,7 @@ export default function EventsImpactPage() {
     const paginated = filtered.slice(startIndex, startIndex + ITEMS_PER_PAGE);
 
     return { filteredData: paginated, totalPages: total };
-  }, [activeTab, searchQuery, currentPage, programs, events, projects, trainings]);
+  }, [activeTab, searchQuery, currentPage, programs, events, projects, trainings, reports]);
 
   const scrollToSection = (sectionId: string) => {
     const element = sectionsRef.current[sectionId];
@@ -274,11 +285,12 @@ export default function EventsImpactPage() {
     },
   };
 
-  const renderCard = (item: Program | Event | Project | Training, index: number) => {
+  const renderCard = (item: Program | Event | Project | Training | any, index: number) => {
     const isProgram = 'fullDescription' in item;
     const isEvent = 'type' in item;
     const isProject = 'status' in item && 'progress' in item;
     const isTraining = 'level' in item && 'duration' in item;
+    const isReport = 'start_year' in item && 'end_year' in item;
 
     // Determine the detail page URL
     const getDetailUrl = () => {
@@ -286,6 +298,7 @@ export default function EventsImpactPage() {
       if (isProgram) return `/events-impact/programs/${item.id}`;
       if (isProject) return `/events-impact/projects/${item.id}`;
       if (isTraining) return `/events-impact/trainings/${item.id}`;
+      if (isReport) return `/events-impact/reports/${item.id}`;
       return '/contact';
     };
 
