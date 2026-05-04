@@ -197,6 +197,14 @@ export default function AboutPage() {
       roleKey: 'leadership.team.members.member19.role',
       bioKey: 'leadership.team.members.member19.bio',
     },
+      {
+      id: 'member20',
+      imageSrc: '/images/team/member 20.jpg',
+      nameKey: 'leadership.team.members.member20.name',
+      roleKey: 'leadership.team.members.member20.role',
+      bioKey: 'leadership.team.members.member20.bio',
+    },
+  
   ];
 
   return (

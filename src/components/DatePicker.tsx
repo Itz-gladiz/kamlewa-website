@@ -1,7 +1,6 @@
 'use client';
 
 import React from 'react';
-import { HiOutlineCalendarDateRange } from 'react-icons/hi2';
 
 interface DatePickerProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'type'> {
   label?: string;
@@ -19,13 +18,10 @@ export default function DatePicker({ label, className = '', ...props }: DatePick
       <div className="relative">
         <input
           type="date"
-          className={`${baseStyles} ${className} pr-10`}
+          className={`${baseStyles} ${className}`}
           {...props}
         />
-        <HiOutlineCalendarDateRange className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5 pointer-events-none" />
       </div>
     </div>
   );
 }
-
-

@@ -471,7 +471,7 @@ export default function ProgramsPreview() {
                       <div className="flex flex-wrap items-center gap-3 mb-4 shrink-0 text-sm">
                         {item.date && (
                           <div className="flex items-center gap-1.5 text-yellow-400">
-                            <HiOutlineCalendarDateRange className="w-4 h-4 shrink-0" />
+                            <HiOutlineCalendarDateRange className="w-4 h-4 shrink-0 text-yellow-400" />
                             <span className="whitespace-nowrap">{item.date}</span>
                           </div>
                         )}
@@ -588,4 +588,3 @@ export default function ProgramsPreview() {
     
   );
 }
-

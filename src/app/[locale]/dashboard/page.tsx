@@ -286,7 +286,7 @@ export default function DashboardPage() {
     <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8 pb-6 border-b border-gray-200">
       <div className="flex items-center gap-4">
         <div className="p-3 bg-yellow-100 rounded-lg border border-yellow-200">
-          <HiOutlineCalendarDateRange className="w-6 h-6 text-yellow-700" />
+          <HiOutlineCalendarDateRange className="w-6 h-6 text-yellow-400" />
         </div>
         <div>
           <p className="text-yellow-700 text-sm font-semibold uppercase tracking-wider">
@@ -324,7 +324,7 @@ export default function DashboardPage() {
                     : tEvents('tabs.upcoming')}
                 </span>
                 <span className="text-sm text-gray-600 flex items-center gap-1">
-                  <HiOutlineCalendarDateRange className="w-4 h-4 text-gray-700" />
+                  <HiOutlineCalendarDateRange className="w-4 h-4 text-yellow-400" />
                   {new Date(event.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
                 </span>
               </div>
@@ -600,4 +600,3 @@ export default function DashboardPage() {
     </div>
   );
 }
-

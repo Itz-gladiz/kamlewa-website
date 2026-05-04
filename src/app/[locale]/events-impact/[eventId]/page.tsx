@@ -373,7 +373,7 @@ export default function EventDetailsPage() {
                         variant="outline-yellow"
                         className="w-full relative z-20"
                       >
-                        <HiCalendar className="w-5 h-5" />
+                        <HiCalendar className="w-5 h-5 text-yellow-400" />
                         {t('calendar.add')}
                       </Button>
                       {/* Calendar Dropdown */}
@@ -411,4 +411,3 @@ export default function EventDetailsPage() {
 );
 
 }
-
