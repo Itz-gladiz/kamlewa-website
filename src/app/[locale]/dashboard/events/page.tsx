@@ -201,9 +201,11 @@ export default function EventsPage() {
       handleCloseModal();
       await loadEvents();
     } catch (error) {
-      console.error('Error saving event:', error);
-      toast.error(editingEvent ? 'Failed to update event' : 'Failed to create event', { id: loadingToast });
-    } finally {
+  
+      const err = error as { message?: string };
+    console.error('Error saving event:', err);
+     toast.error(`Failed to save: ${err?.message || 'Unknown error'}`, { id: loadingToast });
+     } finally {
       setSubmitting(false);
     }
   };
