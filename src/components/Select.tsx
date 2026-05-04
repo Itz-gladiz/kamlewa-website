@@ -25,7 +25,7 @@ export default function CustomSelect({
   isSearchable = true,
   isClearable = false,
   isRequired = false,
-  variant = 'dark',
+  variant = 'light', // ✅ default to light
   placeholderColor,
 }: SelectProps) {
   const isLight = variant === 'light';
@@ -33,14 +33,20 @@ export default function CustomSelect({
   const customStyles: StylesConfig<any, false, GroupBase<any>> = {
     control: (provided, state) => ({
       ...provided,
-      backgroundColor: isLight ? 'rgba(0, 0, 0, 0.1)' : 'rgba(255, 255, 255, 0.05)',
-      borderColor: state.isFocused ? (isLight ? '#000000' : '#facc15') : (isLight ? 'rgba(0, 0, 0, 0.2)' : 'rgba(55, 65, 81, 1)'),
+      backgroundColor: isLight ? '#ffffff' : '#1f2937', // ✅ solid white for light
+      borderColor: state.isFocused 
+        ? (isLight ? '#000000' : '#facc15') 
+        : (isLight ? '#d1d5db' : '#374151'),
       borderWidth: '1px',
-      borderRadius: '0',
-      boxShadow: state.isFocused ? (isLight ? '0 0 0 1px #000000' : '0 0 0 1px #facc15') : 'none',
+      borderRadius: '0.375rem',
+      boxShadow: state.isFocused 
+        ? (isLight ? '0 0 0 1px #000000' : '0 0 0 1px #facc15') 
+        : 'none',
       minHeight: '40px',
       '&:hover': {
-        borderColor: state.isFocused ? (isLight ? '#000000' : '#facc15') : (isLight ? 'rgba(0, 0, 0, 0.3)' : 'rgba(75, 85, 99, 1)'),
+        borderColor: state.isFocused 
+          ? (isLight ? '#000000' : '#facc15') 
+          : (isLight ? '#9ca3af' : '#4b5563'),
       },
     }),
     placeholder: (provided) => ({
@@ -49,17 +55,17 @@ export default function CustomSelect({
     }),
     singleValue: (provided) => ({
       ...provided,
-      color: isLight ? '#000000' : '#ffffff',
+      color: isLight ? '#111827' : '#ffffff', // ✅ dark text on light
     }),
     input: (provided) => ({
       ...provided,
-      color: isLight ? '#000000' : '#ffffff',
+      color: isLight ? '#111827' : '#ffffff',
     }),
     menu: (provided) => ({
       ...provided,
-      backgroundColor: isLight ? '#ffffff' : '#000000',
-      border: isLight ? '1px solid rgba(0, 0, 0, 0.2)' : '1px solid #374151',
-      borderRadius: '0',
+      backgroundColor: isLight ? '#ffffff' : '#111827',
+      border: isLight ? '1px solid #d1d5db' : '1px solid #374151',
+      borderRadius: '0.375rem',
       zIndex: 9999,
     }),
     menuList: (provided) => ({
@@ -71,9 +77,11 @@ export default function CustomSelect({
       backgroundColor: state.isSelected
         ? (isLight ? '#000000' : '#facc15')
         : state.isFocused
-        ? (isLight ? 'rgba(0, 0, 0, 0.1)' : 'rgba(250, 204, 21, 0.1)')
+        ? (isLight ? '#f3f4f6' : 'rgba(250, 204, 21, 0.1)')
         : 'transparent',
-      color: state.isSelected ? (isLight ? '#ffffff' : '#000000') : (isLight ? '#000000' : '#ffffff'),
+      color: state.isSelected 
+        ? (isLight ? '#ffffff' : '#000000') 
+        : (isLight ? '#111827' : '#ffffff'),
       cursor: 'pointer',
       '&:active': {
         backgroundColor: isLight ? '#000000' : '#facc15',
@@ -85,7 +93,9 @@ export default function CustomSelect({
     }),
     dropdownIndicator: (provided, state) => ({
       ...provided,
-      color: state.isFocused ? (isLight ? '#000000' : '#facc15') : (isLight ? '#6b7280' : '#9ca3af'),
+      color: state.isFocused 
+        ? (isLight ? '#000000' : '#facc15') 
+        : (isLight ? '#6b7280' : '#9ca3af'),
       '&:hover': {
         color: isLight ? '#000000' : '#facc15',
       },
@@ -119,20 +129,19 @@ export default function CustomSelect({
           primary25: 'rgba(250, 204, 21, 0.1)',
           primary50: 'rgba(250, 204, 21, 0.2)',
           primary75: 'rgba(250, 204, 21, 0.3)',
-          neutral0: '#000000',
-          neutral5: '#1a1a1a',
-          neutral10: '#374151',
-          neutral20: '#4b5563',
-          neutral30: '#6b7280',
-          neutral40: '#9ca3af',
-          neutral50: '#d1d5db',
-          neutral60: '#e5e7eb',
-          neutral70: '#f3f4f6',
-          neutral80: '#ffffff',
-          neutral90: '#ffffff',
+          neutral0: isLight ? '#ffffff' : '#000000', // ✅ white for light
+          neutral5: isLight ? '#f9fafb' : '#1a1a1a',
+          neutral10: isLight ? '#f3f4f6' : '#374151',
+          neutral20: isLight ? '#e5e7eb' : '#4b5563',
+          neutral30: isLight ? '#d1d5db' : '#6b7280',
+          neutral40: isLight ? '#9ca3af' : '#9ca3af',
+          neutral50: isLight ? '#6b7280' : '#d1d5db',
+          neutral60: isLight ? '#4b5563' : '#e5e7eb',
+          neutral70: isLight ? '#374151' : '#f3f4f6',
+          neutral80: isLight ? '#1f2937' : '#ffffff',
+          neutral90: isLight ? '#111827' : '#ffffff',
         },
       })}
     />
   );
 }
-

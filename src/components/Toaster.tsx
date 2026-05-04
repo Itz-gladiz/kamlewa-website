@@ -9,42 +9,47 @@ export default function Toaster() {
       toastOptions={{
         duration: 4000,
         style: {
-          background: '#000000',
-          color: '#ffffff',
-          border: '1px solid #374151',
-          borderRadius: '0',
+          background: '#ffffff',              // ✅ light background
+          color: '#111827',                   // ✅ dark text
+          border: '1px solid #d1d5db',        // ✅ light gray border
+          borderRadius: '0.375rem',
           padding: '16px',
           fontFamily: 'var(--font-nexa), sans-serif',
         },
         success: {
           iconTheme: {
-            primary: '#facc15',
-            secondary: '#000000',
+            primary: '#facc15',               // yellow accent
+            secondary: '#ffffff',             // white background for icon
           },
           style: {
             border: '1px solid #facc15',
+            background: '#fefce8',            // pale yellow background
+            color: '#111827',
           },
         },
         error: {
           iconTheme: {
-            primary: '#ef4444',
-            secondary: '#000000',
+            primary: '#ef4444',               // red accent
+            secondary: '#ffffff',
           },
           style: {
             border: '1px solid #ef4444',
+            background: '#fee2e2',            // pale red background
+            color: '#111827',
           },
         },
         loading: {
           iconTheme: {
             primary: '#facc15',
-            secondary: '#000000',
+            secondary: '#ffffff',
           },
           style: {
             border: '1px solid #facc15',
+            background: '#fefce8',            // pale yellow background
+            color: '#111827',
           },
         },
       }}
     />
   );
 }
-

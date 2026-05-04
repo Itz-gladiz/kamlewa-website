@@ -235,7 +235,7 @@ export default function EventsImpactPage() {
     return (
       <Link key={item.id} href={getDetailUrl()}>
         <motion.div
-          className="relative bg-white/5 border border-white/10 overflow-hidden group cursor-pointer hover:border-yellow-400/50 transition-all duration-300"
+          className="relative bg-transparent border border-black/10 overflow-hidden group cursor-pointer hover:border-yellow-400/50 transition-all duration-300"
           variants={itemVariants}
           initial="hidden"
           whileInView="visible"
@@ -421,9 +421,9 @@ export default function EventsImpactPage() {
         )}
       </AnimatePresence>
 
-      <div className="flex">
+      <div className="flex bg-neutral-900">
         {/* Desktop Sidebar */}
-        <aside className="hidden md:block w-64 shrink-0 sticky top-24 h-fit">
+        <aside className="hidden md:block w-64 shrink-0 sticky top-24 h-fit bg-neutral-900 border-r border-white/10">
           <div className="px-6 py-8 space-y-6">
             <div className="relative">
               <HiSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5 z-10" />

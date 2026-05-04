@@ -274,87 +274,93 @@ export default function DashboardPage() {
                 ))}
               </div>
 
-          {/* Main Content Grid */}
-          <div className="grid gap-8 lg:grid-cols-3">
-            {/* Events Section */}
-            <motion.div 
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.5, delay: 0.2 }}
-              className="lg:col-span-2 bg-gradient-to-br from-white/5 to-white/[0.02] border border-white/10 rounded-lg p-8 hover:border-white/20 transition-all"
-            >
-              <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8 pb-6 border-b border-white/10">
-                <div className="flex items-center gap-4">
-                  <div className="p-3 bg-yellow-400/10 rounded-lg border border-yellow-400/20">
-                    <HiOutlineCalendarDateRange className="w-6 h-6 text-yellow-400" />
-                  </div>
-                  <div>
-                    <p className="text-yellow-400 text-sm font-semibold uppercase tracking-wider">
-                      {t('sections.events.subtitle')}
-                    </p>
-                    <h2 className="text-2xl md:text-3xl font-bold mt-1" style={{ fontFamily: 'var(--font-nourd), sans-serif' }}>
-                      {t('sections.events.title')}
-                    </h2>
-                  </div>
-                </div>
-                <Link href="/dashboard/events" className="tagline inline-flex items-center gap-2 text-yellow-400 hover:text-yellow-300 transition-colors px-4 py-2 rounded-lg hover:bg-yellow-400/10">
-                  View All Events
-                  <HiArrowRight className="w-4 h-4" />
-                </Link>
+    {/* Main Content Grid */}
+<div className="grid gap-8 lg:grid-cols-3">
+  {/* Events Section */}
+  <motion.div 
+    initial={{ opacity: 0, x: -20 }}
+    animate={{ opacity: 1, x: 0 }}
+    transition={{ duration: 0.5, delay: 0.2 }}
+    className="lg:col-span-2 bg-gradient-to-br from-gray-50 to-white border border-gray-200 rounded-lg p-8 hover:border-gray-300 transition-all"
+  >
+    <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8 pb-6 border-b border-gray-200">
+      <div className="flex items-center gap-4">
+        <div className="p-3 bg-yellow-100 rounded-lg border border-yellow-200">
+          <HiOutlineCalendarDateRange className="w-6 h-6 text-yellow-700" />
+        </div>
+        <div>
+          <p className="text-yellow-700 text-sm font-semibold uppercase tracking-wider">
+            {t('sections.events.subtitle')}
+          </p>
+          <h2 className="text-2xl md:text-3xl font-bold mt-1 text-gray-900" style={{ fontFamily: 'var(--font-nourd), sans-serif' }}>
+            {t('sections.events.title')}
+          </h2>
+        </div>
+      </div>
+      <Link
+        href="/dashboard/events"
+        className="inline-flex items-center gap-2 text-yellow-700 hover:text-yellow-600 transition-colors px-4 py-2 rounded-lg hover:bg-yellow-100"
+      >
+        View All Events
+        <HiArrowRight className="w-4 h-4" />
+      </Link>
+    </div>
+
+    <div className="space-y-4">
+      {eventPipeline.length ? (
+        eventPipeline.map((event, index) => (
+          <motion.div
+            key={event.id}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3, delay: 0.3 + index * 0.1 }}
+            className="border border-gray-200 bg-white p-5 rounded-lg hover:border-yellow-300 hover:bg-yellow-50 transition-all group flex flex-col"
+          >
+            <div className="flex-1">
+              <div className="flex items-center gap-3 mb-3">
+                <span className="px-3 py-1 text-xs uppercase tracking-wide bg-yellow-100 text-yellow-700 rounded">
+                  {event.type === 'featured'
+                    ? tEvents('tabs.featured')
+                    : tEvents('tabs.upcoming')}
+                </span>
+                <span className="text-sm text-gray-600 flex items-center gap-1">
+                  <HiOutlineCalendarDateRange className="w-4 h-4 text-gray-700" />
+                  {new Date(event.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+                </span>
               </div>
-              <div className="space-y-4">
-                {eventPipeline.length ? (
-                  eventPipeline.map((event, index) => (
-                    <motion.div
-                      key={event.id}
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.3, delay: 0.3 + index * 0.1 }}
-                      className="border border-white/10 bg-black/40 p-5 rounded-lg hover:border-yellow-400/30 hover:bg-black/60 transition-all group flex flex-col"
-                    >
-                      <div className="flex-1">
-                        <div className="flex items-center gap-3 mb-3">
-                          <span className="px-3 py-1 text-xs uppercase tracking-wide bg-yellow-400/20 text-yellow-400 rounded">
-                            {event.type === 'featured'
-                              ? tEvents('tabs.featured')
-                              : tEvents('tabs.upcoming')}
-                          </span>
-                          <span className="text-sm text-gray-400 flex items-center gap-1">
-                            <HiOutlineCalendarDateRange className="w-4 h-4" />
-                            {new Date(event.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
-                          </span>
-                        </div>
-                        <h3 className="text-xl font-semibold mb-2">{event.title}</h3>
-                        <p className="text-gray-400 text-sm mb-4 line-clamp-2">{event.description}</p>
-                        <div className="flex items-center gap-4 text-gray-300 text-sm mb-4">
-                          <div className="flex items-center gap-2">
-                            <VscLocation className="w-4 h-4" />
-                            {event.location}
-                          </div>
-                          {event.participants !== undefined && event.participants > 0 && (
-                            <div className="flex items-center gap-2">
-                              <HiUsers className="w-4 h-4" />
-                              {event.participants} participants
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                      <div className="flex justify-end mt-auto pt-4 border-t border-white/10">
-                        <Link
-                          href="/dashboard/events"
-                          className="inline-flex items-center gap-2 text-yellow-400 hover:text-yellow-300 px-4 py-2 rounded-lg hover:bg-yellow-400/10 group-hover:translate-x-1 transition-all"
-                        >
-                          View Details
-                          <HiArrowRight className="w-4 h-4" />
-                        </Link>
-                      </div>
-                    </motion.div>
-                  ))
-                ) : (
-                  <p className="text-gray-400 text-center py-8">{t('empty')}</p>
+              <h3 className="text-xl font-semibold mb-2 text-gray-900">{event.title}</h3>
+              <p className="text-gray-700 text-sm mb-4 line-clamp-2">{event.description}</p>
+              <div className="flex items-center gap-4 text-gray-700 text-sm mb-4">
+                <div className="flex items-center gap-2">
+                  <VscLocation className="w-4 h-4 text-gray-700" />
+                  {event.location}
+                </div>
+                {event.participants !== undefined && event.participants > 0 && (
+                  <div className="flex items-center gap-2">
+                    <HiUsers className="w-4 h-4 text-gray-700" />
+                    {event.participants} participants
+                  </div>
                 )}
               </div>
-            </motion.div>
+            </div>
+            <div className="flex justify-end mt-auto pt-4 border-t border-gray-200">
+              <Link
+                href="/dashboard/events"
+                className="inline-flex items-center gap-2 text-yellow-700 hover:text-yellow-600 px-4 py-2 rounded-lg hover:bg-yellow-100 group-hover:translate-x-1 transition-all"
+              >
+                View Details
+                <HiArrowRight className="w-4 h-4" />
+              </Link>
+            </div>
+          </motion.div>
+        ))
+      ) : (
+        <p className="text-gray-500 text-center py-8">{t('empty')}</p>
+      )}
+    </div>
+  </motion.div>
+</div>
+
 
             {/* Activity Feed */}
             <motion.div 
@@ -402,7 +408,7 @@ export default function DashboardPage() {
                 )}
               </div>
             </motion.div>
-          </div>
+          
 
           {/* Bottom Section - Programs, Trainings, Projects */}
           <div className="grid gap-8 lg:grid-cols-3">
