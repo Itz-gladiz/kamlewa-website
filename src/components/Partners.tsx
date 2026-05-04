@@ -150,8 +150,9 @@ export default function Partners({ className }: { className?: string } ) {
   const duplicatedPartners = [...partners, ...partners, ...partners];
 
   return (
-    <section className="bg-black text-white py-4 md:py-12">
-      <div className={`max-w-7xl mx-auto px-6 md:px-12 lg:px-16 ${className}`}>
+    <section className="bg-gray-600 text-white py-4 md:py-10">
+
+      <div className={`max-w-5xl mx-auto px-6 md:px-12 lg:px-16 ${className}`}>
         <motion.div
           variants={containerVariants}
           initial="hidden"
@@ -172,10 +173,10 @@ export default function Partners({ className }: { className?: string } ) {
           {/* Partners Carousel */}
           <motion.div variants={itemVariants} className="relative overflow-hidden">
             {/* Gradient fade on left edge */}
-            <div className="absolute left-0 top-0 bottom-0 w-12 md:w-20 bg-linear-to-r from-black via-black/80 to-transparent pointer-events-none z-10"></div>
+            <div className="absolute left-0 top-0 bottom-0 w-12 md:w-20 bg-linear-to-r from-gray-100 via-gray-100/80 to-transparent pointer-events-none z-10"></div>
             
             {/* linear fade on right edge */}
-            <div className="absolute right-0 top-0 bottom-0 w-12 md:w-20 bg-linear-to-l from-black via-black/80 to-transparent pointer-events-none z-10"></div>
+            <div className="absolute right-0 top-0 bottom-0 w-12 md:w-20 bg-linear-to-l from-gray-100 via-gray-100/80 to-transparent pointer-events-none z-10"></div>
             
             <Swiper
               modules={[Autoplay]}
@@ -215,4 +216,3 @@ export default function Partners({ className }: { className?: string } ) {
     </section>
   );
 }
-

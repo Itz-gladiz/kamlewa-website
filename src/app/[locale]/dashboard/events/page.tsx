@@ -303,7 +303,7 @@ export default function EventsPage() {
                   
                   <div className="flex flex-wrap items-center gap-4 text-sm mt-auto">
                     <div className="flex items-center gap-2 text-blue-400">
-                      <HiOutlineCalendarDateRange className="w-4 h-4" />
+                      <HiOutlineCalendarDateRange className="w-4 h-4 text-yellow-400" />
                       <span>{formattedDate}</span>
                     </div>
                     <div className="flex items-center gap-2 text-gray-400">
@@ -577,4 +577,3 @@ export default function EventsPage() {
     </div>
   );
 }
-

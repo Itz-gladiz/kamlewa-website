@@ -238,13 +238,13 @@ export default function ProjectsPage() {
                 <div className="flex flex-wrap items-center gap-4 text-sm mt-auto">
                   {project.start_date && (
                     <div className="flex items-center gap-2 text-gray-400">
-                      <HiCalendar className="w-4 h-4" />
+                      <HiCalendar className="w-4 h-4 text-yellow-400" />
                       <span className="text-xs">{project.start_date}</span>
                     </div>
                   )}
                   {project.end_date && (
                     <div className="flex items-center gap-2 text-gray-400">
-                      <HiCalendar className="w-4 h-4" />
+                      <HiCalendar className="w-4 h-4 text-yellow-400" />
                       <span className="text-xs">End: {project.end_date}</span>
                     </div>
                   )}
@@ -417,4 +417,3 @@ export default function ProjectsPage() {
     </div>
   );
 }
-
