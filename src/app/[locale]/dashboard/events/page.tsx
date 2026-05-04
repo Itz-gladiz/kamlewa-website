@@ -302,7 +302,7 @@ export default function EventsPage() {
                   </div>
                   
                   <div className="flex flex-wrap items-center gap-4 text-sm mt-auto">
-                    <div className="flex items-center gap-2 text-yellow-400">
+                    <div className="flex items-center gap-2 text-blue-400">
                       <HiOutlineCalendarDateRange className="w-4 h-4" />
                       <span>{formattedDate}</span>
                     </div>
@@ -394,7 +394,7 @@ export default function EventsPage() {
                   options={typeOptions}
                   value={typeOptions.find(opt => opt.value === formData.type) || null}
                   onChange={(option) => setFormData({ ...formData, type: option?.value as 'featured' | 'upcoming' })}
-                  placeholderColor="#9ca3af"
+                  placeholderColor="#1a65e8"
                 />
               </div>
             </div>
