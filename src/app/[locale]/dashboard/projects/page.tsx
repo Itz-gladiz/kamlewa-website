@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import { useTranslations } from 'next-intl';
 import Button from '@/components/Button';
 import Input from '@/components/Input';
@@ -21,6 +21,8 @@ type ProjectUpdate = Database['public']['Tables']['projects']['Update'];
 
 export default function ProjectsPage() {
   const t = useTranslations('dashboard');
+  const startDateInputRef = useRef<HTMLInputElement>(null);
+  const endDateInputRef = useRef<HTMLInputElement>(null);
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
@@ -158,6 +160,15 @@ export default function ProjectsPage() {
     }
   };
 
+  const openDatePicker = (input: HTMLInputElement | null) => {
+    if (!input) return;
+    if (typeof input.showPicker === 'function') {
+      input.showPicker();
+    } else {
+      input.focus();
+    }
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -279,6 +290,12 @@ export default function ProjectsPage() {
               value={formData.image || ''}
               onChange={(url) => setFormData({ ...formData, image: url })}
               className="mt-2"
+              accept="image/png,image/jpeg,image/jpg,image/webp"
+              maxSizeMb={50}
+              compressImages
+              targetUploadSizeMb={9.5}
+              uploadText="Click to upload the project photo or drag and drop"
+              helpText="PNG, JPG, or WEBP up to 50MB. Large photos are compressed before upload."
             />
             {formData.image && (
               <p className="text-xs text-gray-400 mt-1">Image URL: {formData.image.substring(0, 50)}...</p>
@@ -343,23 +360,45 @@ export default function ProjectsPage() {
                   <label className="block text-sm font-medium text-white/80 mb-2">
                     Start Date
                   </label>
-                  <Input
-                    value={formData.start_date || ''}
-                    onChange={(e) => setFormData({ ...formData, start_date: e.target.value })}
-                    placeholder="e.g., January 2024"
-                    className="w-full bg-white/5 border-white/20 placeholder-gray-500 focus:border-yellow-400/50 focus:ring-1 focus:ring-yellow-400/30 transition-all"
-                  />
+                  <div className="relative">
+                    <Input
+                      inputRef={startDateInputRef}
+                      type="date"
+                      value={formData.start_date || ''}
+                      onChange={(e) => setFormData({ ...formData, start_date: e.target.value })}
+                      className="w-full bg-white/5 border-white/20 pr-12 placeholder-gray-500 focus:border-yellow-400/50 focus:ring-1 focus:ring-yellow-400/30 transition-all"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => openDatePicker(startDateInputRef.current)}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-yellow-400 hover:text-yellow-300 transition-colors"
+                      aria-label="Open start date picker"
+                    >
+                      <HiCalendar className="w-5 h-5" />
+                    </button>
+                  </div>
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-white/80 mb-2">
                     End Date
                   </label>
-                  <Input
-                    value={formData.end_date || ''}
-                    onChange={(e) => setFormData({ ...formData, end_date: e.target.value })}
-                    placeholder="e.g., December 2024"
-                    className="w-full bg-white/5 border-white/20 placeholder-gray-500 focus:border-yellow-400/50 focus:ring-1 focus:ring-yellow-400/30 transition-all"
-                  />
+                  <div className="relative">
+                    <Input
+                      inputRef={endDateInputRef}
+                      type="date"
+                      value={formData.end_date || ''}
+                      onChange={(e) => setFormData({ ...formData, end_date: e.target.value })}
+                      className="w-full bg-white/5 border-white/20 pr-12 placeholder-gray-500 focus:border-yellow-400/50 focus:ring-1 focus:ring-yellow-400/30 transition-all"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => openDatePicker(endDateInputRef.current)}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-yellow-400 hover:text-yellow-300 transition-colors"
+                      aria-label="Open end date picker"
+                    >
+                      <HiCalendar className="w-5 h-5" />
+                    </button>
+                  </div>
                 </div>
               </div>
 

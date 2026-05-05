@@ -8,9 +8,8 @@ import Pagination from '@/components/Pagination';
 import { useTranslations } from 'next-intl';
 import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
-import { HiClock, HiUsers, HiArrowRight, HiSearch, HiX } from 'react-icons/hi';
+import { HiClock, HiUsers, HiArrowRight, HiSearch, HiX, HiDownload } from 'react-icons/hi';
 import { Link } from '@/i18n/routing';
-import Button from '@/components/Button';
 import Input from '@/components/Input';
 import { MdOutlineFeaturedPlayList, MdOutlineSwipe } from 'react-icons/md';
 import { HiOutlineClipboardDocumentList } from 'react-icons/hi2';
@@ -34,8 +33,13 @@ import { mapDbTrainingToTraining } from '@/utils/trainingMapper';
 import { mapDbProgramToProgram } from '@/utils/programMapper';
 import toast from 'react-hot-toast';
 import Loader from '@/components/Loader';
+import { Report, mergeStaticReports } from '@/data/staticReports';
 
 type TabType = 'programs' | 'featured' | 'upcoming' | 'projects' | 'trainings' | 'reports';
+type CardItem = Program | Event | Project | Training | Report;
+
+const isReportItem = (item: CardItem): item is Report =>
+  'start_year' in item && 'end_year' in item;
 
 const ITEMS_PER_PAGE = 6;
 
@@ -52,7 +56,7 @@ export default function EventsImpactPage() {
   const [events, setEvents] = useState<Event[]>([]);
   const [projects, setProjects] = useState<Project[]>([]);
   const [trainings, setTrainings] = useState<Training[]>([]);
-  const [reports, setReports] = useState<any[]>([]);
+  const [reports, setReports] = useState<Report[]>([]);
   const [loading, setLoading] = useState(true);
   const [showSwipeHint, setShowSwipeHint] = useState(false);
   const contentContainerRef = useRef<HTMLDivElement>(null);
@@ -104,10 +108,10 @@ export default function EventsImpactPage() {
 
         try {
           const dbReports = await getReports();
-          setReports(dbReports);
+          setReports(mergeStaticReports(dbReports));
         } catch (e) {
           console.error('Error loading reports:', e);
-          setReports([]);
+          setReports(mergeStaticReports([]));
         }
       } catch (error) {
         console.error('Error loading data:', error);
@@ -179,7 +183,7 @@ export default function EventsImpactPage() {
 
   // ✅ Unified data flow for ALL tabs including reports
   const { filteredData, totalPages } = useMemo(() => {
-    let data: any[] = [];
+    let data: CardItem[] = [];
     switch (activeTab) {
       case 'programs':  data = programs; break;
       case 'featured':  data = events.filter((e) => e.type === 'featured'); break;
@@ -216,11 +220,11 @@ export default function EventsImpactPage() {
   };
 
   // ✅ FIX: key prop is on the outermost element <Link>, not buried inside motion.div
-  const renderCard = (item: any) => {
+  const renderCard = (item: CardItem) => {
     const isEvent    = 'type' in item;
     const isProject  = 'status' in item && 'progress' in item;
     const isTraining = 'level' in item && 'duration' in item;
-    const isReport   = 'start_year' in item && 'end_year' in item;
+    const isReport   = isReportItem(item);
     const isProgram  = 'fullDescription' in item;
 
     const getDetailUrl = () => {
@@ -228,9 +232,72 @@ export default function EventsImpactPage() {
       if (isProgram)  return `/events-impact/programs/${item.id}`;
       if (isProject)  return `/events-impact/projects/${item.id}`;
       if (isTraining) return `/events-impact/trainings/${item.id}`;
-      if (isReport)   return `/events-impact/reports/${item.id}`;
       return '/contact';
     };
+
+    if (isReport) {
+      const reportLabel = `${item.start_year} - ${item.end_year}`;
+      const pdfUrl = item.pdf_url || `/reports/${item.start_year}-${item.end_year}-report.pdf`;
+
+      return (
+        <motion.article
+          key={item.id}
+          className="group flex h-full flex-col overflow-hidden border border-white/10 bg-white/[0.03] transition-all duration-300 hover:border-yellow-400/50"
+          variants={itemVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+        >
+          <div className="relative bg-white p-3 sm:p-4">
+            <div className="relative aspect-[3/4] w-full overflow-hidden bg-gray-100">
+              {item.image ? (
+                <Image
+                  src={item.image}
+                  alt={`Annual Report ${reportLabel}`}
+                  fill
+                  className="object-contain transition-transform duration-500 group-hover:scale-[1.02]"
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                  unoptimized
+                />
+              ) : (
+                <div className="flex h-full items-center justify-center bg-gray-100">
+                  <HiOutlineClipboardDocumentList className="h-16 w-16 text-gray-400" />
+                </div>
+              )}
+            </div>
+          </div>
+
+          <div className="flex flex-1 flex-col p-6">
+            <div className="mb-3 flex items-center justify-between gap-3">
+              <span className="bg-yellow-400/15 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-yellow-400">
+                {item.category || 'Annual'}
+              </span>
+              <span className="flex items-center gap-2 text-sm text-gray-400">
+                <HiClock className="h-4 w-4" />
+                {reportLabel}
+              </span>
+            </div>
+
+            <h3 className="mb-3 text-xl font-bold text-white md:text-2xl" style={{ fontFamily: 'var(--font-nourd), sans-serif' }}>
+              {item.title || `Annual Report ${reportLabel}`}
+            </h3>
+            <p className="mb-5 line-clamp-3 text-sm leading-relaxed text-gray-300 md:text-base">
+              {item.description || item.summary}
+            </p>
+
+            <a
+              href={pdfUrl}
+              download
+              className="mt-auto inline-flex items-center justify-center gap-2 bg-yellow-400 px-4 py-3 text-sm font-bold text-black transition-colors hover:bg-yellow-300"
+              aria-label={`Download Full Report PDF for ${reportLabel}`}
+            >
+              <HiDownload className="h-5 w-5" />
+              Download Full Report (PDF)
+            </a>
+          </div>
+        </motion.article>
+      );
+    }
 
     return (
       <Link key={item.id} href={getDetailUrl()}>
@@ -261,12 +328,6 @@ export default function EventsImpactPage() {
 
           {/* Content */}
           <div className="p-6">
-            {isReport && (
-              <span className="px-3 py-1 bg-yellow-400/20 text-yellow-400 text-xs font-semibold rounded-full mb-3 inline-block">
-                {item.category}
-              </span>
-            )}
-
             <h3 className="text-xl md:text-2xl font-bold text-white mb-3" style={{ fontFamily: 'var(--font-nourd), sans-serif' }}>
               {item.title}
             </h3>
@@ -327,14 +388,6 @@ export default function EventsImpactPage() {
                   {item.level}
                 </div>
                 {item.format && <div className="text-gray-400 text-sm">Format: {item.format}</div>}
-              </div>
-            )}
-
-            {/* Report metadata */}
-            {isReport && (
-              <div className="flex items-center gap-2 text-gray-400 text-sm mb-4">
-                <HiClock className="w-4 h-4" />
-                <span>{item.start_year} - {item.end_year}</span>
               </div>
             )}
 

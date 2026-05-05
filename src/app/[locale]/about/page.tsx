@@ -183,12 +183,33 @@ export default function AboutPage() {
       roleKey: 'leadership.team.members.member16.role',
       bioKey: 'leadership.team.members.member16.bio',
     },
+     {
+      id: 'member13',
+      imageSrc: '/images/team/member 13.jpg',
+      nameKey: 'leadership.team.members.member13.name',
+      roleKey: 'leadership.team.members.member13.role',
+      bioKey: 'leadership.team.members.member13.bio',
+    },
+     {
+      id: 'member15',
+      imageSrc: '/images/team/member 15.jpg',
+      nameKey: 'leadership.team.members.member15.name',
+      roleKey: 'leadership.team.members.member15.role',
+      bioKey: 'leadership.team.members.member15.bio',
+    },
     {
       id: 'member17',
       imageSrc: '/images/team/member 17.jpg',
       nameKey: 'leadership.team.members.member17.name',
       roleKey: 'leadership.team.members.member17.role',
       bioKey: 'leadership.team.members.member17.bio',
+    },
+     {
+      id: 'member18',
+      imageSrc: '/images/team/member 18.jpg',
+      nameKey: 'leadership.team.members.member18.name',
+      roleKey: 'leadership.team.members.member18.role',
+      bioKey: 'leadership.team.members.member18.bio',
     },
     {
       id: 'member19',
@@ -204,6 +225,14 @@ export default function AboutPage() {
       roleKey: 'leadership.team.members.member20.role',
       bioKey: 'leadership.team.members.member20.bio',
     },
+     {
+      id: 'member21',
+      imageSrc: '/images/team/member 21.jpg',
+      nameKey: 'leadership.team.members.member21.name',
+      roleKey: 'leadership.team.members.member21.role',
+      bioKey: 'leadership.team.members.member21.bio',
+    },
+ 
   
   ];
 

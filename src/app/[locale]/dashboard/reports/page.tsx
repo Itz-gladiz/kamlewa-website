@@ -11,6 +11,7 @@ import {
   HiPencil,
   HiTrash,
   HiDocumentText,
+  HiDownload,
   HiEye,
 } from 'react-icons/hi';
 import toast from 'react-hot-toast';
@@ -46,6 +47,7 @@ const emptyForm = {
   start_year: currentYear,
   end_year: currentYear,
   image: '',
+  pdf_url: '',
   category: '',
   summary: '',
 };
@@ -92,6 +94,7 @@ export default function ReportsPage() {
         start_year: report.start_year,
         end_year: report.end_year,
         image: report.image || '',
+        pdf_url: report.pdf_url || '',
         category: report.category || '',
         summary: report.summary || '',
       });
@@ -122,6 +125,10 @@ export default function ReportsPage() {
     setFormData((prev) => ({ ...prev, image: url }));
   };
 
+  const handlePdfUpload = (url: string) => {
+    setFormData((prev) => ({ ...prev, pdf_url: url }));
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -139,6 +146,7 @@ export default function ReportsPage() {
           start_year: formData.start_year,
           end_year: formData.end_year,
           image: formData.image,
+          pdf_url: formData.pdf_url,
           category: formData.category,
           summary: formData.summary,
         };
@@ -151,6 +159,7 @@ export default function ReportsPage() {
           start_year: formData.start_year,
           end_year: formData.end_year,
           image: formData.image,
+          pdf_url: formData.pdf_url,
           category: formData.category,
           summary: formData.summary,
         };
@@ -260,6 +269,17 @@ export default function ReportsPage() {
                   <span>{report.start_year} - {report.end_year}</span>
                   <span>{new Date(report.created_at).toLocaleDateString()}</span>
                 </div>
+                {report.pdf_url && (
+                  <a
+                    href={report.pdf_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="mb-4 inline-flex items-center gap-2 text-sm font-semibold text-yellow-400 hover:text-yellow-300"
+                  >
+                    <HiDownload className="w-4 h-4" />
+                    PDF attached
+                  </a>
+                )}
 
                 {/* Actions */}
                 <div className="flex items-center gap-2">
@@ -409,9 +429,51 @@ export default function ReportsPage() {
           {/* Cover Image */}
           <div>
             <label className="block text-sm font-medium text-gray-300 mb-2">
-              Cover Image
+              Report Image Preview
             </label>
-            <CloudinaryUpload value={formData.image} onChange={handleImageUpload} />
+            <CloudinaryUpload
+              value={formData.image}
+              onChange={handleImageUpload}
+              accept="image/png,image/jpeg,image/jpg,image/webp"
+              maxSizeMb={25}
+              compressImages
+              targetUploadSizeMb={9.5}
+              uploadText="Click to upload the report image or drag and drop"
+              helpText="PNG, JPG, or WEBP up to 25MB. Large images are compressed before upload."
+            />
+            <p className="mt-2 text-xs text-gray-500">
+              Upload a clear PNG or JPEG version of the report page visitors should see.
+            </p>
+          </div>
+
+          {/* PDF Download */}
+          <div>
+            <label className="block text-sm font-medium text-gray-300 mb-2">
+              Full Report PDF
+            </label>
+            <CloudinaryUpload
+              value={formData.pdf_url}
+              onChange={handlePdfUpload}
+              accept="application/pdf"
+              fileKind="document"
+              resourceType="auto"
+              maxSizeMb={10}
+              usePublicPathForOversizeDocuments
+              readyLabel="PDF Ready"
+              uploadText="Click to upload the PDF or drag and drop"
+              helpText="PDF up to 10MB uploads to Cloudinary. Larger PDFs must already be in the public folder."
+            />
+            <div className="mt-3">
+              <label className="block text-xs font-medium text-gray-400 mb-1">
+                Or paste a PDF link for larger reports
+              </label>
+              <Input
+                name="pdf_url"
+                value={formData.pdf_url}
+                onChange={handleInputChange}
+                placeholder="/reports/2023-2024-report.pdf"
+              />
+            </div>
           </div>
 
           {/* Buttons */}
@@ -462,6 +524,17 @@ export default function ReportsPage() {
                 <h4 className="text-sm font-medium text-gray-400 mb-1">Summary</h4>
                 <p className="text-gray-300">{viewingReport.summary}</p>
               </div>
+            )}
+            {viewingReport.pdf_url && (
+              <a
+                href={viewingReport.pdf_url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 rounded-lg bg-yellow-400 px-4 py-2 text-sm font-semibold text-black hover:bg-yellow-300"
+              >
+                <HiDownload className="w-4 h-4" />
+                Download Full Report (PDF)
+              </a>
             )}
             <div className="text-sm text-gray-500">
               Created: {new Date(viewingReport.created_at).toLocaleDateString()}
