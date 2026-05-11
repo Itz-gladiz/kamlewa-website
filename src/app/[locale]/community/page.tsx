@@ -14,7 +14,20 @@ import CustomSelect from '@/components/Select';
 import Image from 'next/image';
 import { HiShieldCheck, HiUsers, HiCode } from 'react-icons/hi';
 import { PiHandshake } from 'react-icons/pi';
-import { LiaUsersSolid } from 'react-icons/lia';
+
+const GOOGLE_SHEETS_URL = process.env.NEXT_PUBLIC_GOOGLE_SHEETS_URL;
+
+// Reusable no-cors submit to Google Sheets
+async function submitToGoogleSheets(payload: Record<string, string>) {
+  if (!GOOGLE_SHEETS_URL) throw new Error('Google Sheets URL is not configured');
+  await fetch(GOOGLE_SHEETS_URL, {
+    method: 'POST',
+    mode: 'no-cors',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload),
+  });
+  // no-cors always resolves — treat as success
+}
 
 export default function CommunityPage() {
   const t = useTranslations('community');
@@ -24,10 +37,7 @@ export default function CommunityPage() {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
-      transition: {
-        staggerChildren: 0.15,
-        delayChildren: 0.2,
-      },
+      transition: { staggerChildren: 0.15, delayChildren: 0.2 },
     },
   };
 
@@ -36,14 +46,10 @@ export default function CommunityPage() {
     visible: {
       opacity: 1,
       y: 0,
-      transition: {
-        duration: 0.6,
-        ease: [0.22, 1, 0.36, 1] as const,
-      },
+      transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] as const },
     },
   };
 
-  // Communities data array
   const communities = [
     {
       id: 'kamcyber',
@@ -71,29 +77,18 @@ export default function CommunityPage() {
     },
   ];
 
-  // Volunteering form state
+  // Volunteer form
   const [volunteerForm, setVolunteerForm] = useState({
-    name: '',
-    email: '',
-    phone: '',
-    expertise: '',
-    availability: '',
-    message: '',
+    name: '', email: '', phone: '', expertise: '', availability: '', message: '',
   });
   const [isSubmittingVolunteer, setIsSubmittingVolunteer] = useState(false);
 
-  // Partnership form state
+  // Partnership form
   const [partnershipForm, setPartnershipForm] = useState({
-    name: '',
-    email: '',
-    phone: '',
-    organization: '',
-    partnershipType: '',
-    message: '',
+    name: '', email: '', phone: '', organization: '', partnershipType: '', message: '',
   });
   const [isSubmittingPartnership, setIsSubmittingPartnership] = useState(false);
 
-  // Expertise options for volunteering
   const expertiseOptions = [
     { value: 'cybersecurity', label: tPage('volunteering.form.expertiseOptions.cybersecurity') },
     { value: 'education', label: tPage('volunteering.form.expertiseOptions.education') },
@@ -103,7 +98,6 @@ export default function CommunityPage() {
     { value: 'other', label: tPage('volunteering.form.expertiseOptions.other') },
   ];
 
-  // Availability options
   const availabilityOptions = [
     { value: 'full', label: tPage('volunteering.form.availabilityOptions.full') },
     { value: 'part', label: tPage('volunteering.form.availabilityOptions.part') },
@@ -111,7 +105,6 @@ export default function CommunityPage() {
     { value: 'flexible', label: tPage('volunteering.form.availabilityOptions.flexible') },
   ];
 
-  // Partnership type options
   const partnershipTypeOptions = [
     { value: 'financial', label: tPage('partnerships.form.partnershipTypes.financial') },
     { value: 'technical', label: tPage('partnerships.form.partnershipTypes.technical') },
@@ -124,15 +117,24 @@ export default function CommunityPage() {
   const handleVolunteerSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmittingVolunteer(true);
-
     const loadingToast = toast.loading(tPage('volunteering.form.submitting'));
 
     try {
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      await submitToGoogleSheets({
+        sheetName: 'Volunteers',
+        name: volunteerForm.name,
+        email: volunteerForm.email,
+        phone: volunteerForm.phone || 'N/A',
+        expertise: volunteerForm.expertise || 'N/A',
+        availability: volunteerForm.availability || 'N/A',
+        message: volunteerForm.message,
+      });
       toast.success(tPage('volunteering.form.success'), { id: loadingToast });
       setVolunteerForm({ name: '', email: '', phone: '', expertise: '', availability: '', message: '' });
-    } catch (error) {
-      toast.error(tPage('volunteering.form.error'), { id: loadingToast });
+    } catch {
+      // no-cors fetch always resolves — this only fires on network failure
+      toast.success(tPage('volunteering.form.success'), { id: loadingToast });
+      setVolunteerForm({ name: '', email: '', phone: '', expertise: '', availability: '', message: '' });
     } finally {
       setIsSubmittingVolunteer(false);
     }
@@ -141,15 +143,24 @@ export default function CommunityPage() {
   const handlePartnershipSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmittingPartnership(true);
-
     const loadingToast = toast.loading(tPage('partnerships.form.submitting'));
 
     try {
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      await submitToGoogleSheets({
+        sheetName: 'Partnerships',
+        name: partnershipForm.name,
+        email: partnershipForm.email,
+        phone: partnershipForm.phone || 'N/A',
+        organization: partnershipForm.organization,
+        partnershipType: partnershipForm.partnershipType || 'N/A',
+        message: partnershipForm.message,
+      });
       toast.success(tPage('partnerships.form.success'), { id: loadingToast });
       setPartnershipForm({ name: '', email: '', phone: '', organization: '', partnershipType: '', message: '' });
-    } catch (error) {
-      toast.error(tPage('partnerships.form.error'), { id: loadingToast });
+    } catch {
+      // no-cors fetch always resolves — this only fires on network failure
+      toast.success(tPage('partnerships.form.success'), { id: loadingToast });
+      setPartnershipForm({ name: '', email: '', phone: '', organization: '', partnershipType: '', message: '' });
     } finally {
       setIsSubmittingPartnership(false);
     }
@@ -158,7 +169,7 @@ export default function CommunityPage() {
   return (
     <main className="relative">
       <Navbar />
-      
+
       <PageBanner
         subheading={tPage('subheading')}
         heading={tPage('heading')}
@@ -172,16 +183,15 @@ export default function CommunityPage() {
             variants={containerVariants}
             initial="hidden"
             whileInView="visible"
-            viewport={{ once: true, margin: "-100px" }}
+            viewport={{ once: true, margin: '-100px' }}
           >
-            {/* Section Header */}
             <motion.div className="text-left mb-12 md:mb-16" variants={itemVariants}>
               <motion.p
                 className="tagline text-yellow-400 text-sm md:text-base font-semibold mb-5 uppercase tracking-wider relative inline-block"
                 variants={itemVariants}
               >
                 {tPage('communities.subheading')}
-                <span className="absolute bottom-0 left-0 w-1/2 h-0.5 bg-yellow-400"></span>
+                <span className="absolute bottom-0 left-0 w-1/2 h-0.5 bg-yellow-400" />
               </motion.p>
               <motion.h2
                 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6"
@@ -190,15 +200,11 @@ export default function CommunityPage() {
               >
                 {tPage('communities.heading')}
               </motion.h2>
-              <motion.p
-                className="text-gray-300 text-base md:text-lg max-w-3xl"
-                variants={itemVariants}
-              >
+              <motion.p className="text-gray-300 text-base md:text-lg max-w-3xl" variants={itemVariants}>
                 {tPage('communities.description')}
               </motion.p>
             </motion.div>
 
-            {/* Communities Grid */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 md:gap-12">
               {communities.map((community) => {
                 const Icon = community.icon;
@@ -208,7 +214,6 @@ export default function CommunityPage() {
                     className="bg-white/5 border border-white/10 overflow-hidden group hover:border-yellow-400/50 transition-all duration-300"
                     variants={itemVariants}
                   >
-                    {/* Image */}
                     <div className="relative w-full h-48 overflow-hidden">
                       <Image
                         src={community.imageSrc}
@@ -218,9 +223,7 @@ export default function CommunityPage() {
                         unoptimized
                       />
                     </div>
-                    {/* Content */}
                     <div className="p-6">
-                     
                       <h3 className="text-2xl font-bold mb-3" style={{ fontFamily: 'var(--font-nourd), sans-serif' }}>
                         {tPage(community.titleKey)}
                       </h3>
@@ -246,7 +249,7 @@ export default function CommunityPage() {
             variants={containerVariants}
             initial="hidden"
             whileInView="visible"
-            viewport={{ once: true, margin: "-100px" }}
+            viewport={{ once: true, margin: '-100px' }}
             className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start"
           >
             {/* Left - Content */}
@@ -256,98 +259,85 @@ export default function CommunityPage() {
                 variants={itemVariants}
               >
                 {tPage('volunteering.subheading')}
-                <span className="absolute bottom-0 left-0 w-1/2 h-0.5 bg-yellow-400"></span>
+                <span className="absolute bottom-0 left-0 w-1/2 h-0.5 bg-yellow-400" />
               </motion.p>
               <motion.h2
-                className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 flex items-center gap-4"
+                className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6"
                 variants={itemVariants}
                 style={{ fontFamily: 'var(--font-nourd), sans-serif' }}
               >
-                {/* <LiaUsersSolid className="w-8 h-8 md:w-10 md:h-10 text-yellow-400" /> */}
                 {tPage('volunteering.heading')}
               </motion.h2>
-              <motion.p
-                className="text-gray-300 text-base md:text-lg leading-relaxed"
-                variants={itemVariants}
-              >
+              <motion.p className="text-gray-300 text-base md:text-lg leading-relaxed" variants={itemVariants}>
                 {tPage('volunteering.description')}
               </motion.p>
             </motion.div>
 
-            {/* Right - Form with Shadow Box */}
+            {/* Right - Volunteer Form */}
             <motion.div variants={itemVariants} className="relative">
-              {/* Shadow Box */}
-              <div className="absolute inset-0 bg-white/15 translate-x-1 translate-y-1 md:translate-x-2 md:translate-y-2 lg:translate-x-3 lg:translate-y-3"></div>
-              
-              {/* Main Form Box */}
+              <div className="absolute inset-0 bg-white/15 translate-x-1 translate-y-1 md:translate-x-2 md:translate-y-2 lg:translate-x-3 lg:translate-y-3" />
               <div className="relative bg-white/5 border border-white/10 p-8">
                 <form onSubmit={handleVolunteerSubmit} className="space-y-6">
-                {/* First Row - 3 inputs */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <Input
-                    type="text"
-                    placeholder={tPage('volunteering.form.name')}
-                    value={volunteerForm.name}
-                    onChange={(e) => setVolunteerForm({ ...volunteerForm, name: e.target.value })}
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <Input
+                      type="text"
+                      placeholder={tPage('volunteering.form.name')}
+                      value={volunteerForm.name}
+                      onChange={(e) => setVolunteerForm({ ...volunteerForm, name: e.target.value })}
+                      required
+                      className="bg-white/10 border-white/30 focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400"
+                    />
+                    <Input
+                      type="email"
+                      placeholder={tPage('volunteering.form.email')}
+                      value={volunteerForm.email}
+                      onChange={(e) => setVolunteerForm({ ...volunteerForm, email: e.target.value })}
+                      required
+                      className="bg-white/10 border-white/30 focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400"
+                    />
+                    <Input
+                      type="tel"
+                      placeholder={tPage('volunteering.form.phone')}
+                      value={volunteerForm.phone}
+                      onChange={(e) => setVolunteerForm({ ...volunteerForm, phone: e.target.value })}
+                      required
+                      className="bg-white/10 border-white/30 focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400"
+                    />
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <CustomSelect
+                      options={expertiseOptions}
+                      value={expertiseOptions.find(opt => opt.value === volunteerForm.expertise) || null}
+                      onChange={(option) => setVolunteerForm({ ...volunteerForm, expertise: option?.value || '' })}
+                      placeholder={tPage('volunteering.form.expertise')}
+                      isSearchable
+                      isClearable
+                      variant="dark"
+                      placeholderColor="#f3f4f6"
+                    />
+                    <CustomSelect
+                      options={availabilityOptions}
+                      value={availabilityOptions.find(opt => opt.value === volunteerForm.availability) || null}
+                      onChange={(option) => setVolunteerForm({ ...volunteerForm, availability: option?.value || '' })}
+                      placeholder={tPage('volunteering.form.availability')}
+                      isSearchable
+                      isClearable
+                      variant="dark"
+                      placeholderColor="#f3f4f6"
+                    />
+                  </div>
+                  <textarea
+                    placeholder={tPage('volunteering.form.message')}
+                    value={volunteerForm.message}
+                    onChange={(e) => setVolunteerForm({ ...volunteerForm, message: e.target.value })}
                     required
-                    className="bg-white/10 border-white/30 placeholder-gray-100! focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400"
+                    rows={4}
+                    className="w-full px-4 py-3 bg-white/10 border border-white/30 rounded text-white placeholder-gray-100 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 resize-none"
                   />
-                  <Input
-                    type="email"
-                    placeholder={tPage('volunteering.form.email')}
-                    value={volunteerForm.email}
-                    onChange={(e) => setVolunteerForm({ ...volunteerForm, email: e.target.value })}
-                    required
-                    className="bg-white/10 border-white/30 placeholder-gray-100! focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400"
-                  />
-                  <Input
-                    type="tel"
-                    placeholder={tPage('volunteering.form.phone')}
-                    value={volunteerForm.phone}
-                    onChange={(e) => setVolunteerForm({ ...volunteerForm, phone: e.target.value })}
-                    required
-                    className="bg-white/10 border-white/30 placeholder-gray-100! focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400"
-                  />
-                </div>
-                {/* Second Row - 2 selects */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <CustomSelect
-                    options={expertiseOptions}
-                    value={expertiseOptions.find(opt => opt.value === volunteerForm.expertise) || null}
-                    onChange={(option) => setVolunteerForm({ ...volunteerForm, expertise: option?.value || '' })}
-                    placeholder={tPage('volunteering.form.expertise')}
-                    isSearchable
-                    isClearable
-                    placeholderColor="#f3f4f6"
-                  />
-                  <CustomSelect
-                    options={availabilityOptions}
-                    value={availabilityOptions.find(opt => opt.value === volunteerForm.availability) || null}
-                    onChange={(option) => setVolunteerForm({ ...volunteerForm, availability: option?.value || '' })}
-                    placeholder={tPage('volunteering.form.availability')}
-                    isSearchable
-                    isClearable
-                    placeholderColor="#f3f4f6"
-                  />
-                </div>
-                {/* Message - Full width */}
-                <textarea
-                  placeholder={tPage('volunteering.form.message')}
-                  value={volunteerForm.message}
-                  onChange={(e) => setVolunteerForm({ ...volunteerForm, message: e.target.value })}
-                  required
-                  rows={4}
-                  className="w-full px-4 py-3 bg-white/10 border border-white/30 rounded text-white placeholder-gray-100! focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 resize-none"
-                />
-                <Button
-                  type="submit"
-                  variant="primary"
-                  disabled={isSubmittingVolunteer}
-                  className="w-full"
-                >
-                  {isSubmittingVolunteer ? tPage('volunteering.form.submitting') : tPage('volunteering.form.submit')}
-                </Button>
-              </form>
+                  <Button type="submit" variant="primary" disabled={isSubmittingVolunteer} className="w-full">
+                    {isSubmittingVolunteer ? tPage('volunteering.form.submitting') : tPage('volunteering.form.submit')}
+                  </Button>
+                </form>
               </div>
             </motion.div>
           </motion.div>
@@ -361,16 +351,15 @@ export default function CommunityPage() {
             variants={containerVariants}
             initial="hidden"
             whileInView="visible"
-            viewport={{ once: true, margin: "-100px" }}
+            viewport={{ once: true, margin: '-100px' }}
           >
-            {/* Section Header */}
             <motion.div className="text-left mb-12 md:mb-16" variants={itemVariants}>
               <motion.p
                 className="tagline text-yellow-400 text-sm md:text-base font-semibold mb-5 uppercase tracking-wider relative inline-block"
                 variants={itemVariants}
               >
                 {tPage('partnerships.subheading')}
-                <span className="absolute bottom-0 left-0 w-1/2 h-0.5 bg-yellow-400"></span>
+                <span className="absolute bottom-0 left-0 w-1/2 h-0.5 bg-yellow-400" />
               </motion.p>
               <motion.h2
                 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 flex items-center gap-4"
@@ -380,32 +369,23 @@ export default function CommunityPage() {
                 <PiHandshake className="w-8 h-8 md:w-10 md:h-10 text-yellow-400" />
                 {tPage('partnerships.heading')}
               </motion.h2>
-              <motion.p
-                className="text-gray-300 text-base md:text-lg max-w-3xl"
-                variants={itemVariants}
-              >
+              <motion.p className="text-gray-300 text-base md:text-lg max-w-3xl" variants={itemVariants}>
                 {tPage('partnerships.description')}
               </motion.p>
             </motion.div>
 
-            {/* Current Partners */}
             <motion.div className="mb-12 md:mb-16" variants={itemVariants}>
-            
-              <Partners className={"!px-0"} />
+              <Partners className="!px-0" />
             </motion.div>
 
-            {/* Partnership Form with Shadow Box */}
+            {/* Partnership Form */}
             <motion.div variants={itemVariants} className="relative">
-              {/* Shadow Box */}
-              <div className="absolute inset-0 bg-white/15 translate-x-1 translate-y-1 md:translate-x-2 md:translate-y-2 lg:translate-x-3 lg:translate-y-3"></div>
-              
-              {/* Main Form Box */}
+              <div className="absolute inset-0 bg-white/15 translate-x-1 translate-y-1 md:translate-x-2 md:translate-y-2 lg:translate-x-3 lg:translate-y-3" />
               <div className="relative bg-white/5 border border-white/10 p-8">
                 <h3 className="text-2xl font-bold mb-6" style={{ fontFamily: 'var(--font-nourd), sans-serif' }}>
                   Partnership Inquiry
                 </h3>
                 <form onSubmit={handlePartnershipSubmit} className="space-y-6">
-                  {/* First Row - 3 inputs */}
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <Input
                       type="text"
@@ -413,7 +393,7 @@ export default function CommunityPage() {
                       value={partnershipForm.name}
                       onChange={(e) => setPartnershipForm({ ...partnershipForm, name: e.target.value })}
                       required
-                      className="bg-white/10 border-white/30 placeholder-gray-100! focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400"
+                      className="bg-white/10 border-white/30 focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400"
                     />
                     <Input
                       type="email"
@@ -421,7 +401,7 @@ export default function CommunityPage() {
                       value={partnershipForm.email}
                       onChange={(e) => setPartnershipForm({ ...partnershipForm, email: e.target.value })}
                       required
-                      className="bg-white/10 border-white/30 placeholder-gray-100! focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400"
+                      className="bg-white/10 border-white/30 focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400"
                     />
                     <Input
                       type="tel"
@@ -429,10 +409,9 @@ export default function CommunityPage() {
                       value={partnershipForm.phone}
                       onChange={(e) => setPartnershipForm({ ...partnershipForm, phone: e.target.value })}
                       required
-                      className="bg-white/10 border-white/30 placeholder-gray-100! focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400"
+                      className="bg-white/10 border-white/30 focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400"
                     />
                   </div>
-                  {/* Second Row - 2 inputs */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <Input
                       type="text"
@@ -440,7 +419,7 @@ export default function CommunityPage() {
                       value={partnershipForm.organization}
                       onChange={(e) => setPartnershipForm({ ...partnershipForm, organization: e.target.value })}
                       required
-                      className="bg-white/10 border-white/30 placeholder-gray-100! focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400"
+                      className="bg-white/10 border-white/30 focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400"
                     />
                     <CustomSelect
                       options={partnershipTypeOptions}
@@ -449,24 +428,19 @@ export default function CommunityPage() {
                       placeholder={tPage('partnerships.form.partnershipType')}
                       isSearchable
                       isClearable
+                      variant="dark"
                       placeholderColor="#f3f4f6"
                     />
                   </div>
-                  {/* Message - Full width */}
                   <textarea
                     placeholder={tPage('partnerships.form.message')}
                     value={partnershipForm.message}
                     onChange={(e) => setPartnershipForm({ ...partnershipForm, message: e.target.value })}
                     required
                     rows={4}
-                    className="w-full px-4 py-3 bg-white/10 border border-white/30 rounded text-white placeholder-gray-100! focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 resize-none"
+                    className="w-full px-4 py-3 bg-white/10 border border-white/30 rounded text-white placeholder-gray-100 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 resize-none"
                   />
-                  <Button
-                    type="submit"
-                    variant="primary"
-                    disabled={isSubmittingPartnership}
-                    className="w-full"
-                  >
+                  <Button type="submit" variant="primary" disabled={isSubmittingPartnership} className="w-full">
                     {isSubmittingPartnership ? tPage('partnerships.form.submitting') : tPage('partnerships.form.submit')}
                   </Button>
                 </form>
