@@ -30,3 +30,7 @@ export function mergeStaticReports(reports: Report[]) {
 
   return [...missingStaticReports, ...reports];
 }
+
+export function getStaticReportById(id: string) {
+  return staticReports.find((report) => report.id === id) || null;
+}

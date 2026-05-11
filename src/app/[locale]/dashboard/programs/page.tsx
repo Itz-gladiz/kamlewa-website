@@ -26,6 +26,7 @@ export default function ProgramsPage() {
   const [submitting, setSubmitting] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingProgram, setEditingProgram] = useState<Program | null>(null);
+  const [locationsInput, setLocationsInput] = useState('');
   const [formData, setFormData] = useState<Partial<ProgramInsert>>({
     title: '',
     description: '',
@@ -68,6 +69,7 @@ export default function ProgramsPage() {
         locations: program.locations || [],
         category: program.category || '',
       });
+      setLocationsInput(program.locations?.join(', ') || '');
     } else {
       setEditingProgram(null);
       setFormData({
@@ -80,6 +82,7 @@ export default function ProgramsPage() {
         locations: [],
         category: '',
       });
+      setLocationsInput('');
     }
     setIsModalOpen(true);
   };
@@ -97,6 +100,7 @@ export default function ProgramsPage() {
       locations: [],
       category: '',
     });
+    setLocationsInput('');
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -378,11 +382,12 @@ export default function ProgramsPage() {
                   Locations
                 </label>
                 <Input
-                  value={formData.locations?.join(', ') || ''}
-                  onChange={(e) => setFormData({ 
-                    ...formData, 
-                    locations: e.target.value.split(',').map(l => l.trim()).filter(l => l.length > 0) 
-                  })}
+                  value={locationsInput}
+                  onChange={(e) => setLocationsInput(e.target.value)}
+                  onBlur={() => {
+                    const processedLocations = locationsInput.split(',').map(l => l.trim()).filter(l => l.length > 0);
+                    setFormData({ ...formData, locations: processedLocations });
+                  }}
                   placeholder="Yaoundé, Douala, Buea"
                   className="w-full bg-white/5 border-white/20 placeholder-gray-500 focus:border-yellow-400/50 focus:ring-1 focus:ring-yellow-400/30 transition-all"
                 />

@@ -258,7 +258,7 @@ export default function EventsPage() {
             return (
               <div key={event.id} className="bg-white/5 border border-white/10 overflow-hidden flex h-60 group hover:border-white/20 transition-all">
                 {/* Image Preview - Left Side */}
-                <div className="relative w-48 h-full shrink-0 bg-white/5">
+                <div className="relative w-48 h-full shrink-0 bg-white/5 border-r-2 border-yellow-400/20 group-hover:border-yellow-400/40 transition-colors duration-300">
                   {event.image ? (
                     <Image
                       src={event.image}
@@ -273,6 +273,9 @@ export default function EventsPage() {
                     </div>
                   )}
                   <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                  <div className="absolute bottom-2 left-2 bg-yellow-400/85 text-black px-1.5 py-0.5 text-xs font-bold rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    CROPPED
+                  </div>
                 </div>
                 
                 {/* Content - Right Side */}

@@ -15,6 +15,9 @@ import { Link } from '@/i18n/routing';
 import { getReports } from '@/lib/supabase/reports';
 import { Report, mergeStaticReports } from '@/data/staticReports';
 
+const getReportPdfUrl = (report: Report) =>
+  report.pdf_url || `/reports/${report.start_year}-${report.end_year}-report.pdf`;
+
 export default function ReportsArchivePage() {
   const [reports, setReports] = useState<Report[]>([]);
   const [loading, setLoading] = useState(true);
@@ -63,7 +66,7 @@ export default function ReportsArchivePage() {
               <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
                 {reports.map((report, index) => {
                   const reportLabel = `${report.start_year} - ${report.end_year}`;
-                  const pdfUrl = report.pdf_url || `/reports/${report.start_year}-${report.end_year}-report.pdf`;
+                  const pdfUrl = getReportPdfUrl(report);
 
                   return (
                     <motion.article
@@ -74,47 +77,55 @@ export default function ReportsArchivePage() {
                       transition={{ duration: 0.5, delay: index * 0.06 }}
                       className="group flex h-full flex-col overflow-hidden border border-white/10 bg-white/[0.03] transition-all duration-300 hover:border-yellow-400/50"
                     >
-                      <div className="relative bg-white p-3 sm:p-4">
-                        <div className="relative aspect-[3/4] w-full overflow-hidden bg-gray-100">
-                          {report.image ? (
-                            <Image
-                              src={report.image}
-                              alt={`Annual Report ${reportLabel}`}
-                              fill
-                              className="object-contain transition-transform duration-500 group-hover:scale-[1.02]"
-                              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                              unoptimized
-                            />
-                          ) : (
-                            <div className="flex h-full items-center justify-center bg-gray-100">
-                              <HiOutlineClipboardDocumentList className="h-16 w-16 text-gray-400" />
-                            </div>
-                          )}
-                        </div>
-                      </div>
-
-                      <div className="flex flex-1 flex-col p-6">
-                        <div className="mb-3 flex items-center justify-between gap-3">
-                          <span className="bg-yellow-400/15 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-yellow-400">
-                            {report.category || 'Annual'}
-                          </span>
-                          <span className="flex items-center gap-2 text-sm text-gray-400">
-                            <HiClock className="h-4 w-4" />
-                            {reportLabel}
-                          </span>
+                      <Link href={`/events-impact/reports/${report.id}`} className="flex flex-1 flex-col">
+                        <div className="relative bg-white p-3 sm:p-4">
+                          <div className="relative aspect-[3/4] w-full overflow-hidden bg-gray-100">
+                            {report.image ? (
+                              <Image
+                                src={report.image}
+                                alt={`Annual Report ${reportLabel}`}
+                                fill
+                                className="object-contain transition-transform duration-500 group-hover:scale-[1.02]"
+                                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                                unoptimized
+                              />
+                            ) : (
+                              <div className="flex h-full items-center justify-center bg-gray-100">
+                                <HiOutlineClipboardDocumentList className="h-16 w-16 text-gray-400" />
+                              </div>
+                            )}
+                          </div>
                         </div>
 
-                        <h2 className="mb-3 text-xl font-bold md:text-2xl" style={{ fontFamily: 'var(--font-nourd), sans-serif' }}>
-                          {report.title || `Annual Report ${reportLabel}`}
-                        </h2>
-                        <p className="mb-5 line-clamp-3 text-sm leading-relaxed text-gray-300 md:text-base">
-                          {report.description || report.summary}
-                        </p>
+                        <div className="flex flex-1 flex-col p-6 pb-0">
+                          <div className="mb-3 flex items-center justify-between gap-3">
+                            <span className="bg-yellow-400/15 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-yellow-400">
+                              {report.category || 'Annual'}
+                            </span>
+                            <span className="flex items-center gap-2 text-sm text-gray-400">
+                              <HiClock className="h-4 w-4" />
+                              {reportLabel}
+                            </span>
+                          </div>
 
+                          <h2 className="mb-3 text-xl font-bold md:text-2xl" style={{ fontFamily: 'var(--font-nourd), sans-serif' }}>
+                            {report.title || `Annual Report ${reportLabel}`}
+                          </h2>
+                          <p className="mb-4 line-clamp-3 text-sm leading-relaxed text-gray-300 md:text-base">
+                            {report.description || report.summary}
+                          </p>
+
+                          <div className="mb-5 inline-flex items-center gap-2 text-sm font-semibold text-yellow-400">
+                            Read Description & Summary
+                          </div>
+                        </div>
+                      </Link>
+
+                      <div className="p-6 pt-0">
                         <a
                           href={pdfUrl}
                           download
-                          className="mt-auto inline-flex items-center justify-center gap-2 bg-yellow-400 px-4 py-3 text-sm font-bold text-black transition-colors hover:bg-yellow-300"
+                          className="inline-flex w-full items-center justify-center gap-2 bg-yellow-400 px-4 py-3 text-sm font-bold text-black transition-colors hover:bg-yellow-300"
                           aria-label={`Download Full Report PDF for ${reportLabel}`}
                         >
                           <HiDownload className="h-5 w-5" />
