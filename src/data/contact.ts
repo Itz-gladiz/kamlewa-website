@@ -5,6 +5,7 @@ export interface ContactInfo {
   value: string;
   is_primary?: boolean;
   order: number;
+  display_order?: number;
 }
 
 export const contactData: ContactInfo[] = [
