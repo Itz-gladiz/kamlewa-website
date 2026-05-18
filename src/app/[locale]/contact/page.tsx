@@ -11,7 +11,7 @@ import Button from '@/components/Button';
 import { HiLocationMarker, HiMail, HiPhone } from 'react-icons/hi';
 
 const GOOGLE_SHEETS_URL = process.env.NEXT_PUBLIC_GOOGLE_SHEETS_URL;
-const MAP_QUERY = 'Yaounde, Cameroon';
+const MAP_QUERY = 'Douala, Cameroon';
 const MAP_EMBED_URL = `https://www.openstreetmap.org/export/embed.html?bbox=11.4265%2C3.7700%2C11.6265%2C3.9700&layer=mapnik&marker=3.8700%2C11.5265`;
 
 export default function ContactPage() {
@@ -91,8 +91,8 @@ export default function ContactPage() {
                   </div>
                   <div>
                     <h3 className="text-sm font-semibold text-gray-400 mb-1 uppercase">{t('email')}</h3>
-                    <a href="mailto:aaaaaaaaaa@gmail.com" className="text-white hover:text-yellow-400 transition-colors">
-                      aaaaaaaaaa@gmail.com
+                    <a href="mailto:contact@kamlewa.org" className="text-white hover:text-yellow-400 transition-colors">
+                      contact@kamlewa.org
                     </a>
                   </div>
                 </div>
@@ -103,7 +103,7 @@ export default function ContactPage() {
                   <div>
                     <h3 className="text-sm font-semibold text-gray-400 mb-1 uppercase">{t('primaryPhone')}</h3>
                     <a href="tel:123456789" className="text-white hover:text-yellow-400 transition-colors">
-                      123456789
+                      +237 653 906 594
                     </a>
                   </div>
                 </div>
@@ -114,7 +114,7 @@ export default function ContactPage() {
                   <div>
                     <h3 className="text-sm font-semibold text-gray-400 mb-1 uppercase">{t('secondaryPhone')}</h3>
                     <a href="tel:123456789" className="text-white hover:text-yellow-400 transition-colors">
-                      123456789
+                      +237 671 317 500
                     </a>
                   </div>
                 </div>
@@ -130,7 +130,7 @@ export default function ContactPage() {
                       rel="noopener noreferrer"
                       className="text-white hover:text-yellow-400 transition-colors"
                     >
-                      Yaoundé, Cameroon
+                      Douala, Cameroon
                     </a>
                   </div>
                 </div>

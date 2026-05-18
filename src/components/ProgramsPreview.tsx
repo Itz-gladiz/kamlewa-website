@@ -13,10 +13,18 @@ import { HiOutlineClipboardDocumentList } from "react-icons/hi2";
 import { FaFirstdraft } from "react-icons/fa6";
 import { VscLocation } from "react-icons/vsc";
 import { getEvents } from '@/lib/supabase/events';
+import { getPrograms } from '@/lib/supabase/programs';
+import { getProjects } from '@/lib/supabase/projects';
+import { getTrainings } from '@/lib/supabase/trainings';
 import { mapDbEventToEvent } from '@/utils/eventMapper';
 import { Event } from '@/data/events';
+import { Database } from '@/lib/supabase/types';
 import Loader from './Loader';
 import toast from 'react-hot-toast';
+
+type ProgramRow = Database['public']['Tables']['programs']['Row'];
+type ProjectRow = Database['public']['Tables']['projects']['Row'];
+type TrainingRow = Database['public']['Tables']['trainings']['Row'];
 
 export default function ProgramsPreview() {
   const t = useTranslations('programs');
@@ -27,7 +35,11 @@ export default function ProgramsPreview() {
   const [showSwipeHint, setShowSwipeHint] = useState(false);
   const [featuredEvents, setFeaturedEvents] = useState<Event[]>([]);
   const [upcomingEvents, setUpcomingEvents] = useState<Event[]>([]);
+  const [programs, setPrograms] = useState<ProgramRow[]>([]);
+  const [projects, setProjects] = useState<ProjectRow[]>([]);
+  const [trainings, setTrainings] = useState<TrainingRow[]>([]);
   const [loadingEvents, setLoadingEvents] = useState(true);
+  const [loadingData, setLoadingData] = useState(true);
   const contentContainerRef = useRef<HTMLDivElement>(null);
   const touchStartX = useRef<number | null>(null);
   const touchEndX = useRef<number | null>(null);
@@ -54,29 +66,6 @@ export default function ProgramsPreview() {
     },
   };
 
-  const programs = [
-    {
-      title: t('steamClubs'),
-      description: t('steamClubsDesc'),
-      image: 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=2071',
-    },
-    {
-      title: t('techBootcamps'),
-      description: t('techBootcampsDesc'),
-      image: 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=2070',
-    },
-    {
-      title: t('cybersafetyTours'),
-      description: t('cybersafetyToursDesc'),
-      image: 'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=2070',
-    },
-    {
-      title: t('startupIncubation'),
-      description: t('startupIncubationDesc'),
-      image: 'https://images.unsplash.com/photo-1552664730-d307ca884978?q=80&w=2070',
-    },
-  ];
-
   const tabs = [
     { id: 'programs' as const, label: t('tabs.programs'), icon: FaFirstdraft },
     { id: 'featured' as const, label: tEvents('tabs.featured'), icon: MdOutlineFeaturedPlayList },
@@ -85,32 +74,55 @@ export default function ProgramsPreview() {
     { id: 'trainings' as const, label: tEvents('tabs.trainings'), icon: PiGraduationCapBold },
   ];
 
-  // Load events from Supabase
+  // Load events, programs, projects, and trainings from Supabase
   useEffect(() => {
     const loadEvents = async () => {
       try {
         setLoadingEvents(true);
         const dbEvents = await getEvents();
         const mappedEvents = dbEvents.map(mapDbEventToEvent);
-        
+
         const featured = mappedEvents.filter(e => e.type === 'featured').slice(0, 3);
         const upcoming = mappedEvents.filter(e => e.type === 'upcoming').slice(0, 2);
-        
+
         setFeaturedEvents(featured);
         setUpcomingEvents(upcoming);
       } catch (error) {
         console.error('Error loading events:', error);
-        // Fallback to empty arrays on error
         setFeaturedEvents([]);
         setUpcomingEvents([]);
       } finally {
         setLoadingEvents(false);
       }
     };
+
+    const loadData = async () => {
+      try {
+        setLoadingData(true);
+        const [programsData, projectsData, trainingsData] = await Promise.all([
+          getPrograms(),
+          getProjects(),
+          getTrainings(),
+        ]);
+
+        setPrograms(programsData);
+        setProjects(projectsData);
+        setTrainings(trainingsData);
+      } catch (error) {
+        console.error('Error loading preview data:', error);
+        setPrograms([]);
+        setProjects([]);
+        setTrainings([]);
+      } finally {
+        setLoadingData(false);
+      }
+    };
+
     loadEvents();
+    loadData();
   }, []);
 
-  const currentProjects = [
+  const currentProjectsFallback = [
     {
       title: tEvents('projects.project1.title'),
       description: tEvents('projects.project1.description'),
@@ -125,7 +137,7 @@ export default function ProgramsPreview() {
     },
   ];
 
-  const trainings = [
+  const trainingsFallback = [
     {
       title: tEvents('trainings.training1.title'),
       description: tEvents('trainings.training1.description'),
@@ -149,10 +161,65 @@ export default function ProgramsPreview() {
     }
   ];
 
+  const programsFallback = [
+    {
+      title: t('steamClubs'),
+      description: t('steamClubsDesc'),
+      image: 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=2071',
+    },
+    {
+      title: t('techBootcamps'),
+      description: t('techBootcampsDesc'),
+      image: 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=2070',
+    },
+    {
+      title: t('cybersafetyTours'),
+      description: t('cybersafetyToursDesc'),
+      image: 'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=2070',
+    },
+    {
+      title: t('startupIncubation'),
+      description: t('startupIncubationDesc'),
+      image: 'https://images.unsplash.com/photo-1552664730-d307ca884978?q=80&w=2070',
+    },
+  ];
+
+  const currentProjects = projects.length > 0
+    ? projects.slice(0, 2).map((project) => ({
+        id: project.id,
+        title: project.title,
+        description: project.description,
+        status: project.status,
+        image: project.image,
+        start_date: project.start_date || undefined,
+        progress: project.progress ?? undefined,
+      }))
+    : currentProjectsFallback;
+
+  const programCards = programs.length > 0
+    ? programs.slice(0, 4).map((program) => ({
+        id: program.id,
+        title: program.title,
+        description: program.description,
+        image: program.image,
+      }))
+    : programsFallback;
+
+  const trainingCards = trainings.length > 0
+    ? trainings.slice(0, 3).map((training) => ({
+        id: training.id,
+        title: training.title,
+        description: training.description,
+        duration: training.duration,
+        level: training.level,
+        image: training.image,
+      }))
+    : trainingsFallback;
+
   const getCurrentData = () => {
     switch (activeTab) {
       case 'programs':
-        return programs;
+        return programCards;
       case 'featured':
         return featuredEvents;
       case 'upcoming':
@@ -160,11 +227,16 @@ export default function ProgramsPreview() {
       case 'projects':
         return currentProjects;
       case 'trainings':
-        return trainings;
+        return trainingCards;
       default:
-        return programs;
+        return programCards;
     }
   };
+
+  const isContentLoading =
+    activeTab === 'featured' || activeTab === 'upcoming'
+      ? loadingEvents
+      : loadingData;
 
   // Check if user has seen swipe hint before
   useEffect(() => {
@@ -412,7 +484,7 @@ export default function ProgramsPreview() {
                         {item.description}
                       </p>
                       <Link 
-                        href="/events-impact" 
+                        href={item.id ? `/events-impact/programs/${item.id}` : '/events-impact'}
                         className="tagline inline-flex items-center gap-2 text-yellow-400 font-semibold text-base md:text-2xl hover:text-yellow-300 transition-colors relative group/link pb-2"
                         onClick={(e) => e.stopPropagation()}
                       >
@@ -533,7 +605,12 @@ export default function ProgramsPreview() {
                         </Link>
                       ) : (
                         <Link
-                          href="/events-impact"
+                          href={item.id && activeTab === 'projects'
+                            ? `/events-impact/projects/${item.id}`
+                            : item.id && activeTab === 'trainings'
+                            ? `/events-impact/trainings/${item.id}`
+                            : '/events-impact'
+                          }
                           className="tagline inline-flex items-center gap-2 text-yellow-400 font-semibold text-base md:text-2xl hover:text-yellow-300 transition-colors group/link mt-auto"
                           onClick={(e) => e.stopPropagation()}
                         >
