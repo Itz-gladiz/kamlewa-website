@@ -357,11 +357,19 @@ export default function TrainingDetailsPage() {
 
                   {/* Action Buttons */}
                   <div className="space-y-3 pt-4 border-t border-white/10">
-                    <Link href="/contact">
-                      <Button variant="primary" className="w-full">
-                        Enroll Now
-                      </Button>
-                    </Link>
+                    {training.title === 'Holiday Tech Bootcamp' ? (
+                      <a href="https://event.fapshi.com/1ecl" target="_blank" rel="noopener noreferrer">
+                        <Button variant="primary" className="w-full">
+                          Enroll Now
+                        </Button>
+                      </a>
+                    ) : (
+                      <Link href="/contact">
+                        <Button variant="primary" className="w-full">
+                          Enroll Now
+                        </Button>
+                      </Link>
+                    )}
                     <Button
                       variant="outline-yellow"
                       onClick={handleShare}
