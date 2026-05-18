@@ -57,7 +57,7 @@ export default function CommunityPage() {
       titleKey: 'communities.kamcyber.title',
       descriptionKey: 'communities.kamcyber.description',
       activitiesKey: 'communities.kamcyber.activities',
-      imageSrc: 'https://dummyimage.com/600x400/1a1a1a/ffffff.png&text=KAMCYBER',
+      imageSrc: '/images/partners/kamcyber.jpg',
     },
     {
       id: 'hackthebox',
@@ -65,7 +65,7 @@ export default function CommunityPage() {
       titleKey: 'communities.hackthebox.title',
       descriptionKey: 'communities.hackthebox.description',
       activitiesKey: 'communities.hackthebox.activities',
-      imageSrc: 'images/partners/hachthebox.png',
+      imageSrc: '/images/lab.jpg',
     },
     {
       id: 'owasp',
@@ -73,7 +73,7 @@ export default function CommunityPage() {
       titleKey: 'communities.owasp.title',
       descriptionKey: 'communities.owasp.description',
       activitiesKey: 'communities.owasp.activities',
-      imageSrc: 'images/partners/owasp_logo.png',
+      imageSrc: '/images/top 10.jpg',
     },
   ];
 

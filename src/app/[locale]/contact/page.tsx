@@ -8,9 +8,11 @@ import { useTranslations } from 'next-intl';
 import toast from 'react-hot-toast';
 import Input from '@/components/Input';
 import Button from '@/components/Button';
-import { HiMail, HiPhone } from 'react-icons/hi';
+import { HiLocationMarker, HiMail, HiPhone } from 'react-icons/hi';
 
 const GOOGLE_SHEETS_URL = process.env.NEXT_PUBLIC_GOOGLE_SHEETS_URL;
+const MAP_QUERY = 'Douala, Cameroon';
+const MAP_EMBED_URL = `https://www.openstreetmap.org/export/embed.html?bbox=11.4265%2C3.7700%2C11.6265%2C3.9700&layer=mapnik&marker=3.8700%2C11.5265`;
 
 export default function ContactPage() {
   const t = useTranslations('contact');
@@ -89,8 +91,8 @@ export default function ContactPage() {
                   </div>
                   <div>
                     <h3 className="text-sm font-semibold text-gray-400 mb-1 uppercase">{t('email')}</h3>
-                    <a href="mailto:aaaaaaaaaa@gmail.com" className="text-white hover:text-yellow-400 transition-colors">
-                      aaaaaaaaaa@gmail.com
+                    <a href="mailto:contact@kamlewa.org" className="text-white hover:text-yellow-400 transition-colors">
+                      contact@kamlewa.org
                     </a>
                   </div>
                 </div>
@@ -101,7 +103,7 @@ export default function ContactPage() {
                   <div>
                     <h3 className="text-sm font-semibold text-gray-400 mb-1 uppercase">{t('primaryPhone')}</h3>
                     <a href="tel:123456789" className="text-white hover:text-yellow-400 transition-colors">
-                      123456789
+                      +237 653 906 594
                     </a>
                   </div>
                 </div>
@@ -112,7 +114,23 @@ export default function ContactPage() {
                   <div>
                     <h3 className="text-sm font-semibold text-gray-400 mb-1 uppercase">{t('secondaryPhone')}</h3>
                     <a href="tel:123456789" className="text-white hover:text-yellow-400 transition-colors">
-                      123456789
+                      +237 671 317 500
+                    </a>
+                  </div>
+                </div>
+                <div className="flex items-start gap-4">
+                  <div className="flex-shrink-0 mt-1">
+                    <HiLocationMarker className="w-6 h-6 text-yellow-400" />
+                  </div>
+                  <div>
+                    <h3 className="text-sm font-semibold text-gray-400 mb-1 uppercase">Location</h3>
+                    <a
+                      href={`https://www.openstreetmap.org/search?query=${encodeURIComponent(MAP_QUERY)}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-white hover:text-yellow-400 transition-colors"
+                    >
+                      Douala, Cameroon
                     </a>
                   </div>
                 </div>
@@ -181,6 +199,27 @@ export default function ContactPage() {
               </form>
             </div>
 
+          </div>
+
+          <div className="mt-12 md:mt-16">
+            <div className="mb-6">
+              <p className="tagline text-yellow-400 text-sm font-semibold mb-3 uppercase tracking-wider relative inline-block">
+                Find Us
+                <span className="absolute bottom-0 left-0 w-1/2 h-0.5 bg-yellow-400"></span>
+              </p>
+              <h2 className="text-2xl md:text-3xl font-bold" style={{ fontFamily: 'var(--font-nourd), sans-serif' }}>
+                Our Location
+              </h2>
+            </div>
+            <div className="overflow-hidden border border-white/10 bg-white/5">
+              <iframe
+                title="KAMLEWA Technologies location map"
+                src={MAP_EMBED_URL}
+                className="h-[320px] w-full md:h-[420px]"
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+              />
+            </div>
           </div>
         </div>
       </section>

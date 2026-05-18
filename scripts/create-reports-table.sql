@@ -9,11 +9,16 @@ CREATE TABLE IF NOT EXISTS public.reports (
   start_year INTEGER NOT NULL,
   end_year INTEGER NOT NULL,
   image TEXT,
+  pdf_url TEXT,
   category TEXT,
   summary TEXT,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
+
+-- Add PDF download support to existing reports tables.
+ALTER TABLE public.reports
+ADD COLUMN IF NOT EXISTS pdf_url TEXT;
 
 -- Enable Row Level Security
 ALTER TABLE public.reports ENABLE ROW LEVEL SECURITY;
@@ -59,6 +64,6 @@ CREATE TRIGGER update_reports_updated_at
   EXECUTE FUNCTION update_updated_at_column();
 
 -- Optional: Insert some sample data
-INSERT INTO public.reports (title, description, start_year, end_year, category, summary) VALUES
-('2023 Annual Report', 'Comprehensive overview of Kamlewa Technologies activities in 2023', 2023, 2023, 'annual', 'A year of growth and impact'),
-('2024 Impact Report', 'Measuring our social impact across communities', 2024, 2024, 'impact', 'Creating lasting change in education and technology');
+INSERT INTO public.reports (title, description, start_year, end_year, image, pdf_url, category, summary) VALUES
+('Annual Report 2023-2024', 'A visual overview of KAMLEWA Technologies activities, reach, and impact for 2023-2024.', 2023, 2024, '/reports/2023-2024-report.png', '/reports/2023-2024-report.pdf', 'annual', 'A year of growth and impact'),
+('Annual Report 2024-2025', 'A visual overview of KAMLEWA Technologies activities, reach, and impact for 2024-2025.', 2024, 2025, '/reports/2024-2025-report.png', '/reports/2024-2025-report.pdf', 'annual', 'Continuing community impact through cyber safety and digital inclusion');

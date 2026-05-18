@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
-import { HiCloudUpload, HiX, HiCheckCircle } from 'react-icons/hi';
+import { HiCloudUpload, HiX, HiCheckCircle, HiDocumentText } from 'react-icons/hi';
 import Image from 'next/image';
 import toast from 'react-hot-toast';
 import Loader from '@/components/Loader';
@@ -11,9 +11,34 @@ interface CloudinaryUploadProps {
   onChange: (url: string) => void;
   label?: string;
   className?: string;
+  accept?: string;
+  fileKind?: 'image' | 'document';
+  maxSizeMb?: number;
+  resourceType?: 'image' | 'raw' | 'auto';
+  readyLabel?: string;
+  uploadText?: string;
+  helpText?: string;
+  compressImages?: boolean;
+  targetUploadSizeMb?: number;
+  usePublicPathForOversizeDocuments?: boolean;
 }
 
-export default function CloudinaryUpload({ value, onChange, label, className = '' }: CloudinaryUploadProps) {
+export default function CloudinaryUpload({
+  value,
+  onChange,
+  label,
+  className = '',
+  accept = 'image/*',
+  fileKind = 'image',
+  maxSizeMb = 10,
+  resourceType = 'image',
+  readyLabel = 'Image Ready',
+  uploadText = 'Click to upload or drag and drop',
+  helpText = 'PNG, JPG, GIF up to 10MB',
+  compressImages = false,
+  targetUploadSizeMb = 9.5,
+  usePublicPathForOversizeDocuments = false,
+}: CloudinaryUploadProps) {
   const [uploading, setUploading] = useState(false);
   const [preview, setPreview] = useState<string | null>(value || null);
   const [dragActive, setDragActive] = useState(false);
@@ -32,16 +57,88 @@ export default function CloudinaryUpload({ value, onChange, label, className = '
   const CLOUDINARY_CLOUD_NAME = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
   const CLOUDINARY_UPLOAD_PRESET = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET;
 
+  const compressImage = async (file: File, targetSizeMb: number): Promise<File> => {
+    const targetBytes = targetSizeMb * 1024 * 1024;
+
+    if (file.size <= targetBytes) {
+      return file;
+    }
+
+    const imageUrl = URL.createObjectURL(file);
+
+    try {
+      const image = await new Promise<HTMLImageElement>((resolve, reject) => {
+        const img = new window.Image();
+        img.onload = () => resolve(img);
+        img.onerror = reject;
+        img.src = imageUrl;
+      });
+
+      const canvas = document.createElement('canvas');
+      let width = image.naturalWidth;
+      let height = image.naturalHeight;
+      let quality = 0.9;
+      let blob: Blob | null = null;
+
+      for (let attempt = 0; attempt < 8; attempt += 1) {
+        const scale = Math.min(1, 2200 / Math.max(width, height));
+        canvas.width = Math.round(width * scale);
+        canvas.height = Math.round(height * scale);
+
+        const context = canvas.getContext('2d');
+        if (!context) {
+          throw new Error('Could not prepare image compression');
+        }
+
+        context.fillStyle = '#ffffff';
+        context.fillRect(0, 0, canvas.width, canvas.height);
+        context.drawImage(image, 0, 0, canvas.width, canvas.height);
+
+        blob = await new Promise<Blob | null>((resolve) => {
+          canvas.toBlob(resolve, 'image/jpeg', quality);
+        });
+
+        if (blob && blob.size <= targetBytes) {
+          break;
+        }
+
+        quality = Math.max(0.62, quality - 0.08);
+        width = Math.round(width * 0.9);
+        height = Math.round(height * 0.9);
+      }
+
+      if (!blob || blob.size > targetBytes) {
+        throw new Error(`Image could not be compressed below ${targetSizeMb}MB`);
+      }
+
+      const fileName = file.name.replace(/\.[^.]+$/, '.jpg');
+      return new File([blob], fileName, { type: 'image/jpeg' });
+    } finally {
+      URL.revokeObjectURL(imageUrl);
+    }
+  };
+
   const handleFile = async (file: File) => {
-    // Validate file type
-    if (!file.type.startsWith('image/')) {
+    if (fileKind === 'image' && !file.type.startsWith('image/')) {
       toast.error('Please select an image file');
       return;
     }
 
-    // Validate file size (max 10MB)
-    if (file.size > 10 * 1024 * 1024) {
-      toast.error('Image size must be less than 10MB');
+    if (fileKind === 'document' && accept.includes('application/pdf') && file.type !== 'application/pdf') {
+      toast.error('Please select a PDF file');
+      return;
+    }
+
+    if (file.size > maxSizeMb * 1024 * 1024) {
+      if (fileKind === 'document' && usePublicPathForOversizeDocuments) {
+        const publicPath = `/${encodeURIComponent(file.name)}`;
+        onChange(publicPath);
+        setPreview(publicPath);
+        toast.success('Large PDF linked from the public folder');
+        return;
+      }
+
+      toast.error(`File size must be less than ${maxSizeMb}MB`);
       return;
     }
 
@@ -51,17 +148,35 @@ export default function CloudinaryUpload({ value, onChange, label, className = '
     }
 
     setUploading(true);
-    const objectUrl = URL.createObjectURL(file);
+    let uploadFile = file;
+    const shouldCompressImage =
+      fileKind === 'image' && compressImages && file.size > targetUploadSizeMb * 1024 * 1024;
+
+    if (shouldCompressImage) {
+      toast.loading('Compressing image for upload...', { id: 'compress-image' });
+      try {
+        uploadFile = await compressImage(file, targetUploadSizeMb);
+        toast.success('Image compressed for upload', { id: 'compress-image' });
+      } catch (error) {
+        toast.dismiss('compress-image');
+        const message = error instanceof Error ? error.message : 'Unknown compression error';
+        toast.error(message);
+        setUploading(false);
+        return;
+      }
+    }
+
+    const objectUrl = URL.createObjectURL(uploadFile);
     setPreview(objectUrl);
 
     try {
       const formData = new FormData();
-      formData.append('file', file);
+      formData.append('file', uploadFile);
       formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
       formData.append('cloud_name', CLOUDINARY_CLOUD_NAME);
 
       const response = await fetch(
-        `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`,
+        `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/${resourceType}/upload`,
         {
           method: 'POST',
           body: formData,
@@ -69,16 +184,19 @@ export default function CloudinaryUpload({ value, onChange, label, className = '
       );
 
       if (!response.ok) {
-        throw new Error('Upload failed');
+        const errorData = await response.json().catch(() => null);
+        const message = errorData?.error?.message || 'Upload failed';
+        throw new Error(message);
       }
 
       const data = await response.json();
       onChange(data.secure_url);
-      toast.success('Image uploaded successfully');
+      toast.success(fileKind === 'image' ? 'Image uploaded successfully' : 'File uploaded successfully');
       URL.revokeObjectURL(objectUrl);
     } catch (error) {
       console.error('Upload error:', error);
-      toast.error('Failed to upload image');
+      const message = error instanceof Error ? error.message : 'Unknown error';
+      toast.error(`Failed to upload file: ${message}`);
       setPreview(value || null);
       URL.revokeObjectURL(objectUrl);
     } finally {
@@ -128,12 +246,21 @@ export default function CloudinaryUpload({ value, onChange, label, className = '
       
       {preview ? (
         <div className="relative w-full h-56 border-2 border-white/20 bg-white/5 rounded-lg overflow-hidden group">
-          <Image
-            src={preview}
-            alt="Preview"
-            fill
-            className="object-cover transition-transform group-hover:scale-105"
-          />
+          {fileKind === 'image' ? (
+            <Image
+              src={preview}
+              alt="Preview"
+              fill
+              className="object-cover transition-transform group-hover:scale-105"
+            />
+          ) : (
+            <div className="flex h-full flex-col items-center justify-center gap-3 px-6 text-center">
+              <HiDocumentText className="h-14 w-14 text-yellow-400" />
+              <p className="max-w-full truncate text-sm font-medium text-white">
+                {preview}
+              </p>
+            </div>
+          )}
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
           <button
             type="button"
@@ -147,7 +274,7 @@ export default function CloudinaryUpload({ value, onChange, label, className = '
             <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between">
               <div className="flex items-center gap-2 px-3 py-1.5 bg-green-500/90 rounded-full text-white text-xs font-medium">
                 <HiCheckCircle className="w-4 h-4" />
-                Image Ready
+                {readyLabel}
               </div>
               <button
                 type="button"
@@ -183,7 +310,7 @@ export default function CloudinaryUpload({ value, onChange, label, className = '
           <input
             ref={fileInputRef}
             type="file"
-            accept="image/*"
+            accept={accept}
             onChange={handleFileSelect}
             className="hidden"
             disabled={uploading}
@@ -191,7 +318,7 @@ export default function CloudinaryUpload({ value, onChange, label, className = '
           {uploading ? (
             <>
               <Loader size={48} className="mx-auto mb-4" />
-              <p className="text-sm text-yellow-400 font-medium mb-1">Uploading image...</p>
+              <p className="text-sm text-yellow-400 font-medium mb-1">Uploading file...</p>
               <p className="text-xs text-gray-400">Please wait</p>
             </>
           ) : (
@@ -202,9 +329,9 @@ export default function CloudinaryUpload({ value, onChange, label, className = '
               <p className={`text-sm mb-2 font-medium transition-colors ${
                 dragActive ? 'text-yellow-400' : 'text-gray-300'
               }`}>
-                {dragActive ? 'Drop image here' : 'Click to upload or drag and drop'}
+                {dragActive ? 'Drop file here' : uploadText}
               </p>
-              <p className="text-xs text-gray-500">PNG, JPG, GIF up to 10MB</p>
+              <p className="text-xs text-gray-500">{helpText}</p>
             </>
           )}
         </div>
@@ -212,4 +339,3 @@ export default function CloudinaryUpload({ value, onChange, label, className = '
     </div>
   );
 }
-

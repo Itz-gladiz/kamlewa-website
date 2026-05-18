@@ -8,9 +8,8 @@ import Pagination from '@/components/Pagination';
 import { useTranslations } from 'next-intl';
 import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
-import { HiClock, HiUsers, HiArrowRight, HiSearch, HiX } from 'react-icons/hi';
+import { HiClock, HiUsers, HiArrowRight, HiSearch, HiX, HiDownload } from 'react-icons/hi';
 import { Link } from '@/i18n/routing';
-import Button from '@/components/Button';
 import Input from '@/components/Input';
 import { MdOutlineFeaturedPlayList, MdOutlineSwipe } from 'react-icons/md';
 import { HiOutlineClipboardDocumentList } from 'react-icons/hi2';
@@ -19,25 +18,107 @@ import { HiOutlineCalendarDateRange } from 'react-icons/hi2';
 import { PiGraduationCapBold } from 'react-icons/pi';
 import { VscLocation } from 'react-icons/vsc';
 import { PiClockCountdownFill } from 'react-icons/pi';
-import { Program } from '@/data/programs';
 import { Event } from '@/data/events';
 import { Project } from '@/data/projects';
 import { Training } from '@/data/trainings';
+import { Program } from '@/data/programs';
 import { getEvents } from '@/lib/supabase/events';
 import { getProjects } from '@/lib/supabase/projects';
-import { getTrainings } from '@/lib/supabase/trainings';
 import { getPrograms } from '@/lib/supabase/programs';
+import { getTrainings } from '@/lib/supabase/trainings';
 import { getReports } from '@/lib/supabase/reports';
 import { mapDbEventToEvent } from '@/utils/eventMapper';
 import { mapDbProjectToProject } from '@/utils/projectMapper';
-import { mapDbTrainingToTraining } from '@/utils/trainingMapper';
 import { mapDbProgramToProgram } from '@/utils/programMapper';
+import { mapDbTrainingToTraining } from '@/utils/trainingMapper';
 import toast from 'react-hot-toast';
 import Loader from '@/components/Loader';
+import { Report, mergeStaticReports } from '@/data/staticReports';
 
 type TabType = 'programs' | 'featured' | 'upcoming' | 'projects' | 'trainings' | 'reports';
+type CardItem = Event | Project | Training | Program | Report;
+
+type SecureByDesignItem = {
+  image: string;
+  title: string;
+  brief: string;
+};
+
+const isReportItem = (item: CardItem): item is Report =>
+  'start_year' in item && 'end_year' in item;
 
 const ITEMS_PER_PAGE = 6;
+
+const getReportPdfUrl = (report: Report) =>
+  report.pdf_url || `/reports/${report.start_year}-${report.end_year}-report.pdf`;
+
+const secureByDesignItems: SecureByDesignItem[] = [
+  {
+    image: '/images/KAMLEWA%20-%20THE%20SECURE%20BY%20DESIGN%20MOVEMENT/1.png',
+    title: 'Secure by Design Movement',
+    brief: 'A community-centered movement helping young people understand that security should be planned from the beginning, not added after harm is done.',
+  },
+  {
+    image: '/images/KAMLEWA%20-%20THE%20SECURE%20BY%20DESIGN%20MOVEMENT/2.png',
+    title: 'Cyber Safety First',
+    brief: 'We introduce practical cyber safety habits that help students, creators, and communities protect their digital identity and online spaces.',
+  },
+  {
+    image: '/images/KAMLEWA%20-%20THE%20SECURE%20BY%20DESIGN%20MOVEMENT/3.png',
+    title: 'Building Awareness',
+    brief: 'The movement uses visual storytelling, workshops, and outreach to make secure technology choices easier to understand and apply.',
+  },
+  {
+    image: '/images/KAMLEWA%20-%20THE%20SECURE%20BY%20DESIGN%20MOVEMENT/4.png',
+    title: 'Designing With Responsibility',
+    brief: 'Participants learn to think about privacy, trust, safety, and user protection while designing digital products and services.',
+  },
+  {
+    image: '/images/KAMLEWA%20-%20THE%20SECURE%20BY%20DESIGN%20MOVEMENT/5.png',
+    title: 'Community Conversations',
+    brief: 'We create room for open conversations about cyber risks, responsible technology use, and the choices that make online communities safer.',
+  },
+  {
+    image: '/images/KAMLEWA%20-%20THE%20SECURE%20BY%20DESIGN%20MOVEMENT/6.png',
+    title: 'Youth-Led Security Culture',
+    brief: 'Young people are encouraged to become champions of secure behavior in schools, homes, startups, and local technology communities.',
+  },
+  {
+    image: '/images/KAMLEWA%20-%20THE%20SECURE%20BY%20DESIGN%20MOVEMENT/7.png',
+    title: 'Practical Digital Protection',
+    brief: 'The program connects security principles with daily actions like stronger authentication, safer sharing, device hygiene, and scam awareness.',
+  },
+  {
+    image: '/images/KAMLEWA%20-%20THE%20SECURE%20BY%20DESIGN%20MOVEMENT/8.png',
+    title: 'Inclusive Technology Safety',
+    brief: 'Secure by design also means making safety knowledge accessible to communities that are often left out of technical conversations.',
+  },
+  {
+    image: '/images/KAMLEWA%20-%20THE%20SECURE%20BY%20DESIGN%20MOVEMENT/9.png',
+    title: 'From Awareness to Action',
+    brief: 'Beyond learning concepts, participants are guided to apply secure thinking in real projects, online behavior, and community initiatives.',
+  },
+  {
+    image: '/images/KAMLEWA%20-%20THE%20SECURE%20BY%20DESIGN%20MOVEMENT/10.png',
+    title: 'Safer Digital Products',
+    brief: 'We promote product thinking where developers and entrepreneurs consider user safety, abuse prevention, and data protection from day one.',
+  },
+  {
+    image: '/images/KAMLEWA%20-%20THE%20SECURE%20BY%20DESIGN%20MOVEMENT/11.png',
+    title: 'Shared Responsibility',
+    brief: 'Security belongs to everyone: learners, builders, leaders, families, and institutions all have a role in building safer digital spaces.',
+  },
+  {
+    image: '/images/KAMLEWA%20-%20THE%20SECURE%20BY%20DESIGN%20MOVEMENT/12.png',
+    title: 'Trust Through Education',
+    brief: 'The movement strengthens digital trust by giving people the confidence to recognize risks and make informed security decisions.',
+  },
+  {
+    image: '/images/KAMLEWA%20-%20THE%20SECURE%20BY%20DESIGN%20MOVEMENT/13.png',
+    title: 'A Safer Digital Future',
+    brief: 'KAMLEWA uses this movement to inspire safer innovation and a future where communities feel protected, empowered, and connected online.',
+  },
+];
 
 export default function EventsImpactPage() {
   const t = useTranslations('eventsImpact');
@@ -48,11 +129,11 @@ export default function EventsImpactPage() {
   const [activeTab, setActiveTab] = useState<TabType>('programs');
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
-  const [programs, setPrograms] = useState<Program[]>([]);
   const [events, setEvents] = useState<Event[]>([]);
   const [projects, setProjects] = useState<Project[]>([]);
+  const [programs, setPrograms] = useState<Program[]>([]);
   const [trainings, setTrainings] = useState<Training[]>([]);
-  const [reports, setReports] = useState<any[]>([]);
+  const [reports, setReports] = useState<Report[]>([]);
   const [loading, setLoading] = useState(true);
   const [showSwipeHint, setShowSwipeHint] = useState(false);
   const contentContainerRef = useRef<HTMLDivElement>(null);
@@ -71,19 +152,19 @@ export default function EventsImpactPage() {
         setLoading(true);
 
         try {
-          const dbPrograms = await getPrograms();
-          setPrograms(dbPrograms.map(mapDbProgramToProgram));
-        } catch (e) {
-          console.error('Error loading programs:', e);
-          setPrograms([]);
-        }
-
-        try {
           const dbEvents = await getEvents();
           setEvents(dbEvents.map(mapDbEventToEvent));
         } catch (e) {
           console.error('Error loading events:', e);
           setEvents([]);
+        }
+
+        try {
+          const dbPrograms = await getPrograms();
+          setPrograms(dbPrograms.map(mapDbProgramToProgram));
+        } catch (e) {
+          console.error('Error loading programs:', e);
+          setPrograms([]);
         }
 
         try {
@@ -104,10 +185,10 @@ export default function EventsImpactPage() {
 
         try {
           const dbReports = await getReports();
-          setReports(dbReports);
+          setReports(mergeStaticReports(dbReports));
         } catch (e) {
           console.error('Error loading reports:', e);
-          setReports([]);
+          setReports(mergeStaticReports([]));
         }
       } catch (error) {
         console.error('Error loading data:', error);
@@ -179,7 +260,7 @@ export default function EventsImpactPage() {
 
   // ✅ Unified data flow for ALL tabs including reports
   const { filteredData, totalPages } = useMemo(() => {
-    let data: any[] = [];
+    let data: CardItem[] = [];
     switch (activeTab) {
       case 'programs':  data = programs; break;
       case 'featured':  data = events.filter((e) => e.type === 'featured'); break;
@@ -203,7 +284,7 @@ export default function EventsImpactPage() {
       filteredData: filtered.slice(startIndex, startIndex + ITEMS_PER_PAGE),
       totalPages: total,
     };
-  }, [activeTab, searchQuery, currentPage, programs, events, projects, trainings, reports]);
+  }, [activeTab, searchQuery, currentPage, events, projects, programs, trainings, reports]);
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -216,21 +297,197 @@ export default function EventsImpactPage() {
   };
 
   // ✅ FIX: key prop is on the outermost element <Link>, not buried inside motion.div
-  const renderCard = (item: any) => {
+  const renderOverview = () => {
+    const filteredMovement = searchQuery
+      ? secureByDesignItems.filter(
+          (item) =>
+            item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            item.brief.toLowerCase().includes(searchQuery.toLowerCase())
+        )
+      : secureByDesignItems;
+
+    if (filteredMovement.length === 0) {
+      return (
+        <motion.div className="text-center py-12" variants={itemVariants}>
+          <p className="text-gray-400 text-lg">No Secure by Design movement items match your search.</p>
+        </motion.div>
+      );
+    }
+
+    return (
+      <div className="space-y-12">
+        <motion.div className="max-w-4xl" variants={itemVariants}>
+          <p className="tagline text-yellow-400 text-sm font-semibold mb-5 uppercase tracking-wider relative inline-block">
+            KAMLEWA
+            <span className="absolute bottom-0 left-0 w-1/2 h-0.5 bg-yellow-400" />
+          </p>
+          <h3 className="text-3xl md:text-5xl font-bold mb-5" style={{ fontFamily: 'var(--font-nourd), sans-serif' }}>
+            The Secure by Design Movement
+          </h3>
+          <p className="text-gray-300 text-base md:text-lg leading-relaxed">
+            This program promotes a security-first mindset for communities, learners, builders, and organizations. Through visual learning and practical outreach, KAMLEWA helps people understand that safe technology begins with intentional design.
+          </p>
+        </motion.div>
+
+        <div className="space-y-14">
+          {filteredMovement.map((item, index) => {
+            const reverse = index % 2 === 1;
+
+            return (
+              <motion.article
+                key={item.image}
+                className={`grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-10 items-center ${
+                  reverse ? 'lg:[&>*:first-child]:order-2' : ''
+                }`}
+                variants={itemVariants}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true, margin: '-80px' }}
+              >
+                <div className="relative min-h-[260px] overflow-hidden bg-white/5 md:min-h-[380px]">
+                  <Image
+                    src={item.image}
+                    alt={item.title}
+                    fill
+                    className="object-cover"
+                    sizes="(max-width: 1024px) 100vw, 50vw"
+                    unoptimized
+                  />
+                </div>
+
+                <div className="border-l-4 border-yellow-400 pl-6">
+                  <span className="mb-3 inline-block text-sm font-semibold text-yellow-400">
+                    {String(index + 1).padStart(2, '0')}
+                  </span>
+                  <h4 className="mb-4 text-2xl md:text-3xl font-bold text-white" style={{ fontFamily: 'var(--font-nourd), sans-serif' }}>
+                    {item.title}
+                  </h4>
+                  <p className="text-gray-300 text-base md:text-lg leading-relaxed">
+                    {item.brief}
+                  </p>
+                </div>
+              </motion.article>
+            );
+          })}
+        </div>
+
+        <motion.div
+          className="grid grid-cols-1 gap-4 border border-white/10 bg-white/[0.03] p-6 md:grid-cols-3"
+          variants={itemVariants}
+        >
+          <button
+            type="button"
+            onClick={() => setActiveTab('featured')}
+            className="text-left text-yellow-400 hover:text-yellow-300"
+          >
+            View Featured Events <HiArrowRight className="inline h-4 w-4" />
+          </button>
+          <button
+            type="button"
+            onClick={() => setActiveTab('trainings')}
+            className="text-left text-yellow-400 hover:text-yellow-300"
+          >
+            View Trainings <HiArrowRight className="inline h-4 w-4" />
+          </button>
+          <button
+            type="button"
+            onClick={() => setActiveTab('reports')}
+            className="text-left text-yellow-400 hover:text-yellow-300"
+          >
+            View Reports <HiArrowRight className="inline h-4 w-4" />
+          </button>
+        </motion.div>
+      </div>
+    );
+  };
+
+  const renderCard = (item: CardItem) => {
     const isEvent    = 'type' in item;
     const isProject  = 'status' in item && 'progress' in item;
+    const isProgram  = 'locations' in item && 'category' in item && !('level' in item);
     const isTraining = 'level' in item && 'duration' in item;
-    const isReport   = 'start_year' in item && 'end_year' in item;
-    const isProgram  = 'fullDescription' in item;
+    const isReport   = isReportItem(item);
 
     const getDetailUrl = () => {
       if (isEvent)    return `/events-impact/${item.id}`;
-      if (isProgram)  return `/events-impact/programs/${item.id}`;
       if (isProject)  return `/events-impact/projects/${item.id}`;
+      if (isProgram)  return `/events-impact/programs/${item.id}`;
       if (isTraining) return `/events-impact/trainings/${item.id}`;
-      if (isReport)   return `/events-impact/reports/${item.id}`;
       return '/contact';
     };
+
+    if (isReport) {
+      const reportLabel = `${item.start_year} - ${item.end_year}`;
+      const pdfUrl = getReportPdfUrl(item);
+
+      return (
+        <motion.article
+          key={item.id}
+          className="group flex h-full flex-col overflow-hidden border border-white/10 bg-white/[0.03] transition-all duration-300 hover:border-yellow-400/50"
+          variants={itemVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+        >
+          <Link href={`/events-impact/reports/${item.id}`} className="flex flex-1 flex-col">
+            <div className="relative bg-white p-3 sm:p-4">
+              <div className="relative aspect-[3/4] w-full overflow-hidden bg-gray-100">
+                {item.image ? (
+                  <Image
+                    src={item.image}
+                    alt={`Annual Report ${reportLabel}`}
+                    fill
+                    className="object-contain transition-transform duration-500 group-hover:scale-[1.02]"
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                    unoptimized
+                  />
+                ) : (
+                  <div className="flex h-full items-center justify-center bg-gray-100">
+                    <HiOutlineClipboardDocumentList className="h-16 w-16 text-gray-400" />
+                  </div>
+                )}
+              </div>
+            </div>
+
+            <div className="flex flex-1 flex-col p-6 pb-0">
+              <div className="mb-3 flex items-center justify-between gap-3">
+                <span className="bg-yellow-400/15 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-yellow-400">
+                  {item.category || 'Annual'}
+                </span>
+                <span className="flex items-center gap-2 text-sm text-gray-400">
+                  <HiClock className="h-4 w-4" />
+                  {reportLabel}
+                </span>
+              </div>
+
+              <h3 className="mb-3 text-xl font-bold text-white md:text-2xl" style={{ fontFamily: 'var(--font-nourd), sans-serif' }}>
+                {item.title || `Annual Report ${reportLabel}`}
+              </h3>
+              <p className="mb-4 line-clamp-3 text-sm leading-relaxed text-gray-300 md:text-base">
+                {item.description || item.summary}
+              </p>
+
+              <div className="mb-5 inline-flex items-center gap-2 text-sm font-semibold text-yellow-400">
+                Read Description & Summary <HiArrowRight className="h-4 w-4" />
+              </div>
+            </div>
+          </Link>
+
+          <div className="p-6 pt-0">
+            <a
+              href={pdfUrl}
+              download
+              onClick={(event) => event.stopPropagation()}
+              className="inline-flex w-full items-center justify-center gap-2 bg-yellow-400 px-4 py-3 text-sm font-bold text-black transition-colors hover:bg-yellow-300"
+              aria-label={`Download Full Report PDF for ${reportLabel}`}
+            >
+              <HiDownload className="h-5 w-5" />
+              Download Full Report (PDF)
+            </a>
+          </div>
+        </motion.article>
+      );
+    }
 
     return (
       <Link key={item.id} href={getDetailUrl()}>
@@ -261,12 +518,6 @@ export default function EventsImpactPage() {
 
           {/* Content */}
           <div className="p-6">
-            {isReport && (
-              <span className="px-3 py-1 bg-yellow-400/20 text-yellow-400 text-xs font-semibold rounded-full mb-3 inline-block">
-                {item.category}
-              </span>
-            )}
-
             <h3 className="text-xl md:text-2xl font-bold text-white mb-3" style={{ fontFamily: 'var(--font-nourd), sans-serif' }}>
               {item.title}
             </h3>
@@ -312,6 +563,29 @@ export default function EventsImpactPage() {
               </div>
             )}
 
+            {/* Program metadata */}
+            {isProgram && (
+              <div className="space-y-2 mb-4">
+                {item.duration && (
+                  <div className="flex items-center gap-2 text-yellow-400 text-sm">
+                    <PiClockCountdownFill className="w-4 h-4" />
+                    <span>{item.duration}</span>
+                  </div>
+                )}
+                {item.participants && (
+                  <div className="flex items-center gap-2 text-gray-400 text-sm">
+                    <HiUsers className="w-4 h-4" />
+                    <span>{item.participants} participants</span>
+                  </div>
+                )}
+                {item.category && (
+                  <div className={`inline-block px-3 py-1 rounded-full text-xs font-semibold bg-blue-500/20 text-blue-400`}>
+                    {item.category}
+                  </div>
+                )}
+              </div>
+            )}
+
             {/* Training metadata */}
             {isTraining && (
               <div className="space-y-2 mb-4">
@@ -327,14 +601,6 @@ export default function EventsImpactPage() {
                   {item.level}
                 </div>
                 {item.format && <div className="text-gray-400 text-sm">Format: {item.format}</div>}
-              </div>
-            )}
-
-            {/* Report metadata */}
-            {isReport && (
-              <div className="flex items-center gap-2 text-gray-400 text-sm mb-4">
-                <HiClock className="w-4 h-4" />
-                <span>{item.start_year} - {item.end_year}</span>
               </div>
             )}
 
@@ -476,7 +742,7 @@ export default function EventsImpactPage() {
                   <motion.h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6" variants={itemVariants} style={{ fontFamily: 'var(--font-nourd), sans-serif' }}>
                     {tabs.find((tab) => tab.id === activeTab)?.label}
                   </motion.h2>
-                  {searchQuery && (
+                  {searchQuery && activeTab !== 'programs' && (
                     <motion.p className="text-gray-300" variants={itemVariants}>
                       Found {filteredData.length} result{filteredData.length !== 1 ? 's' : ''} for &quot;{searchQuery}&quot;
                     </motion.p>
@@ -503,6 +769,8 @@ export default function EventsImpactPage() {
                       <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage} />
                     )}
                   </>
+                ) : activeTab === 'programs' ? (
+                  renderOverview()
                 ) : (
                   <motion.div className="text-center py-12" variants={itemVariants}>
                     <p className="text-gray-400 text-lg">

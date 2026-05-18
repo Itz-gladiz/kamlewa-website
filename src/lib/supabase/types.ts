@@ -211,6 +211,7 @@ export type Database = {
           start_year: number;
           end_year: number;
           image: string;
+          pdf_url: string | null;
           category: string;
           summary: string;
           created_at: string;
@@ -223,6 +224,7 @@ export type Database = {
           start_year: number;
           end_year: number;
           image?: string;
+          pdf_url?: string | null;
           category: string;
           summary?: string;
           created_at?: string;
@@ -235,6 +237,7 @@ export type Database = {
           start_year?: number;
           end_year?: number;
           image?: string;
+          pdf_url?: string | null;
           category?: string;
           summary?: string;
           created_at?: string;

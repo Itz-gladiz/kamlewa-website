@@ -202,7 +202,7 @@ export default function EventDetailsPage() {
   return (
   <>
     <Navbar />
-    <main className="relative bg-white text-black">
+    <main className="bg-[#1a1a1a] text-white p-6 md:p-12 lg:p-16">
       {/* Page Banner */}
       <PageBanner
         subheading={tPage('subheading')}
@@ -261,7 +261,7 @@ export default function EventDetailsPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
-              className="bg-white/5 border border-white/10 p-6 space-y-4"
+              className="bg-[#555555] border border-black/10 p-6 space-y-6 text-black shadow-lg"
             >
               <h3 className="text-xl font-bold mb-4">Event Details</h3>
               <div className="space-y-3">
@@ -295,18 +295,18 @@ export default function EventDetailsPage() {
               className="sticky top-24 space-y-6"
             >
               {/* Registration Card */}
-              <div className="bg-white/5 border border-white/10 p-6 space-y-6">
+              <div className="bg-[#555555] border border-black/10 p-6 space-y-6 text-black shadow-lg">
                 <div>
                   <h3 className="text-2xl font-bold mb-2" style={{ fontFamily: 'var(--font-nourd), sans-serif' }}>
                     Register Now
                   </h3>
                   {event.maxParticipants && (
-                    <div className="flex items-center justify-between pt-2 border-t border-white/10 mt-2">
-                      <span className="text-sm text-gray-400">
+                    <div className="flex items-center justify-between pt-2 border-t border-black/15 mt-2">
+                      <span className="text-sm text-black/70">
                         {registeredCount} / {event.maxParticipants} registered
                       </span>
                       {spotsLeft !== null && (
-                        <span className={`text-sm font-semibold ${isFull ? 'text-red-400' : 'text-yellow-400'}`}>
+                        <span className={`text-sm font-semibold ${isFull ? 'text-red-700' : 'text-black'}`}>
                           {isFull ? t('full') : `${spotsLeft} ${t('spotsAvailable')}`}
                         </span>
                       )}
@@ -322,7 +322,7 @@ export default function EventDetailsPage() {
                       value={formData.name}
                       onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                       required
-                      className="bg-white/10 border-white/30 placeholder-gray-100! focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400"
+                      className="bg-white border-black/20 text-black placeholder-black/50 focus:ring-2 focus:ring-black/20 focus:border-black"
                     />
                     <Input
                       type="email"
@@ -330,7 +330,7 @@ export default function EventDetailsPage() {
                       value={formData.email}
                       onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                       required
-                      className="bg-white/10 border-white/30 placeholder-gray-100! focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400"
+                      className="bg-white border-black/20 text-black placeholder-black/50 focus:ring-2 focus:ring-black/20 focus:border-black"
                     />
                     <Input
                       type="tel"
@@ -338,7 +338,7 @@ export default function EventDetailsPage() {
                       value={formData.phone}
                       onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                       required
-                      className="bg-white/10 border-white/30 placeholder-gray-100! focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400"
+                      className="bg-white border-black/20 text-black placeholder-black/50 focus:ring-2 focus:ring-black/20 focus:border-black"
                     />
                     <Button
                       type="submit"
@@ -358,7 +358,7 @@ export default function EventDetailsPage() {
                 )}
 
                 {/* Action Buttons */}
-                <div className="space-y-3 pt-4 border-t border-white/10">
+                <div className="space-y-3 pt-4 border-t border-black/15">
                   <Button
                     variant="outline-yellow"
                     onClick={handleShare}
