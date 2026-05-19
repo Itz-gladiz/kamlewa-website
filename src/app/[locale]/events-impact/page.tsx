@@ -5,6 +5,7 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import PageBanner from '@/components/PageBanner';
 import Pagination from '@/components/Pagination';
+import BackToHome from '@/components/BackToHome';
 import { useTranslations } from 'next-intl';
 import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
@@ -632,6 +633,7 @@ export default function EventsImpactPage() {
         heading={t('heading')}
         description={t('description')}
       />
+      <BackToHome />
 
       {/* Mobile Tabs */}
       <div className="sticky top-20 md:hidden z-50 bg-black border-b border-gray-800 shadow-lg">

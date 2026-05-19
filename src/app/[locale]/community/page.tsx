@@ -14,6 +14,7 @@ import CustomSelect from '@/components/Select';
 import Image from 'next/image';
 import { HiShieldCheck, HiUsers, HiCode } from 'react-icons/hi';
 import { PiHandshake } from 'react-icons/pi';
+import BackToHome from '@/components/BackToHome';
 
 const GOOGLE_SHEETS_URL = process.env.NEXT_PUBLIC_GOOGLE_SHEETS_URL;
 
@@ -175,6 +176,7 @@ export default function CommunityPage() {
         heading={tPage('heading')}
         description={tPage('description')}
       />
+      <BackToHome />
 
       {/* Our Communities Section */}
       <section className="bg-black text-white py-16 md:py-24">
