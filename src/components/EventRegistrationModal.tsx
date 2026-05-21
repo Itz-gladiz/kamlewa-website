@@ -149,8 +149,10 @@ export default function EventRegistrationModal({
           {/* Header */}
           <div className="relative bg-gradient-to-r from-yellow-400/10 to-yellow-400/5 border-b border-white/10 p-6">
             <button
+             type='button'
               onClick={onClose}
               className="absolute top-4 right-4 text-white/60 hover:text-white transition-colors"
+              aria-label="Close registration"
             >
               <HiX className="w-6 h-6" />
             </button>

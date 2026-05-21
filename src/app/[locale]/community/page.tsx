@@ -17,16 +17,14 @@ import { PiHandshake } from 'react-icons/pi';
 
 const GOOGLE_SHEETS_URL = process.env.NEXT_PUBLIC_GOOGLE_SHEETS_URL;
 
-// Reusable no-cors submit to Google Sheets
-async function submitToGoogleSheets(payload: Record<string, string>) {
-  if (!GOOGLE_SHEETS_URL) throw new Error('Google Sheets URL is not configured');
+async function sendToSheets(payload: Record<string, string>) {
+  if (!GOOGLE_SHEETS_URL) return;
   await fetch(GOOGLE_SHEETS_URL, {
     method: 'POST',
     mode: 'no-cors',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(payload),
   });
-  // no-cors always resolves — treat as success
 }
 
 export default function CommunityPage() {
@@ -120,7 +118,7 @@ export default function CommunityPage() {
     const loadingToast = toast.loading(tPage('volunteering.form.submitting'));
 
     try {
-      await submitToGoogleSheets({
+      await sendToSheets({
         sheetName: 'Volunteers',
         name: volunteerForm.name,
         email: volunteerForm.email,
@@ -129,15 +127,13 @@ export default function CommunityPage() {
         availability: volunteerForm.availability || 'N/A',
         message: volunteerForm.message,
       });
-      toast.success(tPage('volunteering.form.success'), { id: loadingToast });
-      setVolunteerForm({ name: '', email: '', phone: '', expertise: '', availability: '', message: '' });
-    } catch {
-      // no-cors fetch always resolves — this only fires on network failure
-      toast.success(tPage('volunteering.form.success'), { id: loadingToast });
-      setVolunteerForm({ name: '', email: '', phone: '', expertise: '', availability: '', message: '' });
-    } finally {
-      setIsSubmittingVolunteer(false);
+    } catch (error) {
+      console.error(error);
     }
+
+    toast.success(tPage('volunteering.form.success'), { id: loadingToast });
+    setVolunteerForm({ name: '', email: '', phone: '', expertise: '', availability: '', message: '' });
+    setIsSubmittingVolunteer(false);
   };
 
   const handlePartnershipSubmit = async (e: React.FormEvent) => {
@@ -146,7 +142,7 @@ export default function CommunityPage() {
     const loadingToast = toast.loading(tPage('partnerships.form.submitting'));
 
     try {
-      await submitToGoogleSheets({
+      await sendToSheets({
         sheetName: 'Partnerships',
         name: partnershipForm.name,
         email: partnershipForm.email,
@@ -155,15 +151,13 @@ export default function CommunityPage() {
         partnershipType: partnershipForm.partnershipType || 'N/A',
         message: partnershipForm.message,
       });
-      toast.success(tPage('partnerships.form.success'), { id: loadingToast });
-      setPartnershipForm({ name: '', email: '', phone: '', organization: '', partnershipType: '', message: '' });
-    } catch {
-      // no-cors fetch always resolves — this only fires on network failure
-      toast.success(tPage('partnerships.form.success'), { id: loadingToast });
-      setPartnershipForm({ name: '', email: '', phone: '', organization: '', partnershipType: '', message: '' });
-    } finally {
-      setIsSubmittingPartnership(false);
+    } catch (error) {
+      console.error(error);
     }
+
+    toast.success(tPage('partnerships.form.success'), { id: loadingToast });
+    setPartnershipForm({ name: '', email: '', phone: '', organization: '', partnershipType: '', message: '' });
+    setIsSubmittingPartnership(false);
   };
 
   return (

@@ -38,10 +38,10 @@ export default function EventDetailsPage() {
   const [copied, setCopied] = useState(false);
 
   useEffect(() => {
-    const loadEvent = async () => {
+    const loadEvent = async (eventId: string) => {
       try {
         setLoading(true);
-        const dbEvent = await getEventById(params.eventId as string);
+        const dbEvent = await getEventById(eventId);
         const mappedEvent = mapDbEventToEvent(dbEvent);
         
         // Load registrations for this event
@@ -51,13 +51,19 @@ export default function EventDetailsPage() {
             .filter(reg => reg.status === 'confirmed')
             .map(mapDbRegistrationToParticipant);
         } catch (error) {
-          console.error('Error loading registrations:', error);
+          console.error('Error loading registrations:', error instanceof Error ? error.message : JSON.stringify(error, Object.getOwnPropertyNames(error)));
           mappedEvent.registeredParticipants = [];
         }
         
         setEvent(mappedEvent);
       } catch (error) {
-        console.error('Error loading event:', error);
+        const errorMessage = error instanceof Error
+          ? error.message
+          : error && typeof error === 'object'
+            ? JSON.stringify(error, Object.getOwnPropertyNames(error))
+            : String(error);
+
+        console.error('Error loading event:', errorMessage, { eventId: params.eventId });
         toast.error('Event not found');
         setEvent(null);
       } finally {
@@ -65,8 +71,11 @@ export default function EventDetailsPage() {
       }
     };
     
-    if (params.eventId) {
-      loadEvent();
+    const eventId = typeof params.eventId === 'string' ? params.eventId : undefined;
+    if (eventId) {
+      loadEvent(eventId);
+    } else {
+      setLoading(false);
     }
   }, [params.eventId]);
 
