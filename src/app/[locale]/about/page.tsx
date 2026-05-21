@@ -3,6 +3,7 @@
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import PageBanner from '@/components/PageBanner';
+import BackToHome from '@/components/BackToHome';
 import { useTranslations } from 'next-intl';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
@@ -244,6 +245,7 @@ export default function AboutPage() {
         heading={tPage('heading')}
         description={tPage('description')}
       />
+      <BackToHome />
 
       {/* Introduction Section */}
       <section className="bg-black text-white py-16 md:py-24">

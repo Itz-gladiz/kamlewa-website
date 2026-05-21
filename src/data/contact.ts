@@ -4,8 +4,7 @@ export interface ContactInfo {
   label: string;
   value: string;
   is_primary?: boolean;
-  order: number;
-  display_order?: number;
+  display_order: number;
 }
 
 export const contactData: ContactInfo[] = [
@@ -15,7 +14,7 @@ export const contactData: ContactInfo[] = [
     label: 'Email',
     value: 'contact@kamlewa.org',
     is_primary: true,
-    order: 1,
+    display_order: 1,
   },
   {
     id: '2',
@@ -23,7 +22,7 @@ export const contactData: ContactInfo[] = [
     label: 'Primary Phone',
     value: '+237 653 906 594',
     is_primary: true,
-    order: 2,
+    display_order: 2,
   },
   {
     id: '3',
@@ -31,7 +30,7 @@ export const contactData: ContactInfo[] = [
     label: 'Secondary Phone',
     value: '+237 671 317 500',
     is_primary: false,
-    order: 3,
+    display_order: 3,
   },
   {
     id: '4',
@@ -39,8 +38,7 @@ export const contactData: ContactInfo[] = [
     label: 'Address',
     value: 'Douala, Cameroon',
     is_primary: false,
-    order: 4,
+    display_order: 4,
   },
 ];
-
 

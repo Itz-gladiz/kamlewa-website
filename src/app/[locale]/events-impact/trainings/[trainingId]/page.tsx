@@ -357,7 +357,13 @@ export default function TrainingDetailsPage() {
 
                   {/* Action Buttons */}
                   <div className="space-y-3 pt-4 border-t border-white/10">
-                    {training.title === 'Holiday Tech Bootcamp' ? (
+                    {training.title.toLowerCase().includes('kamcyber') ? (
+                      <a href="https://event.fapshi.com/5hut" target="_blank" rel="noopener noreferrer">
+                        <Button variant="primary" className="w-full">
+                          Enroll Now
+                        </Button>
+                      </a>
+                    ) : training.title === 'Holiday Tech Bootcamp' ? (
                       <a href="https://event.fapshi.com/1ecl" target="_blank" rel="noopener noreferrer">
                         <Button variant="primary" className="w-full">
                           Enroll Now

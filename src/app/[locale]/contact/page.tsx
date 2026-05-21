@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import PageBanner from '@/components/PageBanner';
+import BackToHome from '@/components/BackToHome';
 import { useTranslations } from 'next-intl';
 import toast from 'react-hot-toast';
 import Input from '@/components/Input';
@@ -13,7 +14,7 @@ import { HiLocationMarker, HiMail, HiPhone } from 'react-icons/hi';
 
 const GOOGLE_SHEETS_URL = process.env.NEXT_PUBLIC_GOOGLE_SHEETS_URL;
 const MAP_QUERY = 'Douala, Cameroon';
-const MAP_EMBED_URL = `https://www.openstreetmap.org/export/embed.html?bbox=11.4265%2C3.7700%2C11.6265%2C3.9700&layer=mapnik&marker=3.8700%2C11.5265`;
+const MAP_EMBED_URL = 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3975.137301125864!2d9.701349174344397!3d4.049351345513161!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x108fca23255129eb%3A0xc457408f22f64dbd!2sDouala%2C%20Cameroon!5e0!3m2!1sen!2sus!4v1717600000000';
 
 export default function ContactPage() {
   const t = useTranslations('contact');
@@ -68,6 +69,7 @@ export default function ContactPage() {
         heading={t('heading')}
         description={t('description')}
       />
+      <BackToHome />
       <section className="bg-black text-white py-3 md:py-5 min-h-screen">
         <div className="max-w-7xl mx-auto px-6 md:px-12 lg:px-16">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 md:gap-12">
@@ -118,7 +120,7 @@ export default function ContactPage() {
                   <div>
                     <h3 className="text-sm font-semibold text-gray-400 mb-1 uppercase">Location</h3>
                     <a
-                      href={`https://www.openstreetmap.org/search?query=${encodeURIComponent(MAP_QUERY)}`}
+                      href="https://www.google.com/maps/search/?api=1&query=Douala+Cameroon"
                       target="_blank"
                       rel="noopener noreferrer"
                       className="text-white hover:text-yellow-400 transition-colors"
