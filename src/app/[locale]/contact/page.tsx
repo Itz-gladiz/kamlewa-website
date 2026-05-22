@@ -10,10 +10,9 @@ import toast from 'react-hot-toast';
 import Input from '@/components/Input';
 import Button from '@/components/Button';
 import { HiLocationMarker, HiMail, HiPhone } from 'react-icons/hi';
-
+import { createContactSubmission } from '@/lib/supabase/submissions';
 
 const GOOGLE_SHEETS_URL = process.env.NEXT_PUBLIC_GOOGLE_SHEETS_URL;
-const MAP_QUERY = 'Douala, Cameroon';
 const MAP_EMBED_URL = 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3975.137301125864!2d9.701349174344397!3d4.049351345513161!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x108fca23255129eb%3A0xc457408f22f64dbd!2sDouala%2C%20Cameroon!5e0!3m2!1sen!2sus!4v1717600000000';
 
 export default function ContactPage() {
@@ -33,32 +32,34 @@ export default function ContactPage() {
     setIsSubmittingGeneral(true);
     const loadingToast = toast.loading(t('sending'));
 
-    try {
-      if (GOOGLE_SHEETS_URL) {
-        await fetch(GOOGLE_SHEETS_URL, {
-          method: 'POST',
-          mode: 'no-cors',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            sheetName: 'Contact',
-            fullName: generalForm.name,
-            email: generalForm.email,
-            phone: generalForm.phone || 'N/A',
-            subject: generalForm.subject,
-            message: generalForm.message,
-          }),
-        });
-      }
+    await Promise.allSettled([
+      createContactSubmission({
+        name: generalForm.name,
+        email: generalForm.email,
+        phone: generalForm.phone || undefined,
+        subject: generalForm.subject,
+        message: generalForm.message,
+      }),
+      GOOGLE_SHEETS_URL
+        ? fetch(GOOGLE_SHEETS_URL, {
+            method: 'POST',
+            mode: 'no-cors',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              sheetName: 'Contact',
+              fullName: generalForm.name,
+              email: generalForm.email,
+              phone: generalForm.phone || 'N/A',
+              subject: generalForm.subject,
+              message: generalForm.message,
+            }),
+          })
+        : Promise.resolve(),
+    ]);
 
-      toast.success(t('success'), { id: loadingToast });
-      setGeneralForm({ name: '', email: '', phone: '', subject: '', message: '' });
-    } catch (error) {
-      console.error(error);
-      toast.success(t('success'), { id: loadingToast });
-      setGeneralForm({ name: '', email: '', phone: '', subject: '', message: '' });
-    } finally {
-      setIsSubmittingGeneral(false);
-    }
+    toast.success(t('success'), { id: loadingToast });
+    setGeneralForm({ name: '', email: '', phone: '', subject: '', message: '' });
+    setIsSubmittingGeneral(false);
   };
 
   return (

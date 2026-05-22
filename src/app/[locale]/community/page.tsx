@@ -15,8 +15,10 @@ import Image from 'next/image';
 import { HiShieldCheck, HiUsers, HiCode } from 'react-icons/hi';
 import { PiHandshake } from 'react-icons/pi';
 import BackToHome from '@/components/BackToHome';
+import { createVolunteerApplication, createPartnershipInquiry } from '@/lib/supabase/submissions';
 
 const GOOGLE_SHEETS_URL = process.env.NEXT_PUBLIC_GOOGLE_SHEETS_URL;
+
 
 async function sendToSheets(payload: Record<string, string>) {
   if (!GOOGLE_SHEETS_URL) return;
@@ -118,8 +120,16 @@ export default function CommunityPage() {
     setIsSubmittingVolunteer(true);
     const loadingToast = toast.loading(tPage('volunteering.form.submitting'));
 
-    try {
-      await sendToSheets({
+    await Promise.allSettled([
+      createVolunteerApplication({
+        name: volunteerForm.name,
+        email: volunteerForm.email,
+        phone: volunteerForm.phone || undefined,
+        expertise: volunteerForm.expertise || undefined,
+        availability: volunteerForm.availability || undefined,
+        message: volunteerForm.message,
+      }),
+      sendToSheets({
         sheetName: 'Volunteers',
         name: volunteerForm.name,
         email: volunteerForm.email,
@@ -127,10 +137,8 @@ export default function CommunityPage() {
         expertise: volunteerForm.expertise || 'N/A',
         availability: volunteerForm.availability || 'N/A',
         message: volunteerForm.message,
-      });
-    } catch (error) {
-      console.error(error);
-    }
+      }),
+    ]);
 
     toast.success(tPage('volunteering.form.success'), { id: loadingToast });
     setVolunteerForm({ name: '', email: '', phone: '', expertise: '', availability: '', message: '' });
@@ -142,8 +150,16 @@ export default function CommunityPage() {
     setIsSubmittingPartnership(true);
     const loadingToast = toast.loading(tPage('partnerships.form.submitting'));
 
-    try {
-      await sendToSheets({
+    await Promise.allSettled([
+      createPartnershipInquiry({
+        name: partnershipForm.name,
+        email: partnershipForm.email,
+        phone: partnershipForm.phone || undefined,
+        organization: partnershipForm.organization,
+        partnership_type: partnershipForm.partnershipType || undefined,
+        message: partnershipForm.message,
+      }),
+      sendToSheets({
         sheetName: 'Partnerships',
         name: partnershipForm.name,
         email: partnershipForm.email,
@@ -151,10 +167,8 @@ export default function CommunityPage() {
         organization: partnershipForm.organization,
         partnershipType: partnershipForm.partnershipType || 'N/A',
         message: partnershipForm.message,
-      });
-    } catch (error) {
-      console.error(error);
-    }
+      }),
+    ]);
 
     toast.success(tPage('partnerships.form.success'), { id: loadingToast });
     setPartnershipForm({ name: '', email: '', phone: '', organization: '', partnershipType: '', message: '' });
