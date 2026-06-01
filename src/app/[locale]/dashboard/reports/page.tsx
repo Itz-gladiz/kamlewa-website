@@ -6,23 +6,11 @@ import Button from '@/components/Button';
 import Input from '@/components/Input';
 import CloudinaryUpload from '@/components/CloudinaryUpload';
 import Image from 'next/image';
-import {
-  HiPlus,
-  HiPencil,
-  HiTrash,
-  HiDocumentText,
-  HiDownload,
-  HiEye,
-} from 'react-icons/hi';
+import { HiPlus, HiPencil, HiTrash, HiDocumentText, HiDownload, HiEye } from 'react-icons/hi';
 import toast from 'react-hot-toast';
 import DashboardModal from '@/components/DashboardModal';
 import Loader from '@/components/Loader';
-import {
-  getReports,
-  createReport,
-  updateReport,
-  deleteReport,
-} from '@/lib/supabase/reports';
+import { getReports, createReport, updateReport, deleteReport } from '@/lib/supabase/reports';
 import { Database } from '@/lib/supabase/types';
 
 type Report = Database['public']['Tables']['reports']['Row'];
@@ -42,19 +30,14 @@ const currentYear = new Date().getFullYear();
 const yearOptions = Array.from({ length: 10 }, (_, i) => currentYear - i);
 
 const emptyForm = {
-  title: '',
-  description: '',
-  start_year: currentYear,
-  end_year: currentYear,
-  image: '',
-  pdf_url: '',
-  category: '',
-  summary: '',
+  title: '', description: '', start_year: currentYear, end_year: currentYear,
+  image: '', pdf_url: '', category: '', summary: '',
+  title_en: '', title_fr: '', description_en: '', description_fr: '',
+  summary_en: '', summary_fr: '',
 };
 
 export default function ReportsPage() {
   const t = useTranslations('dashboard');
-
   const [reports, setReports] = useState<Report[]>([]);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
@@ -63,9 +46,7 @@ export default function ReportsPage() {
   const [viewingReport, setViewingReport] = useState<Report | null>(null);
   const [formData, setFormData] = useState(emptyForm);
 
-  useEffect(() => {
-    loadReports();
-  }, []);
+  useEffect(() => { loadReports(); }, []);
 
   const loadReports = async () => {
     try {
@@ -89,14 +70,13 @@ export default function ReportsPage() {
     if (report) {
       setEditingReport(report);
       setFormData({
-        title: report.title,
-        description: report.description || '',
-        start_year: report.start_year,
-        end_year: report.end_year,
-        image: report.image || '',
-        pdf_url: report.pdf_url || '',
-        category: report.category || '',
-        summary: report.summary || '',
+        title: report.title, description: report.description || '',
+        start_year: report.start_year, end_year: report.end_year,
+        image: report.image || '', pdf_url: report.pdf_url || '',
+        category: report.category || '', summary: report.summary || '',
+        title_en: report.title_en || '', title_fr: report.title_fr || '',
+        description_en: report.description_en || '', description_fr: report.description_fr || '',
+        summary_en: report.summary_en || '', summary_fr: report.summary_fr || '',
       });
     } else {
       setEditingReport(null);
@@ -111,9 +91,7 @@ export default function ReportsPage() {
     setFormData(emptyForm);
   };
 
-  const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
-  ) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
@@ -121,47 +99,44 @@ export default function ReportsPage() {
     }));
   };
 
-  const handleImageUpload = (url: string) => {
-    setFormData((prev) => ({ ...prev, image: url }));
-  };
-
-  const handlePdfUpload = (url: string) => {
-    setFormData((prev) => ({ ...prev, pdf_url: url }));
-  };
+  const handleImageUpload = (url: string) => setFormData((prev) => ({ ...prev, image: url }));
+  const handlePdfUpload = (url: string) => setFormData((prev) => ({ ...prev, pdf_url: url }));
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
     if (!formData.title || !formData.description || !formData.category) {
       toast.error('Please fill in all required fields');
       return;
     }
-
     setSubmitting(true);
+
+    const bilingualFields = {
+      title_en: formData.title_en || null,
+      title_fr: formData.title_fr || null,
+      description_en: formData.description_en || null,
+      description_fr: formData.description_fr || null,
+      summary_en: formData.summary_en || null,
+      summary_fr: formData.summary_fr || null,
+    };
+
     try {
       if (editingReport) {
         const updateData: ReportUpdate = {
-          title: formData.title,
-          description: formData.description,
-          start_year: formData.start_year,
-          end_year: formData.end_year,
-          image: formData.image,
-          pdf_url: formData.pdf_url,
-          category: formData.category,
-          summary: formData.summary,
+          title: formData.title, description: formData.description,
+          start_year: formData.start_year, end_year: formData.end_year,
+          image: formData.image, pdf_url: formData.pdf_url,
+          category: formData.category, summary: formData.summary,
+          ...bilingualFields,
         };
         await updateReport(editingReport.id, updateData);
         toast.success('Report updated successfully');
       } else {
         const insertData: ReportInsert = {
-          title: formData.title,
-          description: formData.description,
-          start_year: formData.start_year,
-          end_year: formData.end_year,
-          image: formData.image,
-          pdf_url: formData.pdf_url,
-          category: formData.category,
-          summary: formData.summary,
+          title: formData.title, description: formData.description,
+          start_year: formData.start_year, end_year: formData.end_year,
+          image: formData.image, pdf_url: formData.pdf_url,
+          category: formData.category, summary: formData.summary,
+          ...bilingualFields,
         };
         await createReport(insertData);
         toast.success('Report created successfully');
@@ -179,7 +154,6 @@ export default function ReportsPage() {
 
   const handleDelete = async (id: string) => {
     if (!confirm('Are you sure you want to delete this report?')) return;
-
     const loadingToast = toast.loading('Deleting report...');
     try {
       await deleteReport(id);
@@ -195,115 +169,54 @@ export default function ReportsPage() {
     categoryOptions.find((c) => c.value === category)?.label || category;
 
   if (loading) {
-    return (
-      <div className="flex justify-center items-center min-h-[400px]">
-        <Loader />
-      </div>
-    );
+    return <div className="flex justify-center items-center min-h-[400px]"><Loader /></div>;
   }
 
   return (
     <div className="space-y-6">
-      {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
-          <h1 className="text-2xl md:text-3xl font-bold text-white">
-            {t('reports') || 'Reports'}
-          </h1>
+          <h1 className="text-2xl md:text-3xl font-bold text-white">{t('reports') || 'Reports'}</h1>
           <p className="text-gray-400 mt-1">Manage your impact and annual reports</p>
         </div>
-        <Button onClick={() => handleOpenModal()} className="flex items-center gap-2">
-          <HiPlus className="w-5 h-5" />
-          Add Report
-        </Button>
+        <Button onClick={() => handleOpenModal()} className="flex items-center gap-2"><HiPlus className="w-5 h-5" />Add Report</Button>
       </div>
 
-      {/* Reports Grid */}
       {reports.length === 0 ? (
         <div className="text-center py-12 bg-white/5 rounded-lg border border-white/10">
           <HiDocumentText className="w-16 h-16 mx-auto text-gray-600 mb-4" />
           <p className="text-gray-400 text-lg">No reports yet</p>
           <p className="text-gray-500 text-sm mt-2">Create your first report to get started</p>
-          <Button onClick={() => handleOpenModal()} className="mt-4">
-            Create Report
-          </Button>
+          <Button onClick={() => handleOpenModal()} className="mt-4">Create Report</Button>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {reports.map((report) => (
-            <div
-              key={report.id}
-              className="bg-white/5 border border-white/10 rounded-lg overflow-hidden hover:border-yellow-400/50 transition-all duration-300"
-            >
-              {/* Image */}
+            <div key={report.id} className="bg-white/5 border border-white/10 rounded-lg overflow-hidden hover:border-yellow-400/50 transition-all duration-300">
               <div className="relative h-48 bg-gray-800">
-                {report.image ? (
-                  <Image
-                    src={report.image}
-                    alt={report.title}
-                    fill
-                    className="object-cover"
-                    unoptimized
-                  />
-                ) : (
-                  <div className="flex items-center justify-center h-full">
-                    <HiDocumentText className="w-16 h-16 text-gray-600" />
-                  </div>
-                )}
+                {report.image ? <Image src={report.image} alt={report.title} fill className="object-cover" unoptimized /> : <div className="flex items-center justify-center h-full"><HiDocumentText className="w-16 h-16 text-gray-600" /></div>}
                 <div className="absolute top-2 right-2">
-                  <span className="px-3 py-1 bg-yellow-400/20 text-yellow-400 text-xs font-semibold rounded-full">
-                    {getCategoryLabel(report.category || '')}
-                  </span>
+                  <span className="px-3 py-1 bg-yellow-400/20 text-yellow-400 text-xs font-semibold rounded-full">{getCategoryLabel(report.category || '')}</span>
                 </div>
               </div>
-
-              {/* Content */}
               <div className="p-4">
-                <h3 className="text-lg font-semibold text-white mb-2 line-clamp-1">
-                  {report.title}
-                </h3>
-                <p className="text-gray-400 text-sm mb-3 line-clamp-2">
-                  {report.description}
-                </p>
+                <h3 className="text-lg font-semibold text-white mb-2 line-clamp-1">{report.title}</h3>
+                <p className="text-gray-400 text-sm mb-3 line-clamp-2">{report.description}</p>
                 <div className="flex items-center justify-between text-sm text-gray-500 mb-4">
                   <span>{report.start_year} - {report.end_year}</span>
                   <span>{new Date(report.created_at).toLocaleDateString()}</span>
                 </div>
                 {report.pdf_url && (
-                  <a
-                    href={report.pdf_url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="mb-4 inline-flex items-center gap-2 text-sm font-semibold text-yellow-400 hover:text-yellow-300"
-                  >
-                    <HiDownload className="w-4 h-4" />
-                    PDF attached
+                  <a href={report.pdf_url} target="_blank" rel="noopener noreferrer" className="mb-4 inline-flex items-center gap-2 text-sm font-semibold text-yellow-400 hover:text-yellow-300">
+                    <HiDownload className="w-4 h-4" />PDF attached
                   </a>
                 )}
-
-                {/* Actions */}
                 <div className="flex items-center gap-2">
-                  <button
-                    onClick={() => setViewingReport(report)}
-                    className="flex-1 flex items-center justify-center gap-2 px-3 py-2 bg-white/10 text-white text-sm rounded hover:bg-white/20 transition-colors"
-                  >
-                    <HiEye className="w-4 h-4" />
-                    View
+                  <button onClick={() => setViewingReport(report)} className="flex-1 flex items-center justify-center gap-2 px-3 py-2 bg-white/10 text-white text-sm rounded hover:bg-white/20 transition-colors">
+                    <HiEye className="w-4 h-4" />View
                   </button>
-                  <button
-                    onClick={() => handleOpenModal(report)}
-                    className="p-2 text-gray-400 hover:text-yellow-400 transition-colors"
-                    aria-label="Edit report"
-                  >
-                    <HiPencil className="w-5 h-5" />
-                  </button>
-                  <button
-                    onClick={() => handleDelete(report.id)}
-                    className="p-2 text-gray-400 hover:text-red-400 transition-colors"
-                    aria-label="Delete report"
-                  >
-                    <HiTrash className="w-5 h-5" />
-                  </button>
+                  <button onClick={() => handleOpenModal(report)} className="p-2 text-gray-400 hover:text-yellow-400 transition-colors" aria-label="Edit report"><HiPencil className="w-5 h-5" /></button>
+                  <button onClick={() => handleDelete(report.id)} className="p-2 text-gray-400 hover:text-red-400 transition-colors" aria-label="Delete report"><HiTrash className="w-5 h-5" /></button>
                 </div>
               </div>
             </div>
@@ -312,233 +225,126 @@ export default function ReportsPage() {
       )}
 
       {/* Add/Edit Modal */}
-      <DashboardModal
-        isOpen={isModalOpen}
-        onClose={handleCloseModal}
-        title={editingReport ? 'Edit Report' : 'Add New Report'}
-      >
+      <DashboardModal isOpen={isModalOpen} onClose={handleCloseModal} title={editingReport ? 'Edit Report' : 'Add New Report'}>
         <form onSubmit={handleSubmit} className="space-y-4">
           {/* Title */}
           <div>
-            <label className="block text-sm font-medium text-gray-300 mb-1">
-              Report Title *
-            </label>
-            <Input
-              name="title"
-              value={formData.title}
-              onChange={handleInputChange}
-              placeholder="Enter report title"
-              required
-            />
+            <label className="block text-sm font-medium text-gray-300 mb-1">Report Title *</label>
+            <Input name="title" value={formData.title} onChange={handleInputChange} placeholder="Enter report title" required />
           </div>
 
           {/* Description */}
           <div>
-            <label className="block text-sm font-medium text-gray-300 mb-1">
-              Description *
-            </label>
-            <textarea
-              name="description"
-              value={formData.description}
-              onChange={handleInputChange}
-              placeholder="Enter report description"
-              rows={4}
-              className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-yellow-400"
-              required
-            />
+            <label className="block text-sm font-medium text-gray-300 mb-1">Description *</label>
+            <textarea name="description" value={formData.description} onChange={handleInputChange} placeholder="Enter report description" rows={4} className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-yellow-400" required />
           </div>
 
           {/* Year Range */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-1">
-                Start Year *
-              </label>
-              <select
-                name="start_year"
-                value={formData.start_year}
-                onChange={handleInputChange}
-                className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white focus:outline-none focus:border-yellow-400"
-                required
-              >
-                {yearOptions.map((year) => (
-                  <option key={year} value={year} className="bg-gray-800">
-                    {year}
-                  </option>
-                ))}
+              <label className="block text-sm font-medium text-gray-300 mb-1">Start Year *</label>
+              <select title="report start year" name="start_year" value={formData.start_year} onChange={handleInputChange} className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white focus:outline-none focus:border-yellow-400" required>
+                {yearOptions.map((year) => <option key={year} value={year} className="bg-gray-800">{year}</option>)}
               </select>
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-1">
-                End Year *
-              </label>
-              <select
-                name="end_year"
-                value={formData.end_year}
-                onChange={handleInputChange}
-                className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white focus:outline-none focus:border-yellow-400"
-                required
-              >
-                {yearOptions.map((year) => (
-                  <option key={year} value={year} className="bg-gray-800">
-                    {year}
-                  </option>
-                ))}
+              <label className="block text-sm font-medium text-gray-300 mb-1">End Year *</label>
+              <select title="End year" name="end_year" value={formData.end_year} onChange={handleInputChange} className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white focus:outline-none focus:border-yellow-400" required>
+                {yearOptions.map((year) => <option key={year} value={year} className="bg-gray-800">{year}</option>)}
               </select>
             </div>
           </div>
 
           {/* Category */}
           <div>
-            <label className="block text-sm font-medium text-gray-300 mb-1">
-              Category *
-            </label>
-            <select
-              name="category"
-              value={formData.category}
-              onChange={handleInputChange}
-              className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white focus:outline-none focus:border-yellow-400"
-              required
-            >
-              <option value="" className="bg-gray-800">
-                Select category
-              </option>
-              {categoryOptions.map((option) => (
-                <option key={option.value} value={option.value} className="bg-gray-800">
-                  {option.label}
-                </option>
-              ))}
+            <label className="block text-sm font-medium text-gray-300 mb-1">Category *</label>
+            <select title="report category" name="category" value={formData.category} onChange={handleInputChange} className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white focus:outline-none focus:border-yellow-400" required>
+              <option value="" className="bg-gray-800">Select category</option>
+              {categoryOptions.map((option) => <option key={option.value} value={option.value} className="bg-gray-800">{option.label}</option>)}
             </select>
           </div>
 
           {/* Summary */}
           <div>
-            <label className="block text-sm font-medium text-gray-300 mb-1">
-              Summary
-            </label>
-            <textarea
-              name="summary"
-              value={formData.summary}
-              onChange={handleInputChange}
-              placeholder="Enter a brief summary"
-              rows={2}
-              className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-yellow-400"
-            />
+            <label className="block text-sm font-medium text-gray-300 mb-1">Summary</label>
+            <textarea name="summary" value={formData.summary} onChange={handleInputChange} placeholder="Enter a brief summary" rows={2} className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-yellow-400" />
+          </div>
+
+          {/* 🌍 Translations */}
+          <div className="border-t border-white/10 pt-4 space-y-4">
+            <h3 className="text-sm font-semibold text-white/90 uppercase tracking-wide">🌍 Translations</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-1">🇬🇧 Title (English)</label>
+                <Input name="title_en" value={formData.title_en} onChange={handleInputChange} placeholder="English title" />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-1">🇫🇷 Titre (Français)</label>
+                <Input name="title_fr" value={formData.title_fr} onChange={handleInputChange} placeholder="Titre en français" />
+              </div>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-300 mb-1">🇬🇧 Description (English)</label>
+              <textarea name="description_en" value={formData.description_en} onChange={handleInputChange} placeholder="Description in English..." rows={3} className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-yellow-400" />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-300 mb-1">🇫🇷 Description (Français)</label>
+              <textarea name="description_fr" value={formData.description_fr} onChange={handleInputChange} placeholder="Description en français..." rows={3} className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-yellow-400" />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-300 mb-1">🇬🇧 Summary (English)</label>
+              <textarea name="summary_en" value={formData.summary_en} onChange={handleInputChange} placeholder="Summary in English..." rows={2} className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-yellow-400" />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-300 mb-1">🇫🇷 Résumé (Français)</label>
+              <textarea name="summary_fr" value={formData.summary_fr} onChange={handleInputChange} placeholder="Résumé en français..." rows={2} className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-yellow-400" />
+            </div>
           </div>
 
           {/* Cover Image */}
           <div>
-            <label className="block text-sm font-medium text-gray-300 mb-2">
-              Report Image Preview
-            </label>
-            <CloudinaryUpload
-              value={formData.image}
-              onChange={handleImageUpload}
-              accept="image/png,image/jpeg,image/jpg,image/webp"
-              maxSizeMb={25}
-              compressImages
-              targetUploadSizeMb={9.5}
-              uploadText="Click to upload the report image or drag and drop"
-              helpText="PNG, JPG, or WEBP up to 25MB. Large images are compressed before upload."
-            />
-            <p className="mt-2 text-xs text-gray-500">
-              Upload a clear PNG or JPEG version of the report page visitors should see.
-            </p>
+            <label className="block text-sm font-medium text-gray-300 mb-2">Report Image Preview</label>
+            <CloudinaryUpload value={formData.image} onChange={handleImageUpload} accept="image/png,image/jpeg,image/jpg,image/webp" maxSizeMb={25} compressImages targetUploadSizeMb={9.5} uploadText="Click to upload the report image or drag and drop" helpText="PNG, JPG, or WEBP up to 25MB." />
           </div>
 
-          {/* PDF Download */}
+          {/* PDF */}
           <div>
-            <label className="block text-sm font-medium text-gray-300 mb-2">
-              Full Report PDF
-            </label>
-            <CloudinaryUpload
-              value={formData.pdf_url}
-              onChange={handlePdfUpload}
-              accept="application/pdf"
-              fileKind="document"
-              resourceType="auto"
-              maxSizeMb={10}
-              usePublicPathForOversizeDocuments
-              readyLabel="PDF Ready"
-              uploadText="Click to upload the PDF or drag and drop"
-              helpText="PDF up to 10MB uploads to Cloudinary. Larger PDFs must already be in the public folder."
-            />
+            <label className="block text-sm font-medium text-gray-300 mb-2">Full Report PDF</label>
+            <CloudinaryUpload value={formData.pdf_url} onChange={handlePdfUpload} accept="application/pdf" fileKind="document" resourceType="auto" maxSizeMb={10} usePublicPathForOversizeDocuments readyLabel="PDF Ready" uploadText="Click to upload the PDF or drag and drop" helpText="PDF up to 10MB." />
             <div className="mt-3">
-              <label className="block text-xs font-medium text-gray-400 mb-1">
-                Or paste a PDF link for larger reports
-              </label>
-              <Input
-                name="pdf_url"
-                value={formData.pdf_url}
-                onChange={handleInputChange}
-                placeholder="/reports/2023-2024-report.pdf"
-              />
+              <label className="block text-xs font-medium text-gray-400 mb-1">Or paste a PDF link for larger reports</label>
+              <Input name="pdf_url" value={formData.pdf_url} onChange={handleInputChange} placeholder="/reports/2023-2024-report.pdf" />
             </div>
           </div>
 
-          {/* Buttons */}
           <div className="flex justify-end gap-3 pt-4">
-            <Button type="button" variant="secondary" onClick={handleCloseModal}>
-              Cancel
-            </Button>
-            <Button type="submit" disabled={submitting}>
-              {submitting ? 'Saving...' : editingReport ? 'Update Report' : 'Create Report'}
-            </Button>
+            <Button type="button" variant="secondary" onClick={handleCloseModal}>Cancel</Button>
+            <Button type="submit" disabled={submitting}>{submitting ? 'Saving...' : editingReport ? 'Update Report' : 'Create Report'}</Button>
           </div>
         </form>
       </DashboardModal>
 
       {/* View Modal */}
-      <DashboardModal
-        isOpen={!!viewingReport}
-        onClose={() => setViewingReport(null)}
-        title={viewingReport?.title || 'Report Details'}
-      >
+      <DashboardModal isOpen={!!viewingReport} onClose={() => setViewingReport(null)} title={viewingReport?.title || 'Report Details'}>
         {viewingReport && (
           <div className="space-y-4">
             {viewingReport.image && (
               <div className="relative h-64 w-full rounded-lg overflow-hidden">
-                <Image
-                  src={viewingReport.image}
-                  alt={viewingReport.title}
-                  fill
-                  className="object-cover"
-                  unoptimized
-                />
+                <Image src={viewingReport.image} alt={viewingReport.title} fill className="object-cover" unoptimized />
               </div>
             )}
             <div className="flex items-center gap-4">
-              <span className="px-3 py-1 bg-yellow-400/20 text-yellow-400 text-sm font-semibold rounded-full">
-                {getCategoryLabel(viewingReport.category || '')}
-              </span>
-              <span className="text-gray-400">
-                {viewingReport.start_year} - {viewingReport.end_year}
-              </span>
+              <span className="px-3 py-1 bg-yellow-400/20 text-yellow-400 text-sm font-semibold rounded-full">{getCategoryLabel(viewingReport.category || '')}</span>
+              <span className="text-gray-400">{viewingReport.start_year} - {viewingReport.end_year}</span>
             </div>
-            <div>
-              <h4 className="text-sm font-medium text-gray-400 mb-1">Description</h4>
-              <p className="text-white">{viewingReport.description}</p>
-            </div>
-            {viewingReport.summary && (
-              <div>
-                <h4 className="text-sm font-medium text-gray-400 mb-1">Summary</h4>
-                <p className="text-gray-300">{viewingReport.summary}</p>
-              </div>
-            )}
+            <div><h4 className="text-sm font-medium text-gray-400 mb-1">Description</h4><p className="text-white">{viewingReport.description}</p></div>
+            {viewingReport.summary && <div><h4 className="text-sm font-medium text-gray-400 mb-1">Summary</h4><p className="text-gray-300">{viewingReport.summary}</p></div>}
             {viewingReport.pdf_url && (
-              <a
-                href={viewingReport.pdf_url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 rounded-lg bg-yellow-400 px-4 py-2 text-sm font-semibold text-black hover:bg-yellow-300"
-              >
-                <HiDownload className="w-4 h-4" />
-                Download Full Report (PDF)
+              <a href={viewingReport.pdf_url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 rounded-lg bg-yellow-400 px-4 py-2 text-sm font-semibold text-black hover:bg-yellow-300">
+                <HiDownload className="w-4 h-4" />Download Full Report (PDF)
               </a>
             )}
-            <div className="text-sm text-gray-500">
-              Created: {new Date(viewingReport.created_at).toLocaleDateString()}
-            </div>
+            <div className="text-sm text-gray-500">Created: {new Date(viewingReport.created_at).toLocaleDateString()}</div>
           </div>
         )}
       </DashboardModal>

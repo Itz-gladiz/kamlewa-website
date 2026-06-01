@@ -14,6 +14,13 @@ export type Database = {
           category: string | null;
           created_at: string;
           updated_at: string;
+          // Bilingual fields
+          title_en: string | null;
+          title_fr: string | null;
+          description_en: string | null;
+          description_fr: string | null;
+          full_description_en: string | null;
+          full_description_fr: string | null;
         };
         Insert: {
           id?: string;
@@ -27,6 +34,12 @@ export type Database = {
           category?: string | null;
           created_at?: string;
           updated_at?: string;
+          title_en?: string | null;
+          title_fr?: string | null;
+          description_en?: string | null;
+          description_fr?: string | null;
+          full_description_en?: string | null;
+          full_description_fr?: string | null;
         };
         Update: {
           id?: string;
@@ -40,6 +53,12 @@ export type Database = {
           category?: string | null;
           created_at?: string;
           updated_at?: string;
+          title_en?: string | null;
+          title_fr?: string | null;
+          description_en?: string | null;
+          description_fr?: string | null;
+          full_description_en?: string | null;
+          full_description_fr?: string | null;
         };
       };
       events: {
@@ -57,6 +76,13 @@ export type Database = {
           summary: string | null;
           created_at: string;
           updated_at: string;
+          // Bilingual fields
+          title_en: string | null;
+          title_fr: string | null;
+          description_en: string | null;
+          description_fr: string | null;
+          summary_en: string | null;
+          summary_fr: string | null;
         };
         Insert: {
           id?: string;
@@ -72,6 +98,12 @@ export type Database = {
           summary?: string | null;
           created_at?: string;
           updated_at?: string;
+          title_en?: string | null;
+          title_fr?: string | null;
+          description_en?: string | null;
+          description_fr?: string | null;
+          summary_en?: string | null;
+          summary_fr?: string | null;
         };
         Update: {
           id?: string;
@@ -87,6 +119,12 @@ export type Database = {
           summary?: string | null;
           created_at?: string;
           updated_at?: string;
+          title_en?: string | null;
+          title_fr?: string | null;
+          description_en?: string | null;
+          description_fr?: string | null;
+          summary_en?: string | null;
+          summary_fr?: string | null;
         };
       };
       event_registrations: {
@@ -137,6 +175,11 @@ export type Database = {
           format: 'online' | 'in-person' | 'hybrid' | null;
           created_at: string;
           updated_at: string;
+          // Bilingual fields
+          title_en: string | null;
+          title_fr: string | null;
+          description_en: string | null;
+          description_fr: string | null;
         };
         Insert: {
           id?: string;
@@ -150,6 +193,10 @@ export type Database = {
           format?: 'online' | 'in-person' | 'hybrid' | null;
           created_at?: string;
           updated_at?: string;
+          title_en?: string | null;
+          title_fr?: string | null;
+          description_en?: string | null;
+          description_fr?: string | null;
         };
         Update: {
           id?: string;
@@ -163,6 +210,10 @@ export type Database = {
           format?: 'online' | 'in-person' | 'hybrid' | null;
           created_at?: string;
           updated_at?: string;
+          title_en?: string | null;
+          title_fr?: string | null;
+          description_en?: string | null;
+          description_fr?: string | null;
         };
       };
       projects: {
@@ -177,6 +228,11 @@ export type Database = {
           progress: number | null;
           created_at: string;
           updated_at: string;
+          // Bilingual fields
+          title_en: string | null;
+          title_fr: string | null;
+          description_en: string | null;
+          description_fr: string | null;
         };
         Insert: {
           id?: string;
@@ -189,6 +245,10 @@ export type Database = {
           progress?: number | null;
           created_at?: string;
           updated_at?: string;
+          title_en?: string | null;
+          title_fr?: string | null;
+          description_en?: string | null;
+          description_fr?: string | null;
         };
         Update: {
           id?: string;
@@ -201,6 +261,10 @@ export type Database = {
           progress?: number | null;
           created_at?: string;
           updated_at?: string;
+          title_en?: string | null;
+          title_fr?: string | null;
+          description_en?: string | null;
+          description_fr?: string | null;
         };
       };
       reports: {
@@ -216,6 +280,13 @@ export type Database = {
           summary: string;
           created_at: string;
           updated_at: string;
+          // Bilingual fields
+          title_en: string | null;
+          title_fr: string | null;
+          description_en: string | null;
+          description_fr: string | null;
+          summary_en: string | null;
+          summary_fr: string | null;
         };
         Insert: {
           id?: string;
@@ -229,6 +300,12 @@ export type Database = {
           summary?: string;
           created_at?: string;
           updated_at?: string;
+          title_en?: string | null;
+          title_fr?: string | null;
+          description_en?: string | null;
+          description_fr?: string | null;
+          summary_en?: string | null;
+          summary_fr?: string | null;
         };
         Update: {
           id?: string;
@@ -242,6 +319,12 @@ export type Database = {
           summary?: string;
           created_at?: string;
           updated_at?: string;
+          title_en?: string | null;
+          title_fr?: string | null;
+          description_en?: string | null;
+          description_fr?: string | null;
+          summary_en?: string | null;
+          summary_fr?: string | null;
         };
       };
       contact_info: {
@@ -279,4 +362,3 @@ export type Database = {
     };
   };
 };
-
