@@ -14,6 +14,7 @@ export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
+  const [hasMounted, setHasMounted] = useState(false);
   const t = useTranslations('nav');
   const locale = useLocale();
   const router = useRouter();
@@ -63,6 +64,10 @@ export default function Navbar() {
       document.body.style.overflow = 'unset';
     };
   }, [isMenuOpen]);
+
+  useEffect(() => {
+    setHasMounted(true);
+  }, []);
 
   const switchLocale = (newLocale: string) => {
     router.replace(pathname, { locale: newLocale });
@@ -486,7 +491,7 @@ export default function Navbar() {
 
       </div>
     </nav>
-    {typeof window !== 'undefined' && createPortal(mobileMenu, document.body)}
+      {hasMounted && createPortal(mobileMenu, document.body)}
     </>
   );
 }

@@ -1,5 +1,6 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import { useTranslations } from 'next-intl';
 import { motion } from 'framer-motion';
 import { Link } from '@/i18n/routing';
@@ -7,7 +8,12 @@ import { LiaUsersSolid } from "react-icons/lia";
 import { PiHandshake } from "react-icons/pi";
 
 export default function Hero() {
+  const [mounted, setMounted] = useState(false);
   const t = useTranslations('hero');
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -64,7 +70,7 @@ export default function Hero() {
           className="max-w-5xl"
           variants={containerVariants}
           initial="hidden"
-          animate="visible"
+          animate={mounted ? 'visible' : 'hidden'}
         >
           {/* Main Headline */}
           <motion.h1

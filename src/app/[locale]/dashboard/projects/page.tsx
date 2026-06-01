@@ -29,19 +29,12 @@ export default function ProjectsPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingProject, setEditingProject] = useState<Project | null>(null);
   const [formData, setFormData] = useState<Partial<ProjectInsert>>({
-    title: '',
-    description: '',
-    status: 'active',
-    image: '',
-    start_date: '',
-    end_date: '',
-    progress: undefined,
+    title: '', description: '', status: 'active', image: '',
+    start_date: '', end_date: '', progress: undefined,
+    title_en: '', title_fr: '', description_en: '', description_fr: '',
   });
 
-  // Load projects from Supabase
-  useEffect(() => {
-    loadProjects();
-  }, []);
+  useEffect(() => { loadProjects(); }, []);
 
   const loadProjects = async () => {
     try {
@@ -66,24 +59,19 @@ export default function ProjectsPage() {
     if (project) {
       setEditingProject(project);
       setFormData({
-        title: project.title,
-        description: project.description,
-        status: project.status,
-        image: project.image,
-        start_date: project.start_date || '',
-        end_date: project.end_date || '',
+        title: project.title, description: project.description,
+        status: project.status, image: project.image,
+        start_date: project.start_date || '', end_date: project.end_date || '',
         progress: project.progress || undefined,
+        title_en: project.title_en || '', title_fr: project.title_fr || '',
+        description_en: project.description_en || '', description_fr: project.description_fr || '',
       });
     } else {
       setEditingProject(null);
       setFormData({
-        title: '',
-        description: '',
-        status: 'active',
-        image: '',
-        start_date: '',
-        end_date: '',
-        progress: undefined,
+        title: '', description: '', status: 'active', image: '',
+        start_date: '', end_date: '', progress: undefined,
+        title_en: '', title_fr: '', description_en: '', description_fr: '',
       });
     }
     setIsModalOpen(true);
@@ -93,45 +81,41 @@ export default function ProjectsPage() {
     setIsModalOpen(false);
     setEditingProject(null);
     setFormData({
-      title: '',
-      description: '',
-      status: 'active',
-      image: '',
-      start_date: '',
-      end_date: '',
-      progress: undefined,
+      title: '', description: '', status: 'active', image: '',
+      start_date: '', end_date: '', progress: undefined,
+      title_en: '', title_fr: '', description_en: '', description_fr: '',
     });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (submitting) return;
-
     setSubmitting(true);
     const loadingToast = toast.loading(editingProject ? 'Updating project...' : 'Creating project...');
+
+    const bilingualFields = {
+      title_en: formData.title_en || null,
+      title_fr: formData.title_fr || null,
+      description_en: formData.description_en || null,
+      description_fr: formData.description_fr || null,
+    };
 
     try {
       if (editingProject) {
         const updateData: ProjectUpdate = {
-          title: formData.title,
-          description: formData.description,
-          status: formData.status,
-          image: formData.image,
-          start_date: formData.start_date || null,
-          end_date: formData.end_date || null,
-          progress: formData.progress || null,
+          title: formData.title, description: formData.description,
+          status: formData.status, image: formData.image,
+          start_date: formData.start_date || null, end_date: formData.end_date || null,
+          progress: formData.progress || null, ...bilingualFields,
         };
         await updateProject(editingProject.id, updateData);
         toast.success('Project updated successfully', { id: loadingToast });
       } else {
         const insertData: ProjectInsert = {
-          title: formData.title!,
-          description: formData.description!,
-          status: formData.status!,
-          image: formData.image!,
-          start_date: formData.start_date || null,
-          end_date: formData.end_date || null,
-          progress: formData.progress || null,
+          title: formData.title!, description: formData.description!,
+          status: formData.status!, image: formData.image!,
+          start_date: formData.start_date || null, end_date: formData.end_date || null,
+          progress: formData.progress || null, ...bilingualFields,
         };
         await createProject(insertData);
         toast.success('Project created successfully', { id: loadingToast });
@@ -148,7 +132,6 @@ export default function ProjectsPage() {
 
   const handleDelete = async (id: string) => {
     if (!confirm('Are you sure you want to delete this project?')) return;
-
     const loadingToast = toast.loading('Deleting project...');
     try {
       await deleteProject(id);
@@ -162,59 +145,32 @@ export default function ProjectsPage() {
 
   const openDatePicker = (input: HTMLInputElement | null) => {
     if (!input) return;
-    if (typeof input.showPicker === 'function') {
-      input.showPicker();
-    } else {
-      input.focus();
-    }
+    if (typeof input.showPicker === 'function') input.showPicker();
+    else input.focus();
   };
 
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl md:text-4xl font-bold mb-2" style={{ fontFamily: 'var(--font-nourd), sans-serif' }}>
-            {t('nav.projects')}
-          </h1>
+          <h1 className="text-3xl md:text-4xl font-bold mb-2" style={{ fontFamily: 'var(--font-nourd), sans-serif' }}>{t('nav.projects')}</h1>
           <p className="text-gray-400">Manage all strategic projects</p>
         </div>
-        <Button onClick={() => handleOpenModal()} className="flex items-center gap-2">
-          <HiPlus className="w-5 h-5" />
-          Add Project
-        </Button>
+        <Button onClick={() => handleOpenModal()} className="flex items-center gap-2"><HiPlus className="w-5 h-5" />Add Project</Button>
       </div>
 
       {loading ? (
-        <div className="text-center py-12">
-          <p className="text-gray-400">Loading projects...</p>
-        </div>
+        <div className="text-center py-12"><p className="text-gray-400">Loading projects...</p></div>
       ) : projects.length === 0 ? (
-        <div className="text-center py-12">
-          <p className="text-gray-400">No projects found. Create your first project!</p>
-        </div>
+        <div className="text-center py-12"><p className="text-gray-400">No projects found. Create your first project!</p></div>
       ) : (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {projects.map((project) => (
             <div key={project.id} className="bg-white/5 border border-white/10 overflow-hidden flex h-56 group hover:border-white/20 transition-all">
-              {/* Image Preview - Left Side */}
               <div className="relative w-48 h-full shrink-0 bg-white/5">
-                {project.image ? (
-                  <Image
-                    src={project.image}
-                    alt={project.title}
-                    fill
-                    className="object-cover"
-                    unoptimized
-                  />
-                ) : (
-                  <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-white/10 to-white/5">
-                    <HiPhotograph className="w-12 h-12 text-white/30" />
-                  </div>
-                )}
+                {project.image ? <Image src={project.image} alt={project.title} fill className="object-cover" unoptimized /> : <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-white/10 to-white/5"><HiPhotograph className="w-12 h-12 text-white/30" /></div>}
                 <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
               </div>
-              
-              {/* Content - Right Side */}
               <div className="flex-1 flex flex-col p-6 relative">
                 <div className="flex items-start justify-between mb-3">
                   <div className="flex-1">
@@ -222,50 +178,21 @@ export default function ProjectsPage() {
                       project.status === 'active' ? 'bg-green-500/20 text-green-400 border-green-500/30' :
                       project.status === 'completed' ? 'bg-blue-500/20 text-blue-400 border-blue-500/30' :
                       'bg-yellow-500/20 text-yellow-400 border-yellow-500/30'
-                    }`}>
-                      {project.status}
-                    </span>
+                    }`}>{project.status}</span>
                     <h3 className="text-xl font-bold mb-2">{project.title}</h3>
                     <p className="text-gray-300 text-sm line-clamp-2">{project.description}</p>
                   </div>
                   <div className="flex gap-2 ml-4">
-                    <button
-                      onClick={() => handleOpenModal(project)}
-                      className="text-yellow-400 hover:text-yellow-300 transition-colors p-2 hover:bg-white/10 rounded"
-                      aria-label="Edit project"
-                    >
-                      <HiPencil className="w-5 h-5" />
-                    </button>
-                    <button
-                      onClick={() => handleDelete(project.id)}
-                      className="text-red-400 hover:text-red-300 transition-colors p-2 hover:bg-white/10 rounded"
-                      aria-label="Delete project"
-                    >
-                      <HiTrash className="w-5 h-5" />
-                    </button>
+                    <button onClick={() => handleOpenModal(project)} className="text-yellow-400 hover:text-yellow-300 transition-colors p-2 hover:bg-white/10 rounded" aria-label="Edit project"><HiPencil className="w-5 h-5" /></button>
+                    <button onClick={() => handleDelete(project.id)} className="text-red-400 hover:text-red-300 transition-colors p-2 hover:bg-white/10 rounded" aria-label="Delete project"><HiTrash className="w-5 h-5" /></button>
                   </div>
                 </div>
-                
                 <div className="flex flex-wrap items-center gap-4 text-sm mt-auto">
-                  {project.start_date && (
-                    <div className="flex items-center gap-2 text-gray-400">
-                      <HiCalendar className="w-4 h-4 text-yellow-400" />
-                      <span className="text-xs">{project.start_date}</span>
-                    </div>
-                  )}
-                  {project.end_date && (
-                    <div className="flex items-center gap-2 text-gray-400">
-                      <HiCalendar className="w-4 h-4 text-yellow-400" />
-                      <span className="text-xs">End: {project.end_date}</span>
-                    </div>
-                  )}
+                  {project.start_date && <div className="flex items-center gap-2 text-gray-400"><HiCalendar className="w-4 h-4 text-yellow-400" /><span className="text-xs">{project.start_date}</span></div>}
+                  {project.end_date && <div className="flex items-center gap-2 text-gray-400"><HiCalendar className="w-4 h-4 text-yellow-400" /><span className="text-xs">End: {project.end_date}</span></div>}
                 </div>
-
-                {/* Circular Progress - Absolute positioned at bottom right */}
                 {project.progress !== undefined && project.progress !== null && (
-                  <div className="absolute bottom-4 right-4">
-                    <CircularProgress progress={project.progress} size={50} strokeWidth={5} />
-                  </div>
+                  <div className="absolute bottom-4 right-4"><CircularProgress progress={project.progress} size={50} strokeWidth={5} /></div>
                 )}
               </div>
             </div>
@@ -273,182 +200,89 @@ export default function ProjectsPage() {
         </div>
       )}
 
-      {/* Modal */}
-      <DashboardModal
-        isOpen={isModalOpen}
-        onClose={handleCloseModal}
-        title={editingProject ? 'Edit Project' : 'Create New Project'}
-      >
+      <DashboardModal isOpen={isModalOpen} onClose={handleCloseModal} title={editingProject ? 'Edit Project' : 'Create New Project'}>
         <form onSubmit={handleSubmit} className="space-y-6">
-          {/* Image Upload Section */}
+          {/* Image */}
           <div className="space-y-2">
-            <label className="block text-sm font-semibold text-white/90 uppercase tracking-wide">
-              <HiPhotograph className="inline w-4 h-4 mr-2 text-yellow-400" />
-              Project Image
-            </label>
-            <CloudinaryUpload
-              value={formData.image || ''}
-              onChange={(url) => setFormData({ ...formData, image: url })}
-              className="mt-2"
-              accept="image/png,image/jpeg,image/jpg,image/webp"
-              maxSizeMb={50}
-              compressImages
-              targetUploadSizeMb={9.5}
-              uploadText="Click to upload the project photo or drag and drop"
-              helpText="PNG, JPG, or WEBP up to 50MB. Large photos are compressed before upload."
-            />
-            {formData.image && (
-              <p className="text-xs text-gray-400 mt-1">Image URL: {formData.image.substring(0, 50)}...</p>
-            )}
+            <label className="block text-sm font-semibold text-white/90 uppercase tracking-wide"><HiPhotograph className="inline w-4 h-4 mr-2 text-yellow-400" />Project Image</label>
+            <CloudinaryUpload value={formData.image || ''} onChange={(url) => setFormData({ ...formData, image: url })} className="mt-2" accept="image/png,image/jpeg,image/jpg,image/webp" maxSizeMb={50} compressImages targetUploadSizeMb={9.5} uploadText="Click to upload the project photo or drag and drop" helpText="PNG, JPG, or WEBP up to 50MB." />
+            {formData.image && <p className="text-xs text-gray-400 mt-1">Image URL: {formData.image.substring(0, 50)}...</p>}
           </div>
 
           <div className="border-t border-white/10 pt-6 space-y-6">
-            {/* Basic Information */}
+            {/* Basic Info */}
             <div className="space-y-4">
-              <h3 className="text-sm font-semibold text-white/90 uppercase tracking-wide border-b border-white/10 pb-2">
-                Basic Information
-              </h3>
-              
+              <h3 className="text-sm font-semibold text-white/90 uppercase tracking-wide border-b border-white/10 pb-2">Basic Information</h3>
               <div>
-                <label className="block text-sm font-medium text-white/80 mb-2">
-                  Title <span className="text-red-400">*</span>
-                </label>
-                <Input
-                  value={formData.title || ''}
-                  onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                  required
-                  placeholder="e.g., Community Cyber Safety Initiative"
-                  className="w-full bg-white/5 border-white/20 placeholder-gray-500 focus:border-yellow-400/50 focus:ring-1 focus:ring-yellow-400/30 transition-all"
-                />
+                <label className="block text-sm font-medium text-white/80 mb-2">Title <span className="text-red-400">*</span></label>
+                <Input value={formData.title || ''} onChange={(e) => setFormData({ ...formData, title: e.target.value })} required placeholder="e.g., Community Cyber Safety Initiative" className="w-full bg-white/5 border-white/20 placeholder-gray-500" />
               </div>
-
               <div>
-                <label className="block text-sm font-medium text-white/80 mb-2">
-                  Description <span className="text-red-400">*</span>
-                </label>
-                <textarea
-                  value={formData.description || ''}
-                  onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                  className="w-full px-4 py-3 bg-white/5 border border-white/20 rounded text-white placeholder-gray-500 focus:outline-none focus:border-yellow-400/50 focus:ring-1 focus:ring-yellow-400/30 transition-all resize-none"
-                  rows={3}
-                  placeholder="Brief description of the project..."
-                  required
-                />
+                <label className="block text-sm font-medium text-white/80 mb-2">Description <span className="text-red-400">*</span></label>
+                <textarea value={formData.description || ''} onChange={(e) => setFormData({ ...formData, description: e.target.value })} className="w-full px-4 py-3 bg-white/5 border border-white/20 rounded text-white placeholder-gray-500 focus:outline-none focus:border-yellow-400/50 resize-none" rows={3} placeholder="Brief description..." required />
               </div>
-
               <div>
-                <label className="block text-sm font-medium text-white/80 mb-2">
-                  Status <span className="text-red-400">*</span>
-                </label>
-                <CustomSelect
-                  options={statusOptions}
-                  value={statusOptions.find(opt => opt.value === formData.status) || null}
-                  onChange={(option) => setFormData({ ...formData, status: option?.value as Project['status'] })}
-                  placeholderColor="#9ca3af"
-                />
+                <label className="block text-sm font-medium text-white/80 mb-2">Status <span className="text-red-400">*</span></label>
+                <CustomSelect options={statusOptions} value={statusOptions.find(opt => opt.value === formData.status) || null} onChange={(option) => setFormData({ ...formData, status: option?.value as Project['status'] })} placeholderColor="#9ca3af" />
+              </div>
+            </div>
+
+            {/* 🌍 Translations */}
+            <div className="space-y-4 border-t border-white/10 pt-6">
+              <h3 className="text-sm font-semibold text-white/90 uppercase tracking-wide border-b border-white/10 pb-2">🌍 Translations</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-white/80 mb-2">🇬🇧 Title (English)</label>
+                  <Input value={formData.title_en || ''} onChange={(e) => setFormData({ ...formData, title_en: e.target.value })} placeholder="English title" className="w-full bg-white/5 border-white/20 placeholder-gray-500" />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-white/80 mb-2">🇫🇷 Titre (Français)</label>
+                  <Input value={formData.title_fr || ''} onChange={(e) => setFormData({ ...formData, title_fr: e.target.value })} placeholder="Titre en français" className="w-full bg-white/5 border-white/20 placeholder-gray-500" />
+                </div>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-white/80 mb-2">🇬🇧 Description (English)</label>
+                <textarea value={formData.description_en || ''} onChange={(e) => setFormData({ ...formData, description_en: e.target.value })} className="w-full px-4 py-3 bg-white/5 border border-white/20 rounded text-white placeholder-gray-500 focus:outline-none focus:border-yellow-400/50 resize-none" rows={3} placeholder="Description in English..." />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-white/80 mb-2">🇫🇷 Description (Français)</label>
+                <textarea value={formData.description_fr || ''} onChange={(e) => setFormData({ ...formData, description_fr: e.target.value })} className="w-full px-4 py-3 bg-white/5 border border-white/20 rounded text-white placeholder-gray-500 focus:outline-none focus:border-yellow-400/50 resize-none" rows={3} placeholder="Description en français..." />
               </div>
             </div>
 
             {/* Project Details */}
             <div className="space-y-4 border-t border-white/10 pt-6">
-              <h3 className="text-sm font-semibold text-white/90 uppercase tracking-wide border-b border-white/10 pb-2">
-                Project Details
-              </h3>
-
+              <h3 className="text-sm font-semibold text-white/90 uppercase tracking-wide border-b border-white/10 pb-2">Project Details</h3>
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-white/80 mb-2">
-                    Start Date
-                  </label>
+                  <label className="block text-sm font-medium text-white/80 mb-2">Start Date</label>
                   <div className="relative">
-                    <Input
-                      inputRef={startDateInputRef}
-                      type="date"
-                      value={formData.start_date || ''}
-                      onChange={(e) => setFormData({ ...formData, start_date: e.target.value })}
-                      className="w-full bg-white/5 border-white/20 pr-12 placeholder-gray-500 focus:border-yellow-400/50 focus:ring-1 focus:ring-yellow-400/30 transition-all"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => openDatePicker(startDateInputRef.current)}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-yellow-400 hover:text-yellow-300 transition-colors"
-                      aria-label="Open start date picker"
-                    >
-                      <HiCalendar className="w-5 h-5" />
-                    </button>
+                    <Input inputRef={startDateInputRef} type="date" value={formData.start_date || ''} onChange={(e) => setFormData({ ...formData, start_date: e.target.value })} className="w-full bg-white/5 border-white/20 pr-12" />
+                    <button type="button" onClick={() => openDatePicker(startDateInputRef.current)} className="absolute right-3 top-1/2 -translate-y-1/2 text-yellow-400 hover:text-yellow-300" aria-label="Open start date picker"><HiCalendar className="w-5 h-5" /></button>
                   </div>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-white/80 mb-2">
-                    End Date
-                  </label>
+                  <label className="block text-sm font-medium text-white/80 mb-2">End Date</label>
                   <div className="relative">
-                    <Input
-                      inputRef={endDateInputRef}
-                      type="date"
-                      value={formData.end_date || ''}
-                      onChange={(e) => setFormData({ ...formData, end_date: e.target.value })}
-                      className="w-full bg-white/5 border-white/20 pr-12 placeholder-gray-500 focus:border-yellow-400/50 focus:ring-1 focus:ring-yellow-400/30 transition-all"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => openDatePicker(endDateInputRef.current)}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-yellow-400 hover:text-yellow-300 transition-colors"
-                      aria-label="Open end date picker"
-                    >
-                      <HiCalendar className="w-5 h-5" />
-                    </button>
+                    <Input inputRef={endDateInputRef} type="date" value={formData.end_date || ''} onChange={(e) => setFormData({ ...formData, end_date: e.target.value })} className="w-full bg-white/5 border-white/20 pr-12" />
+                    <button type="button" onClick={() => openDatePicker(endDateInputRef.current)} className="absolute right-3 top-1/2 -translate-y-1/2 text-yellow-400 hover:text-yellow-300" aria-label="Open end date picker"><HiCalendar className="w-5 h-5" /></button>
                   </div>
                 </div>
               </div>
-
               <div>
-                <label className="block text-sm font-medium text-white/80 mb-2">
-                  Progress (%)
-                </label>
+                <label className="block text-sm font-medium text-white/80 mb-2">Progress (%)</label>
                 <div className="flex items-center gap-4">
-                  <Input
-                    type="number"
-                    min="0"
-                    max="100"
-                    value={formData.progress || ''}
-                    onChange={(e) => setFormData({ ...formData, progress: e.target.value ? Number(e.target.value) : undefined })}
-                    placeholder="0-100"
-                    className="flex-1 bg-white/5 border-white/20 placeholder-gray-500 focus:border-yellow-400/50 focus:ring-1 focus:ring-yellow-400/30 transition-all"
-                  />
-                  {formData.progress !== undefined && formData.progress !== null && (
-                    <CircularProgress progress={formData.progress} size={60} strokeWidth={6} />
-                  )}
+                  <Input type="number" min="0" max="100" value={formData.progress || ''} onChange={(e) => setFormData({ ...formData, progress: e.target.value ? Number(e.target.value) : undefined })} placeholder="0-100" className="flex-1 bg-white/5 border-white/20 placeholder-gray-500" />
+                  {formData.progress !== undefined && formData.progress !== null && <CircularProgress progress={formData.progress} size={60} strokeWidth={6} />}
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Action Buttons */}
           <div className="flex gap-3 pt-6 border-t border-white/10">
-            <Button 
-              type="button" 
-              variant="secondary" 
-              onClick={handleCloseModal} 
-              className="flex-1"
-              disabled={submitting}
-            >
-              Cancel
-            </Button>
-            <Button 
-              type="submit" 
-              variant="primary" 
-              className="flex-1"
-              disabled={submitting}
-            >
-              {submitting ? (
-                <span className="flex items-center justify-center gap-2">
-                  <Loader size={16} />
-                  {editingProject ? 'Updating...' : 'Creating...'}
-                </span>
-              ) : (
-                editingProject ? 'Update Project' : 'Create Project'
-              )}
+            <Button type="button" variant="secondary" onClick={handleCloseModal} className="flex-1" disabled={submitting}>Cancel</Button>
+            <Button type="submit" variant="primary" className="flex-1" disabled={submitting}>
+              {submitting ? <span className="flex items-center justify-center gap-2"><Loader size={16} />{editingProject ? 'Updating...' : 'Creating...'}</span> : editingProject ? 'Update Project' : 'Create Project'}
             </Button>
           </div>
         </form>

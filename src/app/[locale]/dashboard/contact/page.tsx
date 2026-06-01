@@ -127,13 +127,13 @@ export default function ContactPage() {
     }
   };
 
-  const sortedContacts = [...contacts].sort((a, b) => a.display_order - b.display_order);
+  const sortedContacts = [...contacts].sort((a, b) => (a.display_order ?? 0) - (b.display_order ?? 0));
 
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl md:text-4xl font-bold mb-2" style={{ fontFamily: 'var(--font-nourd), sans-serif' }}>
+          <h1 className="text-3xl md:text-4xl font-bold mb-2">
             Contact Information
           </h1>
           <p className="text-gray-400">Manage contact details displayed on the website</p>
@@ -159,12 +159,18 @@ export default function ContactPage() {
               </div>
               <div className="flex gap-2">
                 <button
+                  type="button"
+                  aria-label="Edit contact info"
+                  title="Edit contact info"
                   onClick={() => handleOpenModal(contact)}
                   className="text-yellow-400 hover:text-yellow-300 transition-colors"
                 >
                   <HiPencil className="w-5 h-5" />
                 </button>
                 <button
+                  type="button"
+                  aria-label="Delete contact info"
+                  title="Delete contact info"
                   onClick={() => handleDelete(contact.id)}
                   className="text-red-400 hover:text-red-300 transition-colors"
                 >
@@ -175,7 +181,7 @@ export default function ContactPage() {
             <p className="text-gray-300 text-sm break-words">{contact.value}</p>
             <div className="flex items-center gap-2 text-xs text-gray-400">
               <span className="px-2 py-1 bg-white/10 uppercase tracking-wide">{contact.type}</span>
-              <span>Order: {contact.display_order}</span>
+              <span>Order: {contact.display_order ?? '—'}</span>
             </div>
           </div>
         ))}

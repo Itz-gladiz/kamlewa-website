@@ -15,19 +15,19 @@ import Image from 'next/image';
 import { HiShieldCheck, HiUsers, HiCode } from 'react-icons/hi';
 import { PiHandshake } from 'react-icons/pi';
 import BackToHome from '@/components/BackToHome';
+import { createVolunteerApplication, createPartnershipInquiry } from '@/lib/supabase/submissions';
 
 const GOOGLE_SHEETS_URL = process.env.NEXT_PUBLIC_GOOGLE_SHEETS_URL;
 
-// Reusable no-cors submit to Google Sheets
-async function submitToGoogleSheets(payload: Record<string, string>) {
-  if (!GOOGLE_SHEETS_URL) throw new Error('Google Sheets URL is not configured');
+
+async function sendToSheets(payload: Record<string, string>) {
+  if (!GOOGLE_SHEETS_URL) return;
   await fetch(GOOGLE_SHEETS_URL, {
     method: 'POST',
     mode: 'no-cors',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(payload),
   });
-  // no-cors always resolves — treat as success
 }
 
 export default function CommunityPage() {
@@ -120,8 +120,16 @@ export default function CommunityPage() {
     setIsSubmittingVolunteer(true);
     const loadingToast = toast.loading(tPage('volunteering.form.submitting'));
 
-    try {
-      await submitToGoogleSheets({
+    await Promise.allSettled([
+      createVolunteerApplication({
+        name: volunteerForm.name,
+        email: volunteerForm.email,
+        phone: volunteerForm.phone || undefined,
+        expertise: volunteerForm.expertise || undefined,
+        availability: volunteerForm.availability || undefined,
+        message: volunteerForm.message,
+      }),
+      sendToSheets({
         sheetName: 'Volunteers',
         name: volunteerForm.name,
         email: volunteerForm.email,
@@ -129,16 +137,12 @@ export default function CommunityPage() {
         expertise: volunteerForm.expertise || 'N/A',
         availability: volunteerForm.availability || 'N/A',
         message: volunteerForm.message,
-      });
-      toast.success(tPage('volunteering.form.success'), { id: loadingToast });
-      setVolunteerForm({ name: '', email: '', phone: '', expertise: '', availability: '', message: '' });
-    } catch {
-      // no-cors fetch always resolves — this only fires on network failure
-      toast.success(tPage('volunteering.form.success'), { id: loadingToast });
-      setVolunteerForm({ name: '', email: '', phone: '', expertise: '', availability: '', message: '' });
-    } finally {
-      setIsSubmittingVolunteer(false);
-    }
+      }),
+    ]);
+
+    toast.success(tPage('volunteering.form.success'), { id: loadingToast });
+    setVolunteerForm({ name: '', email: '', phone: '', expertise: '', availability: '', message: '' });
+    setIsSubmittingVolunteer(false);
   };
 
   const handlePartnershipSubmit = async (e: React.FormEvent) => {
@@ -146,8 +150,16 @@ export default function CommunityPage() {
     setIsSubmittingPartnership(true);
     const loadingToast = toast.loading(tPage('partnerships.form.submitting'));
 
-    try {
-      await submitToGoogleSheets({
+    await Promise.allSettled([
+      createPartnershipInquiry({
+        name: partnershipForm.name,
+        email: partnershipForm.email,
+        phone: partnershipForm.phone || undefined,
+        organization: partnershipForm.organization,
+        partnership_type: partnershipForm.partnershipType || undefined,
+        message: partnershipForm.message,
+      }),
+      sendToSheets({
         sheetName: 'Partnerships',
         name: partnershipForm.name,
         email: partnershipForm.email,
@@ -155,16 +167,12 @@ export default function CommunityPage() {
         organization: partnershipForm.organization,
         partnershipType: partnershipForm.partnershipType || 'N/A',
         message: partnershipForm.message,
-      });
-      toast.success(tPage('partnerships.form.success'), { id: loadingToast });
-      setPartnershipForm({ name: '', email: '', phone: '', organization: '', partnershipType: '', message: '' });
-    } catch {
-      // no-cors fetch always resolves — this only fires on network failure
-      toast.success(tPage('partnerships.form.success'), { id: loadingToast });
-      setPartnershipForm({ name: '', email: '', phone: '', organization: '', partnershipType: '', message: '' });
-    } finally {
-      setIsSubmittingPartnership(false);
-    }
+      }),
+    ]);
+
+    toast.success(tPage('partnerships.form.success'), { id: loadingToast });
+    setPartnershipForm({ name: '', email: '', phone: '', organization: '', partnershipType: '', message: '' });
+    setIsSubmittingPartnership(false);
   };
 
   return (

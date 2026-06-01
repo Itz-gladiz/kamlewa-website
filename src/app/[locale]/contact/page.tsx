@@ -10,9 +10,9 @@ import toast from 'react-hot-toast';
 import Input from '@/components/Input';
 import Button from '@/components/Button';
 import { HiLocationMarker, HiMail, HiPhone } from 'react-icons/hi';
+import { createContactSubmission } from '@/lib/supabase/submissions';
 
 const GOOGLE_SHEETS_URL = process.env.NEXT_PUBLIC_GOOGLE_SHEETS_URL;
-const MAP_QUERY = 'Douala, Cameroon';
 const MAP_EMBED_URL = 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3975.137301125864!2d9.701349174344397!3d4.049351345513161!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x108fca23255129eb%3A0xc457408f22f64dbd!2sDouala%2C%20Cameroon!5e0!3m2!1sen!2sus!4v1717600000000';
 
 export default function ContactPage() {
@@ -29,43 +29,37 @@ export default function ContactPage() {
 
   const handleGeneralSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
-    if (!GOOGLE_SHEETS_URL) {
-      toast.error('Contact form is not configured. Please try again later.');
-      return;
-    }
-
     setIsSubmittingGeneral(true);
     const loadingToast = toast.loading(t('sending'));
 
-    try {
-      // Use no-cors directly — avoids CORS error entirely
-      // Data still reaches Google Sheets even though response is opaque
-      await fetch(GOOGLE_SHEETS_URL, {
-        method: 'POST',
-        mode: 'no-cors',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          fullName: generalForm.name,
-          email: generalForm.email,
-          phone: generalForm.phone || 'N/A',
-          subject: generalForm.subject,
-          message: generalForm.message,
-        }),
-      });
+    await Promise.allSettled([
+      createContactSubmission({
+        name: generalForm.name,
+        email: generalForm.email,
+        phone: generalForm.phone || undefined,
+        subject: generalForm.subject,
+        message: generalForm.message,
+      }),
+      GOOGLE_SHEETS_URL
+        ? fetch(GOOGLE_SHEETS_URL, {
+            method: 'POST',
+            mode: 'no-cors',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              sheetName: 'Contact',
+              fullName: generalForm.name,
+              email: generalForm.email,
+              phone: generalForm.phone || 'N/A',
+              subject: generalForm.subject,
+              message: generalForm.message,
+            }),
+          })
+        : Promise.resolve(),
+    ]);
 
-      // no-cors always resolves successfully — show success toast
-      toast.success(t('success'), { id: loadingToast });
-      setGeneralForm({ name: '', email: '', phone: '', subject: '', message: '' });
-
-    } catch {
-      // Only reaches here on genuine network failure (no internet)
-      // The "Failed to fetch" console warning is a browser quirk, not a real error
-      toast.success(t('success'), { id: loadingToast });
-      setGeneralForm({ name: '', email: '', phone: '', subject: '', message: '' });
-    } finally {
-      setIsSubmittingGeneral(false);
-    }
+    toast.success(t('success'), { id: loadingToast });
+    setGeneralForm({ name: '', email: '', phone: '', subject: '', message: '' });
+    setIsSubmittingGeneral(false);
   };
 
   return (
@@ -104,7 +98,7 @@ export default function ContactPage() {
                   </div>
                   <div>
                     <h3 className="text-sm font-semibold text-gray-400 mb-1 uppercase">{t('primaryPhone')}</h3>
-                    <a href="tel:123456789" className="text-white hover:text-yellow-400 transition-colors">
+                    <a href="tel:+237653906594" className="text-white hover:text-yellow-400 transition-colors">
                       +237 653 906 594
                     </a>
                   </div>
@@ -115,7 +109,7 @@ export default function ContactPage() {
                   </div>
                   <div>
                     <h3 className="text-sm font-semibold text-gray-400 mb-1 uppercase">{t('secondaryPhone')}</h3>
-                    <a href="tel:123456789" className="text-white hover:text-yellow-400 transition-colors">
+                    <a href="tel:+237671317500" className="text-white hover:text-yellow-400 transition-colors">
                       +237 671 317 500
                     </a>
                   </div>
@@ -203,11 +197,12 @@ export default function ContactPage() {
 
           </div>
 
+          {/* Map */}
           <div className="mt-12 md:mt-16">
             <div className="mb-6">
               <p className="tagline text-yellow-400 text-sm font-semibold mb-3 uppercase tracking-wider relative inline-block">
                 Find Us
-                <span className="absolute bottom-0 left-0 w-1/2 h-0.5 bg-yellow-400"></span>
+                <span className="absolute bottom-0 left-0 w-1/2 h-0.5 bg-yellow-400" />
               </p>
               <h2 className="text-2xl md:text-3xl font-bold" style={{ fontFamily: 'var(--font-nourd), sans-serif' }}>
                 Our Location
@@ -223,6 +218,7 @@ export default function ContactPage() {
               />
             </div>
           </div>
+
         </div>
       </section>
       <Footer />
