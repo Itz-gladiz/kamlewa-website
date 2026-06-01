@@ -5,6 +5,7 @@ import { HiArrowRight, HiOutlineCalendarDateRange, HiAcademicCap } from 'react-i
 import { VscLocation } from 'react-icons/vsc';
 import { PiClockCountdownFill } from 'react-icons/pi';
 import { motion } from 'framer-motion';
+import CircularProgress from './CircularProgress';
 
 type Item = {
   id?: string | number;
@@ -17,6 +18,8 @@ type Item = {
   duration?: string;
   level?: string;
   status?: string;
+  progress?: number;
+  startDate?: string;
 };
 
 type TranslationFn = (key: string) => string;
@@ -88,6 +91,12 @@ export function PreviewCard({ item, index, activeTab, tEvents }: { item: Item; i
               <span className="whitespace-nowrap">{item.date}</span>
             </div>
           )}
+          {item.startDate && (
+            <div className="flex items-center gap-1.5 text-yellow-400">
+              <HiOutlineCalendarDateRange className="w-4 h-4 shrink-0 text-yellow-400" />
+              <span className="whitespace-nowrap">{item.startDate}</span>
+            </div>
+          )}
           {item.location && (
             <div className="flex items-center gap-1.5 text-gray-400">
               <VscLocation className="w-4 h-4 shrink-0" />
@@ -112,10 +121,28 @@ export function PreviewCard({ item, index, activeTab, tEvents }: { item: Item; i
               <span className="whitespace-nowrap">{item.level}</span>
             </div>
           )}
-          {item.status && (
-            <div className="inline-block px-3 py-1 bg-yellow-400/20 text-yellow-400 text-xs font-semibold rounded-full whitespace-nowrap">{item.status}</div>
-          )}
         </div>
+
+        {/* Status and Progress for Projects */}
+        {(item.status || item.progress !== undefined) && (
+          <div className="flex items-center justify-between gap-3 mb-4 shrink-0">
+            {item.status && (
+              <div className={`inline-block px-3 py-1 text-xs font-semibold rounded-full whitespace-nowrap ${
+                item.status === 'active' ? 'bg-green-500/20 text-green-400 border border-green-500/30' :
+                item.status === 'completed' ? 'bg-blue-500/20 text-blue-400 border border-blue-500/30' :
+                'bg-yellow-400/20 text-yellow-400 border border-yellow-400/30'
+              }`}>
+                {item.status}
+              </div>
+            )}
+            {item.progress !== undefined && (
+              <div className="flex items-center gap-2">
+                <CircularProgress progress={item.progress} size={32} strokeWidth={3} />
+                <span className="text-xs text-gray-400 font-medium">{item.progress}%</span>
+              </div>
+            )}
+          </div>
+        )}
 
         {(activeTab === 'featured' || activeTab === 'upcoming') && item.id ? (
           <Link href={`/events-impact/${item.id}`} className="tagline inline-flex items-center gap-2 text-yellow-400 font-semibold text-base md:text-2xl hover:text-yellow-300 transition-colors group/link mt-auto" onClick={(e: LinkClickEvent) => e.stopPropagation()}>
@@ -128,9 +155,21 @@ export function PreviewCard({ item, index, activeTab, tEvents }: { item: Item; i
             <HiArrowRight className="w-4 h-4 md:w-5 md:h-5 transition-transform duration-300 group-hover/link:translate-x-1" />
           </Link>
         ) : (
-          <Link href={item.id && activeTab === 'projects' ? `/events-impact/projects/${item.id}` : item.id && activeTab === 'trainings' ? `/events-impact/trainings/${item.id}` : '/events-impact'} className="tagline inline-flex items-center gap-2 text-yellow-400 font-semibold text-base md:text-2xl hover:text-yellow-300 transition-colors group/link mt-auto" onClick={(e: LinkClickEvent) => e.stopPropagation()}>
+          <Link
+            href={
+              item.id && activeTab === 'projects'
+                ? `/events-impact/projects/${item.id}`
+                : item.id && activeTab === 'trainings'
+                ? `/events-impact/trainings/${item.id}`
+                : item.id && activeTab === 'reports'
+                ? `/events-impact/reports/${item.id}`
+                : '/events-impact'
+            }
+            className="tagline inline-flex items-center gap-2 text-yellow-400 font-semibold text-base md:text-2xl hover:text-yellow-300 transition-colors group/link mt-auto"
+            onClick={(e: LinkClickEvent) => e.stopPropagation()}
+          >
             <span className="relative">
-              {tEvents('learnMore')}
+              {activeTab === 'reports' ? 'View Report' : tEvents('learnMore')}
               <svg className="absolute -bottom-1 left-0 w-full" preserveAspectRatio="none" viewBox="0 0 200 10" style={{ height: '6px' }}>
                 <path d="M0,8 L10,2 L20,8 L30,2 L40,8 L50,2 L60,8 L70,2 L80,8 L90,2 L100,8 L110,2 L120,8 L130,2 L140,8 L150,2 L160,8 L170,2 L180,8 L190,2 L200,8" stroke="currentColor" strokeWidth="2" fill="none" />
               </svg>

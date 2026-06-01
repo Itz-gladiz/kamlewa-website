@@ -230,6 +230,7 @@
     "tabs": {
       "programs": "Programs"
     },
+    "reports": "Reports",
     "steamClubs": "STEAM Clubs",
     "steamClubsDesc": "Interactive clubs fostering Science, Technology, Engineering, Arts, and Mathematics skills among youth.",
     "techBootcamps": "Tech Bootcamps",
@@ -419,18 +420,6 @@
         "description": "Supporting aspiring tech entrepreneurs with mentorship, resources, and networking opportunities.",
         "date": "July 2025",
         "location": "Online & In-Person"
-      }
-    },
-    "projects": {
-      "project1": {
-        "title": "Rural Digital Inclusion Initiative",
-        "description": "Expanding digital access and technology education to underserved rural communities across Africa.",
-        "status": "In Progress"
-      },
-      "project2": {
-        "title": "Youth Cybersecurity Training Program",
-        "description": "Comprehensive cybersecurity training program designed specifically for young professionals and students.",
-        "status": "Active"
       }
     },
     "trainings": {

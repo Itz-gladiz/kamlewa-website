@@ -15,29 +15,44 @@ import { VscLocation } from "react-icons/vsc";
 import { getEvents } from '@/lib/supabase/events';
 import { getPrograms } from '@/lib/supabase/programs';
 import { getProjects } from '@/lib/supabase/projects';
+import { getReports } from '@/lib/supabase/reports';
 import { getTrainings } from '@/lib/supabase/trainings';
 import { mapDbEventToEvent } from '@/utils/eventMapper';
+import { mergeStaticReports, Report } from '@/data/staticReports';
 import { Event } from '@/data/events';
 import { Database } from '@/lib/supabase/types';
 import Loader from './Loader';
 import toast from 'react-hot-toast';
 import { PreviewCard, ProgramCard } from './PreviewCard';
+import CircularProgress from './CircularProgress';
 
 type ProgramRow = Database['public']['Tables']['programs']['Row'];
 type ProjectRow = Database['public']['Tables']['projects']['Row'];
 type TrainingRow = Database['public']['Tables']['trainings']['Row'];
+type PreviewItem = Event | {
+  id?: string;
+  title: string;
+  description: string;
+  image: string;
+  status?: string;
+  startDate?: string;
+  progress?: number;
+  duration?: string;
+  level?: string;
+};
 
 export default function ProgramsPreview() {
   const t = useTranslations('programs');
   const tEvents = useTranslations('featuredEvents');
   const router = useRouter();
   const [activeCard, setActiveCard] = useState<number | null>(null);
-  const [activeTab, setActiveTab] = useState<'programs' | 'featured' | 'upcoming' | 'projects' | 'trainings'>('programs');
+  const [activeTab, setActiveTab] = useState<'programs' | 'featured' | 'upcoming' | 'projects' | 'trainings' | 'reports'>('programs');
   const [showSwipeHint, setShowSwipeHint] = useState(false);
   const [featuredEvents, setFeaturedEvents] = useState<Event[]>([]);
   const [upcomingEvents, setUpcomingEvents] = useState<Event[]>([]);
   const [programs, setPrograms] = useState<ProgramRow[]>([]);
   const [projects, setProjects] = useState<ProjectRow[]>([]);
+  const [reports, setReports] = useState<Report[]>([]);
   const [trainings, setTrainings] = useState<TrainingRow[]>([]);
   const [loadingEvents, setLoadingEvents] = useState(true);
   const [loadingData, setLoadingData] = useState(true);
@@ -73,6 +88,7 @@ export default function ProgramsPreview() {
     { id: 'upcoming' as const, label: tEvents('tabs.upcoming'), icon: HiOutlineCalendarDateRange },
     { id: 'projects' as const, label: tEvents('tabs.projects'), icon: HiOutlineClipboardDocumentList },
     { id: 'trainings' as const, label: tEvents('tabs.trainings'), icon: PiGraduationCapBold },
+    { id: 'reports' as const, label: t('reports') || 'Reports', icon: HiOutlineClipboardDocumentList },
   ];
 
   // Load events, programs, projects, and trainings from Supabase
@@ -100,19 +116,22 @@ export default function ProgramsPreview() {
     const loadData = async () => {
       try {
         setLoadingData(true);
-        const [programsData, projectsData, trainingsData] = await Promise.all([
+        const [programsData, projectsData, reportsData, trainingsData] = await Promise.all([
           getPrograms(),
           getProjects(),
+          getReports(),
           getTrainings(),
         ]);
 
         setPrograms(programsData);
         setProjects(projectsData);
+        setReports(mergeStaticReports(reportsData));
         setTrainings(trainingsData);
       } catch (error) {
         console.error('Error loading preview data:', error);
         setPrograms([]);
         setProjects([]);
+        setReports(mergeStaticReports([]));
         setTrainings([]);
       } finally {
         setLoadingData(false);
@@ -123,20 +142,7 @@ export default function ProgramsPreview() {
     loadData();
   }, []);
 
-  const currentProjectsFallback = [
-    {
-      title: tEvents('projects.project1.title'),
-      description: tEvents('projects.project1.description'),
-      status: tEvents('projects.project1.status'),
-      image: 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=2070',
-    },
-    {
-      title: tEvents('projects.project2.title'),
-      description: tEvents('projects.project2.description'),
-      status: tEvents('projects.project2.status'),
-      image: 'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=2070',
-    },
-  ];
+  const currentProjectsFallback: any[] = [];
 
   const trainingsFallback = [
     {
@@ -185,14 +191,16 @@ export default function ProgramsPreview() {
     },
   ];
 
+  const currentProjectRows = projects.filter((project) => project.status !== 'completed');
+
   const currentProjects = projects.length > 0
-    ? projects.slice(0, 2).map((project) => ({
+    ? currentProjectRows.slice(0, 3).map((project) => ({
         id: project.id,
         title: project.title,
         description: project.description,
         status: project.status,
         image: project.image,
-        start_date: project.start_date || undefined,
+        startDate: project.start_date ? new Date(project.start_date).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }) : undefined,
         progress: project.progress ?? undefined,
       }))
     : currentProjectsFallback;
@@ -217,7 +225,16 @@ export default function ProgramsPreview() {
       }))
     : trainingsFallback;
 
-  const getCurrentData = () => {
+  const reportCards = reports.length > 0
+    ? reports.map((report) => ({
+        id: report.id,
+        title: report.title,
+        description: report.description,
+        image: report.image || '/images/2023%202025%20IMPACT%20REPORT/cover%20page.png',
+      }))
+    : [];
+
+  const getCurrentData = (): PreviewItem[] => {
     switch (activeTab) {
       case 'programs':
         return programCards;
@@ -229,6 +246,8 @@ export default function ProgramsPreview() {
         return currentProjects;
       case 'trainings':
         return trainingCards;
+      case 'reports':
+        return reportCards;
       default:
         return programCards;
     }
@@ -444,7 +463,7 @@ export default function ProgramsPreview() {
                   : 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3'
               }`}
             >
-              {getCurrentData().map((item: any, index: number) => {
+              {getCurrentData().map((item, index) => {
               const isActive = activeCard === index;
               const isProgramTab = activeTab === 'programs';
               

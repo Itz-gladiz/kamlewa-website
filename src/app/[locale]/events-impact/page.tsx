@@ -266,7 +266,7 @@ export default function EventsImpactPage() {
       case 'programs':  data = programs; break;
       case 'featured':  data = events.filter((e) => e.type === 'featured'); break;
       case 'upcoming':  data = events.filter((e) => e.type === 'upcoming'); break;
-      case 'projects':  data = projects; break;
+      case 'projects':  data = projects.filter((project) => project.status !== 'completed'); break;
       case 'trainings': data = trainings; break;
       case 'reports':   data = reports; break;
     }
