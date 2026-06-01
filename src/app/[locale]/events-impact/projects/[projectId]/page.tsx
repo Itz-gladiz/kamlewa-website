@@ -132,7 +132,7 @@ export default function ProjectDetailsPage() {
           <Link href="/events-impact">
             <Button variant="outline-white" className="mb-8">
               <HiArrowLeft className="w-5 h-5" />
-              Back to Projects
+              Back to Events
             </Button>
           </Link>
         </div>
@@ -146,13 +146,13 @@ export default function ProjectDetailsPage() {
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="relative h-64 md:h-96 overflow-hidden"
+                className="relative w-full aspect-[8/11] overflow-hidden bg-black"
               >
                 <Image
                   src={project.image}
                   alt={project.title}
                   fill
-                  className="object-cover"
+                  className="object-contain object-center"
                   unoptimized
                 />
               </motion.div>
