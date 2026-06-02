@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
-import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import PageBanner from '@/components/PageBanner';
 import { useTranslations } from 'next-intl';
@@ -170,7 +169,6 @@ export default function TrainingDetailsPage() {
   if (loading) {
     return (
       <>
-        <Navbar />
         <div className="min-h-screen bg-black text-white flex items-center justify-center">
           <div className="flex justify-center items-center">
             <Loader />
@@ -184,7 +182,6 @@ export default function TrainingDetailsPage() {
   if (!training) {
     return (
       <>
-        <Navbar />
         <div className="min-h-screen bg-black text-white flex items-center justify-center">
           <div className="text-center">
             <h1 className="text-2xl font-bold mb-4">Training Not Found</h1>
@@ -200,7 +197,6 @@ export default function TrainingDetailsPage() {
 
   return (
     <>
-      <Navbar />
       <main className="relative bg-black text-white">
 
         {/* ── Registration Modal (only for non-Fapshi trainings) ── */}

@@ -3,14 +3,22 @@ import { createClient } from '@supabase/supabase-js';
 
 export async function POST() {
   try {
-    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL;
     const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
-    if (!supabaseUrl || !supabaseServiceKey) {
+    if (!supabaseUrl) {
       return NextResponse.json(
-        { error: 'Missing Supabase configuration' },
+        { error: 'Missing Supabase URL. Set NEXT_PUBLIC_SUPABASE_URL or SUPABASE_URL.' },
         { status: 500 }
       );
+    }
+
+    if (!supabaseServiceKey) {
+      return NextResponse.json(
+        { error: 'Missing Supabase service role key. Set SUPABASE_SERVICE_ROLE_KEY.' },
+        { status: 500 }
+      );
+    }
     }
 
     // Use service role key for admin operations

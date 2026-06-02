@@ -1,7 +1,6 @@
-'use client';
+ 'use client';
 
 import { useState } from 'react';
-import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import PageBanner from '@/components/PageBanner';
 import Partners from '@/components/Partners';
@@ -177,8 +176,6 @@ export default function CommunityPage() {
 
   return (
     <main className="relative">
-      <Navbar />
-
       <PageBanner
         subheading={tPage('subheading')}
         heading={tPage('heading')}

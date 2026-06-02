@@ -3,14 +3,17 @@ import { Training } from '@/data/trainings';
 
 type DbTraining = Database['public']['Tables']['trainings']['Row'];
 
-/**
- * Convert database training to frontend Training format
- */
-export function mapDbTrainingToTraining(dbTraining: DbTraining): Training {
+export function mapDbTrainingToTraining(dbTraining: DbTraining, locale = 'en'): Training {
+  const isFr = locale === 'fr';
+
   return {
     id: dbTraining.id,
-    title: dbTraining.title,
-    description: dbTraining.description,
+    title: isFr
+      ? (dbTraining.title_fr || dbTraining.title)
+      : (dbTraining.title_en || dbTraining.title),
+    description: isFr
+      ? (dbTraining.description_fr || dbTraining.description)
+      : (dbTraining.description_en || dbTraining.description),
     duration: dbTraining.duration,
     level: dbTraining.level,
     image: dbTraining.image,
@@ -19,4 +22,3 @@ export function mapDbTrainingToTraining(dbTraining: DbTraining): Training {
     format: dbTraining.format || undefined,
   };
 }
-

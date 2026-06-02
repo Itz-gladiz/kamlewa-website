@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
-import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import PageBanner from '@/components/PageBanner';
 import { useTranslations } from 'next-intl';
@@ -49,7 +48,6 @@ export default function ProjectDetailsPage() {
   if (loading) {
     return (
       <>
-        <Navbar />
         <div className="min-h-screen bg-black text-white flex items-center justify-center">
           <div className="flex justify-center items-center">
             <Loader />
@@ -63,7 +61,6 @@ export default function ProjectDetailsPage() {
   if (!project) {
     return (
       <>
-        <Navbar />
         <div className="min-h-screen bg-black text-white flex items-center justify-center">
           <div className="text-center">
             <h1 className="text-2xl font-bold mb-4">Project Not Found</h1>
@@ -117,7 +114,6 @@ export default function ProjectDetailsPage() {
 
   return (
     <>
-      <Navbar />
       <main className="relative bg-black text-white">
         {/* Page Banner */}
         <PageBanner

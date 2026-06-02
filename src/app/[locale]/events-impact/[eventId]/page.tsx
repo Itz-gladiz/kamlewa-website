@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import PageBanner from '@/components/PageBanner';
 import { useTranslations } from 'next-intl';
@@ -82,7 +81,6 @@ export default function EventDetailsPage() {
   if (loading) {
     return (
       <>
-        <Navbar />
         <div className="min-h-screen bg-black text-white flex items-center justify-center">
           <div className="flex justify-center items-center">
             <Loader />
@@ -96,7 +94,6 @@ export default function EventDetailsPage() {
   if (!event) {
     return (
       <>
-        <Navbar />
         <div className="min-h-screen bg-black text-white flex items-center justify-center">
           <div className="text-center">
             <h1 className="text-2xl font-bold mb-4">Event Not Found</h1>
@@ -210,7 +207,6 @@ export default function EventDetailsPage() {
 
   return (
   <>
-    <Navbar />
     <main className="bg-[#1a1a1a] text-white p-6 md:p-12 lg:p-16">
       {/* Page Banner */}
       <PageBanner

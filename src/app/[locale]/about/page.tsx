@@ -1,6 +1,4 @@
-'use client';
-
-import Navbar from '@/components/Navbar';
+ 'use client';
 import Footer from '@/components/Footer';
 import PageBanner from '@/components/PageBanner';
 import BackToHome from '@/components/BackToHome';
@@ -239,7 +237,6 @@ export default function AboutPage() {
 
   return (
     <main className="relative">
-      <Navbar />
       <PageBanner
         subheading={tPage('subheading')}
         heading={tPage('heading')}

@@ -20,9 +20,12 @@ Add these to your `.env.local` file:
 ```env
 NEXT_PUBLIC_SUPABASE_URL=your-supabase-project-url
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your-supabase-anon-key
+SUPABASE_SERVICE_ROLE_KEY=your-supabase-service-role-key
 NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME=your-cloudinary-cloud-name
 NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET=your-cloudinary-upload-preset
 ```
+
+The `SUPABASE_SERVICE_ROLE_KEY` is required for the admin user creation endpoint under `/api/create-admin-user`.
 
 ## Features
 

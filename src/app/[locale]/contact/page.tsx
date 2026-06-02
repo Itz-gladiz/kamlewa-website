@@ -1,7 +1,6 @@
-'use client';
+ 'use client';
 
 import { useState } from 'react';
-import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import PageBanner from '@/components/PageBanner';
 import BackToHome from '@/components/BackToHome';
@@ -64,7 +63,6 @@ export default function ContactPage() {
 
   return (
     <main className="relative">
-      <Navbar />
       <PageBanner
         subheading={t('subheading')}
         heading={t('heading')}

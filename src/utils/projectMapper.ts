@@ -3,14 +3,17 @@ import { Project } from '@/data/projects';
 
 type DbProject = Database['public']['Tables']['projects']['Row'];
 
-/**
- * Convert database project to frontend Project format
- */
-export function mapDbProjectToProject(dbProject: DbProject): Project {
+export function mapDbProjectToProject(dbProject: DbProject, locale = 'en'): Project {
+  const isFr = locale === 'fr';
+
   return {
     id: dbProject.id,
-    title: dbProject.title,
-    description: dbProject.description,
+    title: isFr
+      ? (dbProject.title_fr || dbProject.title)
+      : (dbProject.title_en || dbProject.title),
+    description: isFr
+      ? (dbProject.description_fr || dbProject.description)
+      : (dbProject.description_en || dbProject.description),
     status: dbProject.status,
     image: dbProject.image,
     startDate: dbProject.start_date || undefined,
@@ -18,4 +21,3 @@ export function mapDbProjectToProject(dbProject: DbProject): Project {
     progress: dbProject.progress || undefined,
   };
 }
-
