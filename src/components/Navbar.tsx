@@ -77,7 +77,25 @@ export default function Navbar({ serverLabels }: { serverLabels?: ServerLabels }
   }, []);
 
   const switchLocale = (newLocale: string) => {
-    router.replace(pathname, { locale: newLocale, forcePrefix: true });
+    const currentPath = pathname || '/';
+    const pathWithoutLocale = currentPath.replace(/^\/[a-z]{2}/, '') || '/';
+    const newPath = `/${newLocale}${pathWithoutLocale === '/' ? '' : pathWithoutLocale}`;
+    // Try client-side navigation first; if it doesn't change the URL, fall back to full reload.
+    try {
+      const res = router.push(newPath);
+      if (res && typeof (res as any).then === 'function') {
+        (res as any).catch(() => (window.location.href = newPath));
+      } else {
+        // If router.push doesn't return a promise, ensure the location changes shortly after
+        setTimeout(() => {
+          if (typeof window !== 'undefined' && window.location.pathname !== newPath) {
+            window.location.href = newPath;
+          }
+        }, 400);
+      }
+    } catch (e) {
+      if (typeof window !== 'undefined') window.location.href = newPath;
+    }
   };
 
   // Check if a link is active

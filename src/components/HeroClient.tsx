@@ -74,6 +74,7 @@ export default function HeroClient({ headline, subtext, volunteer, partner }: He
           <motion.h1
             className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-yellow-400 mb-6 leading-tight max-w-5xl"
             variants={headlineVariants}
+            suppressHydrationWarning={true}
           >
             {headline}
           </motion.h1>
@@ -81,6 +82,7 @@ export default function HeroClient({ headline, subtext, volunteer, partner }: He
           <motion.p
             className="text-lg md:text-xl lg:text-2xl text-white mb-10 leading-relaxed max-w-3xl font-[var(--font-nexa),sans-serif]"
             variants={itemVariants}
+            suppressHydrationWarning={true}
           >
             {subtext}
           </motion.p>
