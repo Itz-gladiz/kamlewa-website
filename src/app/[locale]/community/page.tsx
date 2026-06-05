@@ -1,6 +1,8 @@
 'use client';
 
 import { useState } from 'react';
+import Link from 'next/link';
+import { useLocale } from 'next-intl';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import PageBanner from '@/components/PageBanner';
@@ -12,7 +14,7 @@ import Input from '@/components/Input';
 import Button from '@/components/Button';
 import CustomSelect from '@/components/Select';
 import Image from 'next/image';
-import { HiShieldCheck, HiUsers, HiCode } from 'react-icons/hi';
+import { HiShieldCheck, HiUsers, HiCode, HiArrowRight } from 'react-icons/hi';
 import { PiHandshake } from 'react-icons/pi';
 import BackToHome from '@/components/BackToHome';
 import { createVolunteerApplication, createPartnershipInquiry } from '@/lib/supabase/submissions';
@@ -31,6 +33,7 @@ async function sendToSheets(payload: Record<string, string>) {
 }
 
 export default function CommunityPage() {
+  const locale = useLocale();
   const t = useTranslations('community');
   const tPage = useTranslations('community.page');
 
@@ -218,10 +221,15 @@ export default function CommunityPage() {
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 md:gap-12">
               {communities.map((community) => {
                 const Icon = community.icon;
+                const communityLinks: Record<string, string> = {
+                  kamcyber: `/${locale}/kamcyber`,
+                  hackthebox: `/${locale}/hackthebox`,
+                  owasp: `/${locale}/owasp`,
+                };
                 return (
                   <motion.div
                     key={community.id}
-                    className="bg-white/5 border border-white/10 overflow-hidden group hover:border-yellow-400/50 transition-all duration-300"
+                    className="bg-white/5 border border-white/10 overflow-hidden group hover:border-yellow-400/50 transition-all duration-300 flex flex-col h-full"
                     variants={itemVariants}
                   >
                     <div className="relative w-full h-48 overflow-hidden">
@@ -233,16 +241,34 @@ export default function CommunityPage() {
                         unoptimized
                       />
                     </div>
-                    <div className="p-6">
+                    <div className="p-6 flex flex-col flex-1">
                       <h3 className="text-2xl font-bold mb-3" style={{ fontFamily: 'var(--font-nourd), sans-serif' }}>
                         {tPage(community.titleKey)}
                       </h3>
                       <p className="text-gray-300 text-sm leading-relaxed mb-4">
                         {tPage(community.descriptionKey)}
                       </p>
-                      <p className="text-yellow-400 text-sm font-semibold">
+                      <p className="text-yellow-400 text-sm font-semibold mb-6">
                         {tPage(community.activitiesKey)}
                       </p>
+                      
+                      {/* Button with arrow and wavy underline */}
+                      <Link href={communityLinks[community.id]} className="mt-auto">
+                        <button className="relative inline-flex items-center gap-2 text-yellow-400 font-semibold text-sm hover:text-yellow-300 transition-colors group/btn">
+                          <span className="relative">
+                            Learn More
+                            <svg 
+                              className="absolute bottom-0 left-0 w-full h-1 text-yellow-400 opacity-0 group-hover/btn:opacity-100 transition-opacity" 
+                              viewBox="0 0 100 10" 
+                              preserveAspectRatio="none"
+                              style={{ fill: 'none', stroke: 'currentColor', strokeWidth: 2 }}
+                            >
+                              <path d="M 0 5 Q 10 0, 20 5 T 40 5 T 60 5 T 80 5 T 100 5" />
+                            </svg>
+                          </span>
+                          <HiArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
+                        </button>
+                      </Link>
                     </div>
                   </motion.div>
                 );
