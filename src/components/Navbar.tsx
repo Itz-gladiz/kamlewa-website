@@ -9,7 +9,14 @@ import Image from 'next/image';
 import UKFlag from './flags/UKFlag';
 import FrenchFlag from './flags/FrenchFlag';
 
-export default function Navbar() {
+type ServerLabels = {
+  about: string;
+  events: string;
+  community: string;
+  contact: string;
+};
+
+export default function Navbar({ serverLabels }: { serverLabels?: ServerLabels }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
@@ -70,7 +77,25 @@ export default function Navbar() {
   }, []);
 
   const switchLocale = (newLocale: string) => {
-    router.replace(pathname, { locale: newLocale });
+    const currentPath = pathname || '/';
+    const pathWithoutLocale = currentPath.replace(/^\/[a-z]{2}/, '') || '/';
+    const newPath = `/${newLocale}${pathWithoutLocale === '/' ? '' : pathWithoutLocale}`;
+    // Try client-side navigation first; if it doesn't change the URL, fall back to full reload.
+    try {
+      const res = router.push(newPath);
+      if (res && typeof (res as any).then === 'function') {
+        (res as any).catch(() => (window.location.href = newPath));
+      } else {
+        // If router.push doesn't return a promise, ensure the location changes shortly after
+        setTimeout(() => {
+          if (typeof window !== 'undefined' && window.location.pathname !== newPath) {
+            window.location.href = newPath;
+          }
+        }, 400);
+      }
+    } catch (e) {
+      if (typeof window !== 'undefined') window.location.href = newPath;
+    }
   };
 
   // Check if a link is active
@@ -189,7 +214,7 @@ export default function Navbar() {
                     onClick={() => setIsMenuOpen(false)}
                     style={{ fontFamily: 'var(--font-nourd), sans-serif' }}
                   >
-                    {t('about')}
+                      <span>{serverLabels?.about ?? t('about')}</span>
                     {isActive('/about') && (
                       <span className="absolute bottom-0 left-0 transform w-[10%] md:w-1/2 h-0.5 bg-yellow-400"></span>
                     )}
@@ -213,7 +238,7 @@ export default function Navbar() {
                     onClick={() => setIsMenuOpen(false)}
                     style={{ fontFamily: 'var(--font-nourd), sans-serif' }}
                   >
-                    {t('events')}
+                      <span>{serverLabels?.events ?? t('events')}</span>
                     {isActive('/events-impact') && (
                       <span className="absolute bottom-0 left-0 transform w-[10%] md:w-1/2 h-0.5 bg-yellow-400"></span>
                     )}
@@ -237,7 +262,7 @@ export default function Navbar() {
                     onClick={() => setIsMenuOpen(false)}
                     style={{ fontFamily: 'var(--font-nourd), sans-serif' }}
                   >
-                    {t('community')}
+                      <span>{serverLabels?.community ?? t('community')}</span>
                     {isActive('/community') && (
                       <span className="absolute bottom-0 left-0 transform w-[10%] md:w-1/2 h-0.5 bg-yellow-400"></span>
                     )}
@@ -261,7 +286,7 @@ export default function Navbar() {
                     onClick={() => setIsMenuOpen(false)}
                     style={{ fontFamily: 'var(--font-nourd), sans-serif' }}
                   >
-                    {t('contact')}
+                      <span>{serverLabels?.contact ?? t('contact')}</span>
                     {isActive('/contact') && (
                       <span className="absolute bottom-0 left-0 transform w-[10%] md:w-1/2 h-0.5 bg-yellow-400"></span>
                     )}
@@ -325,6 +350,7 @@ export default function Navbar() {
         } ${
           isVisible ? 'translate-y-0' : '-translate-y-full'
         }`}
+        suppressHydrationWarning
       >
       <div className="w-full max-w-7xl mx-auto px-6 py-6 md:px-12 lg:px-16 flex items-center justify-between">
         {/* Logo with Text */}
@@ -357,7 +383,7 @@ export default function Navbar() {
               : 'text-white hover:text-yellow-400'
           }`}
         >
-          {t('about')}
+          <span suppressHydrationWarning>{t('about')}</span>
           {isActive('/about') && (
             <span className="absolute bottom-0 left-1/2 transform -translate-x-full w-1/2 h-0.5 bg-yellow-400"></span>
           )}
@@ -370,7 +396,7 @@ export default function Navbar() {
               : 'text-white hover:text-yellow-400'
           }`}
         >
-          {t('events')}
+          <span suppressHydrationWarning>{t('events')}</span>
           {isActive('/events-impact') && (
             <span className="absolute bottom-0 left-0 transform w-[10%] md:w-1/2 h-0.5 bg-yellow-400"></span>
           )}
@@ -383,7 +409,7 @@ export default function Navbar() {
               : 'text-white hover:text-yellow-400'
           }`}
         >
-          {t('community')}
+          <span suppressHydrationWarning>{t('community')}</span>
           {isActive('/community') && (
             <span className="absolute bottom-0 left-0 transform w-[10%] md:w-1/2 h-0.5 bg-yellow-400"></span>
           )}
@@ -396,7 +422,7 @@ export default function Navbar() {
               : 'text-white hover:text-yellow-400'
           }`}
         >
-          {t('contact')}
+          <span suppressHydrationWarning>{t('contact')}</span>
           {isActive('/contact') && (
             <span className="absolute bottom-0 left-0 transform w-[10%] md:w-1/2 h-0.5 bg-yellow-400"></span>
           )}

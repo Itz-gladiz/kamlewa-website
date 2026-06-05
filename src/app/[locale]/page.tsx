@@ -1,5 +1,4 @@
 import Hero from '@/components/Hero';
-import Navbar from '@/components/Navbar';
 import Partners from '@/components/Partners';
 import About from '@/components/About';
 import ImpactMetrics from '@/components/ImpactMetrics';
@@ -11,7 +10,6 @@ import Footer from '@/components/Footer';
 export default function Home() {
   return (
     <main className="relative">
-      <Navbar />
       <Hero />
       <Partners />
       <About />

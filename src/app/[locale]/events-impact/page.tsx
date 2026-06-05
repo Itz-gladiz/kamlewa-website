@@ -1,12 +1,12 @@
 'use client';
 
 import { useState, useEffect, useRef, useMemo } from 'react';
-import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
+import Navbar from '@/components/Navbar';
 import PageBanner from '@/components/PageBanner';
 import Pagination from '@/components/Pagination';
 import BackToHome from '@/components/BackToHome';
-import { useTranslations } from 'next-intl';
+import { useTranslations, useLocale } from 'next-intl';
 import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
 import { HiClock, HiUsers, HiArrowRight, HiSearch, HiX, HiDownload } from 'react-icons/hi';
@@ -127,6 +127,9 @@ export default function EventsImpactPage() {
   const tEvents = useTranslations('featuredEvents');
   const tEventModal = useTranslations('events');
 
+  // ✅ Get current locale for bilingual content
+  const locale = useLocale();
+
   const [activeTab, setActiveTab] = useState<TabType>('programs');
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
@@ -146,7 +149,7 @@ export default function EventsImpactPage() {
     setCurrentPage(1);
   }, [activeTab, searchQuery]);
 
-  // Load all data from Supabase
+  // ✅ Load all data — re-runs when locale changes so translations update
   useEffect(() => {
     const loadData = async () => {
       try {
@@ -154,7 +157,8 @@ export default function EventsImpactPage() {
 
         try {
           const dbEvents = await getEvents();
-          setEvents(dbEvents.map(mapDbEventToEvent));
+          // ✅ Pass locale to mapper
+          setEvents(dbEvents.map((e) => mapDbEventToEvent(e, locale)));
         } catch (e) {
           console.error('Error loading events:', e);
           setEvents([]);
@@ -162,7 +166,8 @@ export default function EventsImpactPage() {
 
         try {
           const dbPrograms = await getPrograms();
-          setPrograms(dbPrograms.map(mapDbProgramToProgram));
+          // ✅ Pass locale to mapper
+          setPrograms(dbPrograms.map((p) => mapDbProgramToProgram(p, locale)));
         } catch (e) {
           console.error('Error loading programs:', e);
           setPrograms([]);
@@ -170,7 +175,8 @@ export default function EventsImpactPage() {
 
         try {
           const dbProjects = await getProjects();
-          setProjects(dbProjects.map(mapDbProjectToProject));
+          // ✅ Pass locale to mapper
+          setProjects(dbProjects.map((p) => mapDbProjectToProject(p, locale)));
         } catch (e) {
           console.error('Error loading projects:', e);
           setProjects([]);
@@ -178,7 +184,8 @@ export default function EventsImpactPage() {
 
         try {
           const dbTrainings = await getTrainings();
-          setTrainings(dbTrainings.map(mapDbTrainingToTraining));
+          // ✅ Pass locale to mapper
+          setTrainings(dbTrainings.map((tr) => mapDbTrainingToTraining(tr, locale)));
         } catch (e) {
           console.error('Error loading trainings:', e);
           setTrainings([]);
@@ -199,7 +206,7 @@ export default function EventsImpactPage() {
       }
     };
     loadData();
-  }, []);
+  }, [locale]); // ✅ Re-fetch when locale changes
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -259,7 +266,6 @@ export default function EventsImpactPage() {
     }
   };
 
-  // ✅ Unified data flow for ALL tabs including reports
   const { filteredData, totalPages } = useMemo(() => {
     let data: CardItem[] = [];
     switch (activeTab) {
@@ -297,7 +303,6 @@ export default function EventsImpactPage() {
     visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] as const } },
   };
 
-  // ✅ FIX: key prop is on the outermost element <Link>, not buried inside motion.div
   const renderOverview = () => {
     const filteredMovement = searchQuery
       ? secureByDesignItems.filter(
@@ -333,7 +338,6 @@ export default function EventsImpactPage() {
         <div className="space-y-14">
           {filteredMovement.map((item, index) => {
             const reverse = index % 2 === 1;
-
             return (
               <motion.article
                 key={item.image}
@@ -346,16 +350,8 @@ export default function EventsImpactPage() {
                 viewport={{ once: true, margin: '-80px' }}
               >
                 <div className="relative min-h-[260px] overflow-hidden bg-white/5 md:min-h-[380px]">
-                  <Image
-                    src={item.image}
-                    alt={item.title}
-                    fill
-                    className="object-cover"
-                    sizes="(max-width: 1024px) 100vw, 50vw"
-                    unoptimized
-                  />
+                  <Image src={item.image} alt={item.title} fill className="object-cover" sizes="(max-width: 1024px) 100vw, 50vw" unoptimized />
                 </div>
-
                 <div className="border-l-4 border-yellow-400 pl-6">
                   <span className="mb-3 inline-block text-sm font-semibold text-yellow-400">
                     {String(index + 1).padStart(2, '0')}
@@ -363,38 +359,21 @@ export default function EventsImpactPage() {
                   <h4 className="mb-4 text-2xl md:text-3xl font-bold text-white" style={{ fontFamily: 'var(--font-nourd), sans-serif' }}>
                     {item.title}
                   </h4>
-                  <p className="text-gray-300 text-base md:text-lg leading-relaxed">
-                    {item.brief}
-                  </p>
+                  <p className="text-gray-300 text-base md:text-lg leading-relaxed">{item.brief}</p>
                 </div>
               </motion.article>
             );
           })}
         </div>
 
-        <motion.div
-          className="grid grid-cols-1 gap-4 border border-white/10 bg-white/[0.03] p-6 md:grid-cols-3"
-          variants={itemVariants}
-        >
-          <button
-            type="button"
-            onClick={() => setActiveTab('featured')}
-            className="text-left text-yellow-400 hover:text-yellow-300"
-          >
+        <motion.div className="grid grid-cols-1 gap-4 border border-white/10 bg-white/[0.03] p-6 md:grid-cols-3" variants={itemVariants}>
+          <button type="button" onClick={() => setActiveTab('featured')} className="text-left text-yellow-400 hover:text-yellow-300">
             View Featured Events <HiArrowRight className="inline h-4 w-4" />
           </button>
-          <button
-            type="button"
-            onClick={() => setActiveTab('trainings')}
-            className="text-left text-yellow-400 hover:text-yellow-300"
-          >
+          <button type="button" onClick={() => setActiveTab('trainings')} className="text-left text-yellow-400 hover:text-yellow-300">
             View Trainings <HiArrowRight className="inline h-4 w-4" />
           </button>
-          <button
-            type="button"
-            onClick={() => setActiveTab('reports')}
-            className="text-left text-yellow-400 hover:text-yellow-300"
-          >
+          <button type="button" onClick={() => setActiveTab('reports')} className="text-left text-yellow-400 hover:text-yellow-300">
             View Reports <HiArrowRight className="inline h-4 w-4" />
           </button>
         </motion.div>
@@ -434,14 +413,7 @@ export default function EventsImpactPage() {
             <div className="relative bg-white p-3 sm:p-4">
               <div className="relative aspect-[3/4] w-full overflow-hidden bg-gray-100">
                 {item.image ? (
-                  <Image
-                    src={item.image}
-                    alt={`Annual Report ${reportLabel}`}
-                    fill
-                    className="object-contain transition-transform duration-500 group-hover:scale-[1.02]"
-                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                    unoptimized
-                  />
+                  <Image src={item.image} alt={`Annual Report ${reportLabel}`} fill className="object-contain transition-transform duration-500 group-hover:scale-[1.02]" sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw" unoptimized />
                 ) : (
                   <div className="flex h-full items-center justify-center bg-gray-100">
                     <HiOutlineClipboardDocumentList className="h-16 w-16 text-gray-400" />
@@ -449,39 +421,28 @@ export default function EventsImpactPage() {
                 )}
               </div>
             </div>
-
             <div className="flex flex-1 flex-col p-6 pb-0">
               <div className="mb-3 flex items-center justify-between gap-3">
                 <span className="bg-yellow-400/15 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-yellow-400">
                   {item.category || 'Annual'}
                 </span>
                 <span className="flex items-center gap-2 text-sm text-gray-400">
-                  <HiClock className="h-4 w-4" />
-                  {reportLabel}
+                  <HiClock className="h-4 w-4" />{reportLabel}
                 </span>
               </div>
-
               <h3 className="mb-3 text-xl font-bold text-white md:text-2xl" style={{ fontFamily: 'var(--font-nourd), sans-serif' }}>
                 {item.title || `Annual Report ${reportLabel}`}
               </h3>
               <p className="mb-4 line-clamp-3 text-sm leading-relaxed text-gray-300 md:text-base">
                 {item.description || item.summary}
               </p>
-
               <div className="mb-5 inline-flex items-center gap-2 text-sm font-semibold text-yellow-400">
                 Read Description & Summary <HiArrowRight className="h-4 w-4" />
               </div>
             </div>
           </Link>
-
           <div className="p-6 pt-0">
-            <a
-              href={pdfUrl}
-              download
-              onClick={(event) => event.stopPropagation()}
-              className="inline-flex w-full items-center justify-center gap-2 bg-yellow-400 px-4 py-3 text-sm font-bold text-black transition-colors hover:bg-yellow-300"
-              aria-label={`Download Full Report PDF for ${reportLabel}`}
-            >
+            <a href={pdfUrl} download onClick={(event) => event.stopPropagation()} className="inline-flex w-full items-center justify-center gap-2 bg-yellow-400 px-4 py-3 text-sm font-bold text-black transition-colors hover:bg-yellow-300" aria-label={`Download Full Report PDF for ${reportLabel}`}>
               <HiDownload className="h-5 w-5" />
               Download Full Report (PDF)
             </a>
@@ -499,16 +460,9 @@ export default function EventsImpactPage() {
           whileInView="visible"
           viewport={{ once: true }}
         >
-          {/* Image */}
           <div className="relative h-64 overflow-hidden">
             {item.image ? (
-              <Image
-                src={item.image}
-                alt={item.title}
-                fill
-                className="object-cover transition-transform duration-500 group-hover:scale-110"
-                unoptimized
-              />
+              <Image src={item.image} alt={item.title} fill className="object-cover transition-transform duration-500 group-hover:scale-110" unoptimized />
             ) : (
               <div className="w-full h-full bg-gray-800 flex items-center justify-center">
                 <HiOutlineClipboardDocumentList className="w-16 h-16 text-gray-600" />
@@ -517,16 +471,12 @@ export default function EventsImpactPage() {
             <div className="absolute inset-0 bg-black/40 group-hover:bg-black/60 transition-colors duration-300" />
           </div>
 
-          {/* Content */}
           <div className="p-6">
             <h3 className="text-xl md:text-2xl font-bold text-white mb-3" style={{ fontFamily: 'var(--font-nourd), sans-serif' }}>
               {item.title}
             </h3>
-            <p className="text-gray-300 text-sm md:text-base mb-4 line-clamp-2">
-              {item.description}
-            </p>
+            <p className="text-gray-300 text-sm md:text-base mb-4 line-clamp-2">{item.description}</p>
 
-            {/* Event metadata */}
             {isEvent && (
               <div className="space-y-2 mb-4">
                 <div className="flex items-center gap-2 text-yellow-400 text-sm">
@@ -534,28 +484,23 @@ export default function EventsImpactPage() {
                   <span>{item.date}</span>
                 </div>
                 <div className="flex items-center gap-2 text-gray-400 text-sm">
-                  <VscLocation className="w-4 h-4" />
-                  <span>{item.location}</span>
+                  <VscLocation className="w-4 h-4" /><span>{item.location}</span>
                 </div>
                 {item.participants && (
                   <div className="flex items-center gap-2 text-gray-400 text-sm">
-                    <HiUsers className="w-4 h-4" />
-                    <span>{item.participants} participants</span>
+                    <HiUsers className="w-4 h-4" /><span>{item.participants} participants</span>
                   </div>
                 )}
               </div>
             )}
 
-            {/* Project metadata */}
             {isProject && (
               <div className="space-y-2 mb-4">
                 <div className={`inline-block px-3 py-1 rounded-full text-xs font-semibold ${
-                  item.status === 'active'    ? 'bg-green-500/20 text-green-400' :
+                  item.status === 'active' ? 'bg-green-500/20 text-green-400' :
                   item.status === 'completed' ? 'bg-blue-500/20 text-blue-400' :
-                                                'bg-yellow-500/20 text-yellow-400'
-                }`}>
-                  {item.status}
-                </div>
+                  'bg-yellow-500/20 text-yellow-400'
+                }`}>{item.status}</div>
                 {item.progress !== undefined && (
                   <div className="w-full bg-white/10 rounded-full h-2">
                     <div className="bg-yellow-400 h-2 rounded-full" style={{ width: `${item.progress}%` }} />
@@ -564,53 +509,44 @@ export default function EventsImpactPage() {
               </div>
             )}
 
-            {/* Program metadata */}
             {isProgram && (
               <div className="space-y-2 mb-4">
                 {item.duration && (
                   <div className="flex items-center gap-2 text-yellow-400 text-sm">
-                    <PiClockCountdownFill className="w-4 h-4" />
-                    <span>{item.duration}</span>
+                    <PiClockCountdownFill className="w-4 h-4" /><span>{item.duration}</span>
                   </div>
                 )}
                 {item.participants && (
                   <div className="flex items-center gap-2 text-gray-400 text-sm">
-                    <HiUsers className="w-4 h-4" />
-                    <span>{item.participants} participants</span>
+                    <HiUsers className="w-4 h-4" /><span>{item.participants} participants</span>
                   </div>
                 )}
                 {item.category && (
-                  <div className={`inline-block px-3 py-1 rounded-full text-xs font-semibold bg-blue-500/20 text-blue-400`}>
+                  <div className="inline-block px-3 py-1 rounded-full text-xs font-semibold bg-blue-500/20 text-blue-400">
                     {item.category}
                   </div>
                 )}
               </div>
             )}
 
-            {/* Training metadata */}
             {isTraining && (
               <div className="space-y-2 mb-4">
                 <div className="flex items-center gap-2 text-yellow-400 text-sm">
-                  <PiClockCountdownFill className="w-4 h-4" />
-                  <span>{item.duration}</span>
+                  <PiClockCountdownFill className="w-4 h-4" /><span>{item.duration}</span>
                 </div>
                 <div className={`inline-block px-3 py-1 rounded-full text-xs font-semibold ${
-                  item.level === 'beginner'     ? 'bg-green-500/20 text-green-400' :
+                  item.level === 'beginner' ? 'bg-green-500/20 text-green-400' :
                   item.level === 'intermediate' ? 'bg-yellow-500/20 text-yellow-400' :
-                                                  'bg-red-500/20 text-red-400'
-                }`}>
-                  {item.level}
-                </div>
+                  'bg-red-500/20 text-red-400'
+                }`}>{item.level}</div>
                 {item.format && <div className="text-gray-400 text-sm">Format: {item.format}</div>}
               </div>
             )}
 
-            {/* CTA */}
             <div className="pointer-events-none">
               {isEvent ? (
                 <div className="inline-flex items-center justify-center gap-2 text-yellow-400 font-semibold text-sm bg-yellow-400/10 px-4 py-2 rounded border border-yellow-400/20">
-                  {tEventModal('registerButton')}
-                  <HiArrowRight className="w-4 h-4" />
+                  {tEventModal('registerButton')}<HiArrowRight className="w-4 h-4" />
                 </div>
               ) : (
                 <div className="inline-flex items-center gap-2 text-yellow-400 font-semibold text-sm">
@@ -627,7 +563,6 @@ export default function EventsImpactPage() {
   return (
     <main className="relative">
       <Navbar />
-
       <PageBanner
         subheading={t('subheading')}
         heading={t('heading')}
@@ -656,9 +591,7 @@ export default function EventsImpactPage() {
                       <Icon className={`w-5 h-5 ${isActive ? 'scale-110' : ''}`} />
                       <span className={`whitespace-nowrap overflow-hidden transition-all duration-200 ${
                         isActive ? 'opacity-100 max-w-[200px]' : 'opacity-0 max-w-0'
-                      }`}>
-                        {item.label}
-                      </span>
+                      }`}>{item.label}</span>
                     </span>
                   </button>
                 </div>
@@ -734,8 +667,6 @@ export default function EventsImpactPage() {
           >
             <div className="max-w-7xl mx-auto px-6 md:px-12 lg:px-16">
               <motion.div variants={containerVariants} initial="hidden" whileInView="visible" viewport={{ once: true, margin: '-100px' }}>
-
-                {/* Header */}
                 <motion.div className="text-left mb-12 md:mb-16" variants={itemVariants}>
                   <motion.p className="tagline text-yellow-400 text-sm font-semibold mb-5 uppercase tracking-wider relative inline-block" variants={itemVariants}>
                     {tabs.find((tab) => tab.id === activeTab)?.label}
@@ -751,7 +682,6 @@ export default function EventsImpactPage() {
                   )}
                 </motion.div>
 
-                {/* Grid — same path for ALL tabs */}
                 {loading ? (
                   <div className="flex justify-center items-center py-12 min-h-[400px]">
                     <Loader />

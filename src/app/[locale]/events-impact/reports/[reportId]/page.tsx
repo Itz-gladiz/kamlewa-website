@@ -1,8 +1,7 @@
-'use client';
+ 'use client';
 
 import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
-import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import PageBanner from '@/components/PageBanner';
 import Button from '@/components/Button';
@@ -54,7 +53,6 @@ export default function ReportDetailsPage() {
   if (loading) {
     return (
       <>
-        <Navbar />
         <main className="min-h-screen bg-black text-white flex items-center justify-center">
           <Loader />
         </main>
@@ -66,7 +64,6 @@ export default function ReportDetailsPage() {
   if (!report) {
     return (
       <>
-        <Navbar />
         <main className="min-h-screen bg-black text-white flex items-center justify-center px-6">
           <div className="text-center">
             <h1 className="text-2xl font-bold mb-4">Report Not Found</h1>
@@ -85,7 +82,6 @@ export default function ReportDetailsPage() {
 
   return (
     <>
-      <Navbar />
       <main className="relative bg-black text-white">
         <PageBanner
           subheading={report.category || 'Impact Report'}

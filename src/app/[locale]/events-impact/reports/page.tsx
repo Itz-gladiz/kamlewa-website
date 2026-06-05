@@ -1,7 +1,6 @@
-'use client';
+ 'use client';
 
 import { useEffect, useState } from 'react';
-import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import PageBanner from '@/components/PageBanner';
 import Button from '@/components/Button';
@@ -41,7 +40,6 @@ export default function ReportsArchivePage() {
 
   return (
     <>
-      <Navbar />
       <main className="relative bg-black text-white">
         <PageBanner
           subheading="Impact Reports"

@@ -4,19 +4,17 @@ import { Event, EventParticipant } from '@/data/events';
 type DbEvent = Database['public']['Tables']['events']['Row'];
 type DbRegistration = Database['public']['Tables']['event_registrations']['Row'];
 
-/**
- * Convert database event to frontend Event format
- */
-export function mapDbEventToEvent(dbEvent: DbEvent): Event {
-  // Format date for display (convert YYYY-MM-DD to readable format)
+export function mapDbEventToEvent(dbEvent: DbEvent, locale = 'en'): Event {
+  const isFr = locale === 'fr';
+
   let formattedDate = dbEvent.date;
   try {
     const date = new Date(dbEvent.date);
     if (!isNaN(date.getTime())) {
-      formattedDate = date.toLocaleDateString('en-US', { 
-        year: 'numeric', 
-        month: 'long', 
-        day: 'numeric' 
+      formattedDate = date.toLocaleDateString(isFr ? 'fr-FR' : 'en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
       });
     }
   } catch {
@@ -25,8 +23,12 @@ export function mapDbEventToEvent(dbEvent: DbEvent): Event {
 
   return {
     id: dbEvent.id,
-    title: dbEvent.title,
-    description: dbEvent.description,
+    title: isFr
+      ? (dbEvent.title_fr || dbEvent.title)
+      : (dbEvent.title_en || dbEvent.title),
+    description: isFr
+      ? (dbEvent.description_fr || dbEvent.description)
+      : (dbEvent.description_en || dbEvent.description),
     date: formattedDate,
     location: dbEvent.location,
     image: dbEvent.image,
@@ -34,9 +36,11 @@ export function mapDbEventToEvent(dbEvent: DbEvent): Event {
     participants: dbEvent.participants,
     feedback: dbEvent.feedback || undefined,
     hours: dbEvent.hours || undefined,
-    summary: dbEvent.summary || undefined,
+    summary: isFr
+      ? (dbEvent.summary_fr || dbEvent.summary || undefined)
+      : (dbEvent.summary_en || dbEvent.summary || undefined),
     maxParticipants: (dbEvent as any).max_participants || undefined,
-    registeredParticipants: [], // Will be loaded separately if needed
+    registeredParticipants: [],
     registrationOpen: (dbEvent as any).registration_open !== false,
     startTime: (dbEvent as any).start_time || undefined,
     endTime: (dbEvent as any).end_time || undefined,
@@ -44,9 +48,6 @@ export function mapDbEventToEvent(dbEvent: DbEvent): Event {
   };
 }
 
-/**
- * Convert database registration to frontend EventParticipant format
- */
 export function mapDbRegistrationToParticipant(dbReg: DbRegistration): EventParticipant {
   return {
     id: dbReg.id,
@@ -56,4 +57,3 @@ export function mapDbRegistrationToParticipant(dbReg: DbRegistration): EventPart
     registeredAt: dbReg.registered_at,
   };
 }
-

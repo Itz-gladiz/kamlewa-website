@@ -3,15 +3,20 @@ import { Program } from '@/data/programs';
 
 type DbProgram = Database['public']['Tables']['programs']['Row'];
 
-/**
- * Convert database program to frontend Program format
- */
-export function mapDbProgramToProgram(dbProgram: DbProgram): Program {
+export function mapDbProgramToProgram(dbProgram: DbProgram, locale = 'en'): Program {
+  const isFr = locale === 'fr';
+
   return {
     id: dbProgram.id,
-    title: dbProgram.title,
-    description: dbProgram.description,
-    fullDescription: dbProgram.full_description || undefined,
+    title: isFr
+      ? (dbProgram.title_fr || dbProgram.title)
+      : (dbProgram.title_en || dbProgram.title),
+    description: isFr
+      ? (dbProgram.description_fr || dbProgram.description)
+      : (dbProgram.description_en || dbProgram.description),
+    fullDescription: isFr
+      ? (dbProgram.full_description_fr || dbProgram.full_description || undefined)
+      : (dbProgram.full_description_en || dbProgram.full_description || undefined),
     image: dbProgram.image,
     duration: dbProgram.duration || undefined,
     participants: dbProgram.participants || undefined,
@@ -19,6 +24,3 @@ export function mapDbProgramToProgram(dbProgram: DbProgram): Program {
     category: dbProgram.category || undefined,
   };
 }
-
-
-

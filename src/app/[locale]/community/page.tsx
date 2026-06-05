@@ -180,8 +180,6 @@ export default function CommunityPage() {
 
   return (
     <main className="relative">
-      <Navbar />
-
       <PageBanner
         subheading={tPage('subheading')}
         heading={tPage('heading')}
