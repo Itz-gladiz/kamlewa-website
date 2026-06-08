@@ -122,31 +122,91 @@ export default function CommunityPreview() {
                     <p className="text-gray-300 text-sm md:text-base leading-relaxed mb-6">
                       {community.description}
                     </p>
-                    <Link 
-                      href="/community" 
-                      className="tagline inline-flex items-center gap-2 text-yellow-400 font-semibold text-base md:text-2xl hover:text-yellow-300 transition-colors relative group/link pb-2"
-                      onClick={(e) => e.stopPropagation()}
-                    >
-                      <span className="relative">
-                        View Community
-                        {/* Zigzag Underline */}
-                        <svg 
-                          className="absolute -bottom-1 left-0 w-full" 
-                          preserveAspectRatio="none" 
-                          viewBox="0 0 200 10"
-                          style={{ height: '6px' }}
-                        >
-                          <path 
-                            d="M0,8 L10,2 L20,8 L30,2 L40,8 L50,2 L60,8 L70,2 L80,8 L90,2 L100,8 L110,2 L120,8 L130,2 L140,8 L150,2 L160,8 L170,2 L180,8 L190,2 L200,8" 
-                            stroke="currentColor"
-                            strokeWidth="2"
-                            fill="none"
-                            className="text-yellow-400"
-                          />
-                        </svg>
-                      </span>
-                      <HiArrowRight className="w-4 h-4 md:w-5 md:h-5 transition-transform duration-300 group-hover/link:translate-x-1" />
-                    </Link>
+                    {index === 0 && (
+                      <Link 
+                        href="#kamcyber-section" 
+                        className="tagline inline-flex items-center gap-2 text-yellow-400 font-semibold text-base md:text-2xl hover:text-yellow-300 transition-colors relative group/link pb-2"
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        <span className="relative">
+                          Join KamCyber
+                          {/* Zigzag Underline */}
+                          <svg 
+                            className="absolute -bottom-1 left-0 w-full" 
+                            preserveAspectRatio="none" 
+                            viewBox="0 0 200 10"
+                            style={{ height: '6px' }}
+                          >
+                            <path 
+                              d="M0,8 L10,2 L20,8 L30,2 L40,8 L50,2 L60,8 L70,2 L80,8 L90,2 L100,8 L110,2 L120,8 L130,2 L140,8 L150,2 L160,8 L170,2 L180,8 L190,2 L200,8" 
+                              stroke="currentColor"
+                              strokeWidth="2"
+                              fill="none"
+                              className="text-yellow-400"
+                            />
+                          </svg>
+                        </span>
+                        <HiArrowRight className="w-4 h-4 md:w-5 md:h-5 transition-transform duration-300 group-hover/link:translate-x-1" />
+                      </Link>
+                    )}
+                    {index === 1 && (
+                      <a 
+                        href="https://app.hackthebox.com" 
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="tagline inline-flex items-center gap-2 text-yellow-400 font-semibold text-base md:text-2xl hover:text-yellow-300 transition-colors relative group/link pb-2"
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        <span className="relative">
+                          Start Hacking
+                          {/* Zigzag Underline */}
+                          <svg 
+                            className="absolute -bottom-1 left-0 w-full" 
+                            preserveAspectRatio="none" 
+                            viewBox="0 0 200 10"
+                            style={{ height: '6px' }}
+                          >
+                            <path 
+                              d="M0,8 L10,2 L20,8 L30,2 L40,8 L50,2 L60,8 L70,2 L80,8 L90,2 L100,8 L110,2 L120,8 L130,2 L140,8 L150,2 L160,8 L170,2 L180,8 L190,2 L200,8" 
+                              stroke="currentColor"
+                              strokeWidth="2"
+                              fill="none"
+                              className="text-yellow-400"
+                            />
+                          </svg>
+                        </span>
+                        <HiArrowRight className="w-4 h-4 md:w-5 md:h-5 transition-transform duration-300 group-hover/link:translate-x-1" />
+                      </a>
+                    )}
+                    {index === 2 && (
+                      <a 
+                        href="https://owasp.org" 
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="tagline inline-flex items-center gap-2 text-yellow-400 font-semibold text-base md:text-2xl hover:text-yellow-300 transition-colors relative group/link pb-2"
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        <span className="relative">
+                          Learn Security
+                          {/* Zigzag Underline */}
+                          <svg 
+                            className="absolute -bottom-1 left-0 w-full" 
+                            preserveAspectRatio="none" 
+                            viewBox="0 0 200 10"
+                            style={{ height: '6px' }}
+                          >
+                            <path 
+                              d="M0,8 L10,2 L20,8 L30,2 L40,8 L50,2 L60,8 L70,2 L80,8 L90,2 L100,8 L110,2 L120,8 L130,2 L140,8 L150,2 L160,8 L170,2 L180,8 L190,2 L200,8" 
+                              stroke="currentColor"
+                              strokeWidth="2"
+                              fill="none"
+                              className="text-yellow-400"
+                            />
+                          </svg>
+                        </span>
+                        <HiArrowRight className="w-4 h-4 md:w-5 md:h-5 transition-transform duration-300 group-hover/link:translate-x-1" />
+                      </a>
+                    )}
                   </div>
                 </motion.div>
               );
