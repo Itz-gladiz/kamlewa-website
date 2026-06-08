@@ -1,68 +1,273 @@
 'use client';
 
-import Link from "next/link";
+import { useState } from 'react';
+import Link from 'next/link';
+import Image from 'next/image';
+import { HiX } from 'react-icons/hi';
+import { motion, AnimatePresence } from 'framer-motion';
+import { createClient } from '@supabase/supabase-js';
 
-export default function Owasp() {
+const GOOGLE_SHEETS_URL = process.env.NEXT_PUBLIC_GOOGLE_SHEETS_URL;
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+);
+
+
+export default function OwaspPage() {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [form, setForm] = useState({ name: '', email: '', phone: '', message: '' });
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+
+   await Promise.allSettled([
+      // Google Sheets
+      GOOGLE_SHEETS_URL
+        ? fetch(GOOGLE_SHEETS_URL, {
+            method: 'POST',
+            mode: 'no-cors',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              sheetName: 'Community Applications',
+              community: 'OWASP Buea',
+              name: form.name,
+              email: form.email,
+              phone: form.phone,
+              message: form.message,
+            }),
+          })
+        : Promise.resolve(),
+
+      // Supabase
+      supabase.from('community_applications').insert({
+        community: 'OWASP Buea',
+        name: form.name,
+        email: form.email,
+        phone: form.phone,
+        message: form.message,
+      }),
+    ]);
+
+    setIsSubmitting(false);
+    setIsModalOpen(false);
+    setForm({ name: '', email: '', phone: '', message: '' });
+    alert('Application submitted! We will get back to you soon.');
+  };
+
   return (
-    <section id="owasp-section" className="bg-black text-white overflow-hidden">
+    <section className="bg-black text-white overflow-hidden">
+
+      {/* Join Modal */}
+      <AnimatePresence>
+        {isModalOpen && (
+          <motion.div
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm"
+            onClick={(e) => { if (e.target === e.currentTarget) setIsModalOpen(false); }}
+          >
+            <motion.div
+              initial={{ opacity: 0, y: 40, scale: 0.95 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 40, scale: 0.95 }}
+              className="relative bg-[#111] border border-white/10 w-full max-w-md p-8"
+            >
+              <button
+                title="Close"
+                onClick={() => setIsModalOpen(false)}
+                className="absolute top-4 right-4 text-gray-400 hover:text-white"
+              >
+                <HiX className="w-6 h-6" />
+              </button>
+              <p className="text-yellow-400 text-sm font-semibold uppercase tracking-wider mb-1">Join</p>
+              <h2 className="text-2xl font-bold mb-1">OWASP Buea Community</h2>
+              <p className="text-gray-400 text-sm mb-6">Fill in your details and we will get back to you shortly.</p>
+              <form onSubmit={handleSubmit} className="space-y-4">
+                <input
+                  required
+                  placeholder="Full Name"
+                  value={form.name}
+                  onChange={e => setForm({ ...form, name: e.target.value })}
+                  className="w-full px-4 py-2 bg-white/5 border border-white/20 rounded text-white placeholder-gray-500 focus:outline-none focus:border-yellow-400 text-sm"
+                />
+                <input
+                  required
+                  type="email"
+                  placeholder="Email Address"
+                  value={form.email}
+                  onChange={e => setForm({ ...form, email: e.target.value })}
+                  className="w-full px-4 py-2 bg-white/5 border border-white/20 rounded text-white placeholder-gray-500 focus:outline-none focus:border-yellow-400 text-sm"
+                />
+                <input
+                  placeholder="Phone (optional)"
+                  value={form.phone}
+                  onChange={e => setForm({ ...form, phone: e.target.value })}
+                  className="w-full px-4 py-2 bg-white/5 border border-white/20 rounded text-white placeholder-gray-500 focus:outline-none focus:border-yellow-400 text-sm"
+                />
+                <textarea
+                  placeholder="Why do you want to join? (optional)"
+                  value={form.message}
+                  onChange={e => setForm({ ...form, message: e.target.value })}
+                  rows={3}
+                  className="w-full px-4 py-2 bg-white/5 border border-white/20 rounded text-white placeholder-gray-500 focus:outline-none focus:border-yellow-400 text-sm resize-none"
+                />
+                <div className="flex gap-3 pt-2">
+                  <button
+                    type="button"
+                    onClick={() => setIsModalOpen(false)}
+                    className="flex-1 px-4 py-2 border border-white/20 text-white text-sm hover:bg-white/10 transition-colors"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={isSubmitting}
+                    className="flex-1 px-4 py-2 bg-yellow-400 text-black font-bold text-sm hover:bg-yellow-300 transition-colors disabled:opacity-50"
+                  >
+                    {isSubmitting ? 'Submitting...' : 'Submit'}
+                  </button>
+                </div>
+              </form>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Hero Banner */}
+      <div className="relative w-full h-64 md:h-80 overflow-hidden">
+        <Image src="/images/partners/owasp_logo.png" alt="OWASP Buea" fill className="object-cover" unoptimized />
+        <div className="absolute inset-0 bg-black/60" />
+        <div className="absolute inset-0 flex items-center px-6 md:px-16">
+          <div>
+            <p className="text-yellow-400 text-sm font-semibold uppercase tracking-wider mb-2">KAMLEWA Community</p>
+            <h1 className="text-4xl md:text-6xl font-black text-white">OWASP BUEA</h1>
+            <p className="text-yellow-400 font-semibold mt-2">Secure Code. Secure Future.</p>
+          </div>
+        </div>
+      </div>
+
+      {/* Back to Community */}
+      <div className="px-6 md:px-16 pt-6">
+        <Link href="/community">
+          <button className="text-yellow-400 text-sm font-semibold hover:text-yellow-300 transition-colors flex items-center gap-2">
+            ← Back to Community
+          </button>
+        </Link>
+      </div>
+
       {/* Main Content */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 px-6 md:px-10 lg:px-16 py-16 md:py-24 lg:py-32 items-center">
-        {/* Left Section - Description */}
-        <div className="order-2 lg:order-1 flex flex-col items-start justify-center space-y-6">
-          <div className="bg-white text-black rounded-xl p-8 md:p-10 shadow-lg w-full">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4 text-yellow-500">
-              OWASP
-            </h2>
-            <div className="space-y-3">
-              <p className="text-base md:text-lg text-gray-800 leading-relaxed font-light">
-                Local chapter of the Open Web Application Security Project, promoting secure software development practices.
-              </p>
-              <p className="text-base md:text-lg text-gray-800 leading-relaxed font-light">
-                Join discussions, contribute to projects, and learn about web application security best practices.
-              </p>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 px-6 md:px-10 lg:px-16 py-12 md:py-20 items-start">
+
+        {/* Left — Info */}
+        <div className="flex flex-col space-y-6">
+          <div className="bg-white text-black rounded-xl p-8 shadow-lg">
+            <h2 className="text-2xl md:text-3xl font-bold mb-4 text-yellow-500">OWASP BUEA CHAPTER</h2>
+            <p className="text-base leading-relaxed text-gray-800">
+              OWASP Buea, led by Ramsey Ibe, is the application security-focused community we actively engage with and support in Cameroon's Silicon Mountain. As part of the global Open Web Application Security Project (OWASP) network, this community is dedicated to improving software security through awareness, education, and open-source tools.
+            </p>
+            <p className="text-base leading-relaxed text-gray-800 mt-3">
+              KAMLEWA collaborates closely with OWASP Buea to organize meetups, workshops, and training sessions that equip developers, security professionals, and students with the knowledge to build and maintain secure applications. Together, we're fostering a culture where security is embedded into the software development process — ensuring that the apps and platforms built in Cameroon are secure by design from the first line of code.
+            </p>
+            {/* Website link */}
+            <p className="text-base leading-relaxed text-gray-800 mt-4">
+              Find more on the official website:{' '}
+              <a
+                href="https://owasp.org/www-chapter-buea"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-yellow-500 font-semibold underline hover:text-yellow-400 transition-colors"
+              >
+                owasp.org →
+              </a>
+            </p>
+          </div>
+
+          {/* Stats */}
+          <div className="grid grid-cols-2 gap-4">
+            <div className="border border-yellow-400/30 p-4 bg-yellow-400/5">
+              <p className="text-3xl font-black text-yellow-400">Global</p>
+              <p className="text-gray-400 text-sm mt-1">OWASP Network</p>
+            </div>
+            <div className="border border-yellow-400/30 p-4 bg-yellow-400/5">
+              <p className="text-3xl font-black text-yellow-400">Active</p>
+              <p className="text-gray-400 text-sm mt-1">Buea Chapter</p>
             </div>
           </div>
 
-          {/* Features */}
-          <div className="space-y-3 w-full">
-            <p className="text-yellow-400 font-semibold uppercase tracking-wider">Key Activities:</p>
+          {/* Key Activities */}
+          <div>
+            <p className="text-yellow-400 font-semibold uppercase tracking-wider mb-3">Key Activities</p>
             <div className="space-y-2">
-              <div className="flex items-start gap-3">
-                <span className="text-yellow-400 font-bold text-lg">•</span>
-                <span className="text-gray-300">Security Discussions</span>
-              </div>
-              <div className="flex items-start gap-3">
-                <span className="text-yellow-400 font-bold text-lg">•</span>
-                <span className="text-gray-300">Project Contributions</span>
-              </div>
-              <div className="flex items-start gap-3">
-                <span className="text-yellow-400 font-bold text-lg">•</span>
-                <span className="text-gray-300">Security Training</span>
-              </div>
+              {[
+                'Application Security Workshops & Meetups',
+                'Secure Software Development Training',
+                'OWASP Top 10 Awareness Campaigns',
+                'Developer & Student Security Education',
+                'Open-Source Security Tool Contributions',
+                'AI & Application Security Talks',
+              ].map((item) => (
+                <div key={item} className="flex items-start gap-3">
+                  <span className="text-yellow-400 font-bold mt-1">•</span>
+                  <span className="text-gray-300 text-sm">{item}</span>
+                </div>
+              ))}
             </div>
           </div>
 
-          {/* CTA Button */}
-          <Link href="/join">
-            <button className="bg-yellow-400 text-black font-bold px-8 py-3 rounded-lg hover:bg-yellow-500 transition duration-300 w-full lg:w-auto">
-              Join Community
-            </button>
-          </Link>
+          <button
+            onClick={() => setIsModalOpen(true)}
+            className="bg-yellow-400 text-black font-bold px-8 py-3 hover:bg-yellow-300 transition-colors w-full lg:w-auto"
+          >
+            Join OWASP Buea Community
+          </button>
         </div>
 
-        {/* Right Section - Heading and Image */}
-        <div className="order-1 lg:order-2 flex flex-col items-center lg:items-start space-y-8">
-          <h1 className="text-6xl md:text-7xl lg:text-8xl font-black tracking-tight text-center lg:text-left">
-            OWASP
-          </h1>
-
-          {/* Image Placeholder */}
-          <div className="bg-gradient-to-br from-yellow-400/20 to-yellow-600/20 border-2 border-yellow-400 rounded-2xl p-8 md:p-12 flex items-center justify-center w-full h-80 shadow-2xl">
-            <div className="text-center">
-              <p className="text-gray-300 text-lg font-semibold">OWASP Community</p>
-            </div>
+        {/* Right — Logo + Impact */}
+        <div className="flex flex-col space-y-6">
+          <div className="bg-black rounded-2xl p-8 flex items-center justify-center shadow-2xl">
+            <Image
+              src="/images/partners/owasp_logo.png"
+              alt="OWASP Buea Logo"
+              width={300}
+              height={300}
+              className="mx-auto rounded-xl"
+              unoptimized
+            />
+          </div>
+          <div className="bg-white/5 border border-white/10 p-6">
+            <p className="text-yellow-400 font-semibold text-sm uppercase tracking-wider mb-2">Our Impact</p>
+            <p className="text-gray-300 text-sm leading-relaxed">
+              Through our collaboration with OWASP Buea, KAMLEWA is helping build a generation of security-conscious developers in Cameroon — where security is not an afterthought, but a foundation built from the very first line of code.
+            </p>
           </div>
         </div>
+      </div>
+
+      {/* Decorative Pattern */}
+      <div className="bg-black px-6 md:px-16 pb-8">
+        <div className="flex justify-center items-end gap-2">
+          {[...Array(4)].map((_, i) => (
+            <div key={i} className="flex flex-col items-center">
+              <div className="w-12 md:w-16 h-12 md:h-16 border-4 border-gray-700 rotate-45 mb-2" />
+              <div className="w-10 md:w-14 h-10 md:h-14 bg-yellow-400 rotate-45" />
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Redirect Links */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-0 border-t border-white/10">
+        <Link href="/community" className="p-6 hover:bg-white/5 transition-colors text-center border-r border-white/10">
+          <p className="text-yellow-400 font-semibold text-sm">← Back to Community</p>
+        </Link>
+        <Link href="/kamcyber" className="p-6 hover:bg-white/5 transition-colors text-center border-r border-white/10">
+          <p className="text-yellow-400 font-semibold text-sm">← KamCyber</p>
+        </Link>
+        <Link href="/hackthebox" className="p-6 hover:bg-white/5 transition-colors text-center">
+          <p className="text-yellow-400 font-semibold text-sm">← HackTheBox</p>
+        </Link>
       </div>
     </section>
   );
