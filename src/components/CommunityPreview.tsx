@@ -38,17 +38,17 @@ export default function CommunityPreview() {
     {
       name: t('kamcyber'),
       description: t('kamcyberDesc'),
-      image: 'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=2070',
+      image: '/images/kamcyber.png',
     },
     {
       name: t('hackthebox'),
       description: t('hacktheboxDesc'),
-      image: 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=2070',
+      image: '/images/hacker1.jpg',
     },
     {
       name: t('owasp'),
       description: t('owaspDesc'),
-      image: 'https://images.unsplash.com/photo-1529390079861-591de354faf5?q=80&w=2070',
+      image: '/images/owasp.jpg',
     },
   ];
 
@@ -124,7 +124,7 @@ export default function CommunityPreview() {
                     </p>
                     {index === 0 && (
                       <Link 
-                        href="#kamcyber-section" 
+                        href="/kamcyber" 
                         className="tagline inline-flex items-center gap-2 text-yellow-400 font-semibold text-base md:text-2xl hover:text-yellow-300 transition-colors relative group/link pb-2"
                         onClick={(e) => e.stopPropagation()}
                       >

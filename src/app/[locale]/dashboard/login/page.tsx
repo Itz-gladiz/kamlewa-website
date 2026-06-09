@@ -55,10 +55,13 @@ export default function LoginPage() {
     };
   }, [router]);
 
+  const DEFAULT_ADMIN_EMAIL = 'admin@kamlewa.org';
+  const DEFAULT_ADMIN_PASSWORD = 'Admin123!@#Kamlewa';
+
   const createDefaultUserIfNeeded = async () => {
     try {
-      const email = 'admin@kamlewa.org';
-      const password = 'Admin123!@#Kamlewa';
+      const email = DEFAULT_ADMIN_EMAIL;
+      const password = DEFAULT_ADMIN_PASSWORD;
 
       // Try to sign in first to check if user exists
       const { error: signInError } = await supabase.auth.signInWithPassword({
@@ -71,17 +74,17 @@ export default function LoginPage() {
         await supabase.auth.signOut();
         console.log('✅ Default admin user already exists');
         toast.success('Default admin user is ready!', { duration: 3000 });
-        return;
+        return true;
       }
 
       // If error is not "Invalid login credentials", something else went wrong
       if (signInError && !signInError.message.includes('Invalid login') && !signInError.message.includes('Invalid') && !signInError.message.includes('Email not confirmed')) {
         console.error('Error checking user:', signInError);
-        return;
+        return false;
       }
 
-      // User doesn't exist, create it via API route (which auto-confirms)
-      console.log('Creating default admin user...');
+      // User doesn't exist or credentials need reset, create/update via API route
+      console.log('Creating or resetting default admin user...');
       const loadingToast = toast.loading('Creating default admin user...');
       
       const response = await fetch('/api/create-admin-user', {
@@ -97,11 +100,12 @@ export default function LoginPage() {
         if (result.error?.includes('already exists') || result.error?.includes('already registered')) {
           toast.success('Default admin user already exists!', { id: loadingToast });
           console.log('Default admin user already exists');
-        } else {
-          toast.error(`Error: ${result.error || 'Failed to create user'}`, { id: loadingToast });
-          console.error('Error creating default user:', result.error);
+          return true;
         }
-        return;
+
+        toast.error(`Error: ${result.error || 'Failed to create user'}`, { id: loadingToast });
+        console.error('Error creating default user:', result.error);
+        return false;
       }
 
       if (result.success) {
@@ -112,10 +116,14 @@ export default function LoginPage() {
         console.log('✅ Default admin user created successfully!');
         console.log('Email: admin@kamlewa.org');
         console.log('Password: Admin123!@#Kamlewa');
+        return true;
       }
+
+      return false;
     } catch (error: any) {
       console.error('Error in createDefaultUserIfNeeded:', error);
       toast.error(`Error: ${error.message || 'Failed to create user'}`);
+      return false;
     }
   };
 
@@ -137,6 +145,30 @@ export default function LoginPage() {
       });
 
       if (error) {
+        if (
+          email === DEFAULT_ADMIN_EMAIL &&
+          password === DEFAULT_ADMIN_PASSWORD &&
+          error.message?.includes('Invalid')
+        ) {
+          const created = await createDefaultUserIfNeeded();
+          if (created) {
+            const { data: retryData, error: retryError } = await supabase.auth.signInWithPassword({
+              email,
+              password,
+            });
+
+            if (retryError) {
+              throw retryError;
+            }
+
+            if (retryData.session) {
+              toast.success('Welcome back!', { id: loadingToast });
+              router.push('/dashboard');
+              return;
+            }
+          }
+        }
+
         throw error;
       }
 

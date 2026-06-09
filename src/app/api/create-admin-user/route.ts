@@ -19,7 +19,6 @@ export async function POST() {
         { status: 500 }
       );
     }
-    }
 
     // Use service role key for admin operations
     const supabaseAdmin = createClient(supabaseUrl, supabaseServiceKey, {
@@ -32,21 +31,39 @@ export async function POST() {
     const email = 'admin@kamlewa.org';
     const password = 'Admin123!@#Kamlewa';
 
-    // Check if user already exists
+    // Check if user already exists and reset password if needed
     const { data: existingUsers, error: listError } = await supabaseAdmin.auth.admin.listUsers();
     
     if (listError) {
       console.error('Error listing users:', listError);
     } else {
-      const userExists = existingUsers?.users?.some(
+      const existingUser = existingUsers?.users?.find(
         (user) => user.email === email
       );
       
-      if (userExists) {
+      if (existingUser) {
+        const { data: updatedUser, error: updateError } = await supabaseAdmin.auth.admin.updateUserById(existingUser.id, {
+          password,
+          email_confirm: true,
+          user_metadata: {
+            role: 'admin',
+            name: 'Admin User',
+          },
+        });
+
+        if (updateError) {
+          console.error('Error updating existing user:', updateError);
+          return NextResponse.json(
+            { error: updateError.message || 'Failed to update existing user' },
+            { status: 400 }
+          );
+        }
+
         return NextResponse.json({
           success: true,
-          message: 'User already exists',
+          message: 'User already exists; password reset successfully',
           email,
+          userId: existingUser.id,
         });
       }
     }
@@ -83,10 +100,10 @@ export async function POST() {
       { error: 'Failed to create user' },
       { status: 500 }
     );
-  } catch (error: any) {
+  } catch (error) {
     console.error('Error in create-admin-user API:', error);
     return NextResponse.json(
-      { error: error.message || 'Internal server error' },
+      { error: (error as any)?.message || 'Internal server error' },
       { status: 500 }
     );
   }
