@@ -3,7 +3,8 @@ import { createClient } from '@supabase/supabase-js';
 
 export async function POST() {
   try {
-    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL;
+    const supabaseUrl =
+      process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL;
     const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
     if (!supabaseUrl) {
@@ -19,7 +20,6 @@ export async function POST() {
         { status: 500 }
       );
     }
-    }
 
     // Use service role key for admin operations
     const supabaseAdmin = createClient(supabaseUrl, supabaseServiceKey, {
@@ -33,15 +33,16 @@ export async function POST() {
     const password = 'Admin123!@#Kamlewa';
 
     // Check if user already exists
-    const { data: existingUsers, error: listError } = await supabaseAdmin.auth.admin.listUsers();
-    
+    const { data: existingUsers, error: listError } =
+      await supabaseAdmin.auth.admin.listUsers();
+
     if (listError) {
       console.error('Error listing users:', listError);
     } else {
       const userExists = existingUsers?.users?.some(
         (user) => user.email === email
       );
-      
+
       if (userExists) {
         return NextResponse.json({
           success: true,
@@ -55,7 +56,7 @@ export async function POST() {
     const { data, error } = await supabaseAdmin.auth.admin.createUser({
       email,
       password,
-      email_confirm: true, // Auto-confirm email
+      email_confirm: true,
       user_metadata: {
         role: 'admin',
         name: 'Admin User',
@@ -64,10 +65,7 @@ export async function POST() {
 
     if (error) {
       console.error('Error creating user:', error);
-      return NextResponse.json(
-        { error: error.message },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: error.message }, { status: 400 });
     }
 
     if (data.user) {
@@ -79,10 +77,7 @@ export async function POST() {
       });
     }
 
-    return NextResponse.json(
-      { error: 'Failed to create user' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to create user' }, { status: 500 });
   } catch (error: any) {
     console.error('Error in create-admin-user API:', error);
     return NextResponse.json(
@@ -91,10 +86,3 @@ export async function POST() {
     );
   }
 }
-
-
-
-
-
-
-
