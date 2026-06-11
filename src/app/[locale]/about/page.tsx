@@ -7,7 +7,6 @@ import { motion } from 'framer-motion';
 import Image from 'next/image';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay } from 'swiper/modules';
-import 'swiper/css';
 import { 
   HiShieldCheck, 
   HiUsers, 
@@ -177,7 +176,7 @@ export default function AboutPage() {
     },
     {
       id: 'member16',
-      imageSrc: '/images/team/memeber 16.jpg',
+      imageSrc: '/images/team/member-16.jpg',
       nameKey: 'leadership.team.members.member16.name',
       roleKey: 'leadership.team.members.member16.role',
       bioKey: 'leadership.team.members.member16.bio',
@@ -230,6 +229,13 @@ export default function AboutPage() {
       nameKey: 'leadership.team.members.member21.name',
       roleKey: 'leadership.team.members.member21.role',
       bioKey: 'leadership.team.members.member21.bio',
+    },
+    {
+      id: 'member22',
+      imageSrc: '/images/team/member-22.jpg',
+      nameKey: 'leadership.team.members.member22.name',
+      roleKey: 'leadership.team.members.member22.role',
+      bioKey: 'leadership.team.members.member22.bio',
     },
  
   
@@ -417,7 +423,7 @@ export default function AboutPage() {
               {/* CEO Image */}
               <div className="relative w-full h-96 md:h-[500px] order-2 lg:order-1">
                 <Image
-                  src="/images/11.jpg"
+                  src="/images/12.jpg"
                   alt={tPage('leadership.ceo.imageAlt')}
                   width={800}
                   height={500}
