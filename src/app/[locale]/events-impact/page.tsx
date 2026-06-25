@@ -389,9 +389,9 @@ export default function EventsImpactPage() {
     const isReport   = isReportItem(item);
 
     const getDetailUrl = () => {
-      if (isEvent)    return `/events-impact/${item.id}`;
-      if (isProject)  return `/events-impact/projects/${item.id}`;
-      if (isProgram)  return `/events-impact/programs/${item.id}`;
+      if (isEvent) return `/events-impact/${item.id}`;
+      if (isProject) return `/events-impact/projects/${item.id}`;
+      if (isProgram) return `/events-impact/programs/${item.id}`;
       if (isTraining) return `/events-impact/trainings/${item.id}`;
       return '/contact';
     };
@@ -451,8 +451,10 @@ export default function EventsImpactPage() {
       );
     }
 
+    const detailUrl = getDetailUrl();
+
     return (
-      <Link key={item.id} href={getDetailUrl()}>
+      <Link key={item.id} href={detailUrl} className="group">
         <motion.div
           className="relative bg-transparent border border-black/10 overflow-hidden group cursor-pointer hover:border-yellow-400/50 transition-all duration-300"
           variants={itemVariants}

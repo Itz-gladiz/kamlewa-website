@@ -70,6 +70,13 @@ export default function ProgramDetailsPage() {
     );
   }
 
+  const getProgramFapshiUrl = (title: string) => {
+    const normalized = title?.toLowerCase() || '';
+    if (normalized.includes('kamcyber')) return 'https://event.fapshi.com/5hut';
+    if (normalized.includes('holiday') && normalized.includes('bootcamp')) return 'https://event.fapshi.com/1ecl';
+    return '';
+  };
+
   const handleShare = async () => {
     const shareUrl = `${window.location.origin}/events-impact/programs/${program.id}`;
     try {
@@ -150,7 +157,22 @@ export default function ProgramDetailsPage() {
                     {program.category && <div className="flex items-start gap-3"><HiAcademicCap className="w-5 h-5 text-yellow-400 mt-1 shrink-0" /><div><p className="text-sm text-gray-400">Category</p><p className="text-white font-semibold">{program.category}</p></div></div>}
                   </div>
                   <div className="space-y-3 pt-4 border-t border-white/10">
-                    <Link href="/community#volunteer"><Button variant="primary" className="w-full">Join This Program</Button></Link>
+                    {
+                      (() => {
+                        const programJoinUrl = getProgramFapshiUrl(program.title) || '/community#volunteer';
+                        const isProgramJoinExternal = programJoinUrl.startsWith('http');
+                        return (
+                          <a
+                            href={programJoinUrl}
+                            target={isProgramJoinExternal ? '_blank' : undefined}
+                            rel={isProgramJoinExternal ? 'noopener noreferrer' : undefined}
+                            className="block"
+                          >
+                            <Button variant="primary" className="w-full">Join This Program</Button>
+                          </a>
+                        );
+                      })()
+                    }
                     <Button variant="outline-yellow" onClick={handleShare} className="w-full">
                       <HiShare className="w-5 h-5" />{copied ? 'Link Copied!' : 'Share Program'}
                     </Button>

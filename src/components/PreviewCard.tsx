@@ -26,6 +26,34 @@ type TranslationFn = (key: string) => string;
 type LinkClickEvent = MouseEvent<HTMLAnchorElement>;
 
 export function ProgramCard({ item, index, isActive, onToggle }: { item: Item; index: number; isActive: boolean; onToggle: () => void }) {
+  const title = (item.title || '').toString();
+
+  const usesFapshi = (t: string, id?: string | number, img?: string, desc?: string) => {
+    const s = (t || '').toString().toLowerCase();
+    const i = id ? id.toString().toLowerCase() : '';
+    const im = (img || '').toLowerCase();
+    const d = (desc || '').toLowerCase();
+    return [s, i, im, d].some(x => x.includes('kamcyber') || x.includes('kid') || x.includes('kids') || x.includes('holiday'));
+  };
+
+  const getFapshiUrl = (t: string, id?: string | number, img?: string, desc?: string) => {
+    const s = (t || '').toString().toLowerCase();
+    const i = id ? id.toString().toLowerCase() : '';
+    const im = (img || '').toLowerCase();
+    const d = (desc || '').toLowerCase();
+    if ([s, i, im, d].some(x => x.includes('kamcyber'))) return 'https://event.fapshi.com/5hut';
+    if ([s, i, im, d].some(x => x.includes('kid') || x.includes('kids') || x.includes('holiday'))) return 'https://event.fapshi.com/1ecl';
+    return '';
+  };
+
+  const isSecureByDesign = (t: string, id?: string | number, img?: string, desc?: string) => {
+    const s = (t || '').toString().toLowerCase();
+    const i = id ? id.toString().toLowerCase() : '';
+    const im = (img || '').toLowerCase();
+    const d = (desc || '').toLowerCase();
+    return [s, i, im, d].some(x => x.includes('secure by design') || x.includes('secure-by-design'));
+  };
+
   return (
     <motion.div
       key={`program-${index}`}
@@ -49,7 +77,19 @@ export function ProgramCard({ item, index, isActive, onToggle }: { item: Item; i
       <div className={`absolute inset-0 bg-black/90 p-6 flex flex-col justify-center transition-opacity duration-300 ${isActive ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}>
         <h3 className="text-xl md:text-2xl font-bold text-yellow-400 mb-4" style={{ fontFamily: 'var(--font-nourd), sans-serif' }}>{item.title}</h3>
         <p className="text-gray-300 text-sm md:text-base leading-relaxed mb-6">{item.description}</p>
-        <Link href={item.id ? `/events-impact/programs/${item.id}` : '/events-impact'} className="tagline inline-flex items-center gap-2 text-yellow-400 font-semibold text-base md:text-2xl hover:text-yellow-300 transition-colors relative group/link pb-2" onClick={(e: LinkClickEvent) => e.stopPropagation()}>
+        <Link
+          href={
+            isSecureByDesign(title, item.id, item.image, item.description)
+              ? '/community#partnerships'
+              : (usesFapshi(title, item.id, item.image, item.description) && getFapshiUrl(title, item.id, item.image, item.description))
+              ? getFapshiUrl(title, item.id, item.image, item.description)
+              : (item.id ? `/events-impact/programs/${item.id}` : '/events-impact')
+          }
+          className="tagline inline-flex items-center gap-2 text-yellow-400 font-semibold text-base md:text-2xl hover:text-yellow-300 transition-colors relative group/link pb-2"
+          onClick={(e: LinkClickEvent) => e.stopPropagation()}
+          target={usesFapshi(title, item.id, item.image, item.description) ? '_blank' : undefined}
+          rel={usesFapshi(title, item.id, item.image, item.description) ? 'noopener noreferrer' : undefined}
+        >
           <span className="relative">
             View Program
             <svg className="absolute -bottom-1 left-0 w-full" preserveAspectRatio="none" viewBox="0 0 200 10" style={{ height: '6px' }}>

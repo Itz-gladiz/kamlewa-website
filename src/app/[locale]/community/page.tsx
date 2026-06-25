@@ -21,7 +21,6 @@ import { createVolunteerApplication, createPartnershipInquiry } from '@/lib/supa
 
 const GOOGLE_SHEETS_URL = process.env.NEXT_PUBLIC_GOOGLE_SHEETS_URL;
 
-
 async function sendToSheets(payload: Record<string, string>) {
   if (!GOOGLE_SHEETS_URL) return;
   await fetch(GOOGLE_SHEETS_URL, {
@@ -31,6 +30,38 @@ async function sendToSheets(payload: Record<string, string>) {
     body: JSON.stringify(payload),
   });
 }
+
+// ─── NEW: send confirmation email via Resend API route ───────────────────────
+async function sendVolunteerEmail(data: {
+  name: string;
+  email: string;
+  phone: string;
+  expertise: string;
+  availability: string;
+  message: string;
+}) {
+  await fetch('/api/volunteer', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data),
+  });
+}
+
+async function sendPartnershipEmail(data: {
+  name: string;
+  email: string;
+  phone: string;
+  organization: string;
+  partnershipType: string;
+  message: string;
+}) {
+  await fetch('/api/partnership', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data),
+  });
+}
+// ─────────────────────────────────────────────────────────────────────────────
 
 export default function CommunityPage() {
   const locale = useLocale();
@@ -141,6 +172,15 @@ export default function CommunityPage() {
         availability: volunteerForm.availability || 'N/A',
         message: volunteerForm.message,
       }),
+      // ── NEW: confirmation email to the applicant ──
+      sendVolunteerEmail({
+        name: volunteerForm.name,
+        email: volunteerForm.email,
+        phone: volunteerForm.phone,
+        expertise: volunteerForm.expertise,
+        availability: volunteerForm.availability,
+        message: volunteerForm.message,
+      }),
     ]);
 
     toast.success(tPage('volunteering.form.success'), { id: loadingToast });
@@ -169,6 +209,15 @@ export default function CommunityPage() {
         phone: partnershipForm.phone || 'N/A',
         organization: partnershipForm.organization,
         partnershipType: partnershipForm.partnershipType || 'N/A',
+        message: partnershipForm.message,
+      }),
+      // ── NEW: confirmation email to the inquiry sender ──
+      sendPartnershipEmail({
+        name: partnershipForm.name,
+        email: partnershipForm.email,
+        phone: partnershipForm.phone,
+        organization: partnershipForm.organization,
+        partnershipType: partnershipForm.partnershipType,
         message: partnershipForm.message,
       }),
     ]);
@@ -249,15 +298,13 @@ export default function CommunityPage() {
                       <p className="text-yellow-400 text-sm font-semibold mb-6">
                         {tPage(community.activitiesKey)}
                       </p>
-                      
-                      {/* Button with arrow and wavy underline */}
                       <Link href={communityLinks[community.id]} className="mt-auto">
                         <button className="relative inline-flex items-center gap-2 text-yellow-400 font-semibold text-sm hover:text-yellow-300 transition-colors group/btn">
                           <span className="relative">
                             Learn More
-                            <svg 
-                              className="absolute bottom-0 left-0 w-full h-1 text-yellow-400 opacity-0 group-hover/btn:opacity-100 transition-opacity" 
-                              viewBox="0 0 100 10" 
+                            <svg
+                              className="absolute bottom-0 left-0 w-full h-1 text-yellow-400 opacity-0 group-hover/btn:opacity-100 transition-opacity"
+                              viewBox="0 0 100 10"
                               preserveAspectRatio="none"
                               style={{ fill: 'none', stroke: 'currentColor', strokeWidth: 2 }}
                             >
@@ -286,7 +333,6 @@ export default function CommunityPage() {
             viewport={{ once: true, margin: '-100px' }}
             className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start"
           >
-            {/* Left - Content */}
             <motion.div variants={itemVariants}>
               <motion.p
                 className="tagline text-yellow-400 text-sm md:text-base font-semibold mb-5 uppercase tracking-wider relative inline-block"
@@ -307,7 +353,6 @@ export default function CommunityPage() {
               </motion.p>
             </motion.div>
 
-            {/* Right - Volunteer Form */}
             <motion.div variants={itemVariants} className="relative">
               <div className="absolute inset-0 bg-white/15 translate-x-1 translate-y-1 md:translate-x-2 md:translate-y-2 lg:translate-x-3 lg:translate-y-3" />
               <div className="relative bg-white/5 border border-white/10 p-8">

@@ -20,12 +20,30 @@ import { mapDbEventToEvent, mapDbRegistrationToParticipant } from '@/utils/event
 import { getEventById, getEventRegistrations, registerForEvent } from '@/lib/supabase/events';
 import Loader from '@/components/Loader';
 
+// ── NEW: send confirmation email via Resend ──────────────────────────────────
+async function sendEventRegistrationEmail(data: {
+  name: string;
+  email: string;
+  phone: string;
+  eventTitle: string;
+  eventDate: string;
+  eventLocation: string;
+  eventTime?: string;
+}) {
+  await fetch('/api/event-registration', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data),
+  });
+}
+// ─────────────────────────────────────────────────────────────────────────────
+
 export default function EventDetailsPage() {
   const params = useParams();
   const router = useRouter();
   const t = useTranslations('events');
   const tPage = useTranslations('eventsImpact');
-  const locale = useLocale(); // ✅
+  const locale = useLocale();
 
   const [event, setEvent] = useState<Event | null>(null);
   const [loading, setLoading] = useState(true);
@@ -38,7 +56,6 @@ export default function EventDetailsPage() {
       try {
         setLoading(true);
         const dbEvent = await getEventById(eventId);
-        // ✅ Pass locale to mapper
         const mappedEvent = mapDbEventToEvent(dbEvent, locale);
 
         try {
@@ -69,7 +86,7 @@ export default function EventDetailsPage() {
     const eventId = typeof params.eventId === 'string' ? params.eventId : undefined;
     if (eventId) loadEvent(eventId);
     else setLoading(false);
-  }, [params.eventId, locale]); // ✅ Re-run when locale changes
+  }, [params.eventId, locale]);
 
   if (loading) {
     return (
@@ -118,6 +135,23 @@ export default function EventDetailsPage() {
         ...event,
         registeredParticipants: [...(event.registeredParticipants || []), newParticipant],
       });
+
+      // ── NEW: send confirmation email ──
+      const eventTime = event.startTime
+        ? `${new Date(event.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}${event.endTime ? ` - ${new Date(event.endTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}` : ''}`
+        : undefined;
+
+      await sendEventRegistrationEmail({
+        name: formData.name,
+        email: formData.email,
+        phone: formData.phone,
+        eventTitle: event.title,
+        eventDate: event.date,
+        eventLocation: event.location,
+        eventTime,
+      });
+      // ─────────────────────────────────
+
       toast.success(t('registration.success'));
       setFormData({ name: '', email: '', phone: '' });
     } catch (error) {
@@ -262,6 +296,24 @@ export default function EventDetailsPage() {
                     )}
                   </div>
                 </div>
+
+                {/* Office Info Card */}
+                <div className="bg-white/5 border border-white/10 p-6">
+                  <h4 className="text-lg font-bold mb-3 text-yellow-400">Need More Information?</h4>
+                  <p className="text-gray-300 text-sm mb-3 leading-relaxed">
+                    Feel free to visit us in person or get in touch — we'd love to help.
+                  </p>
+                  <div className="flex items-start gap-2 text-gray-300 text-sm">
+                    <VscLocation className="w-4 h-4 text-yellow-400 mt-0.5 shrink-0" />
+                    <span>Douala, Bonaberi — Derrière Immeuble Kottobass</span>
+                  </div>
+                  <div className="mt-4">
+                    <Link href="/contact">
+                      <Button variant="outline-yellow" className="w-full">Contact Us</Button>
+                    </Link>
+                  </div>
+                </div>
+
               </motion.div>
             </div>
           </div>

@@ -40,6 +40,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     { href: '/dashboard/reports', label: t('nav.reports') || 'Reports', icon: HiOutlineClipboardDocumentList },
     { href: '/dashboard/contact', label: t('nav.contact'), icon: HiMail },
     { href: '/dashboard/settings', label: t('nav.settings'), icon: HiCog },
+    { href: '/dashboard/broadcast', label: 'Broadcast', icon: HiMail },
   ];
 
   // Check authentication (skip for login page)
@@ -213,6 +214,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
               </div>
             </Link>
             <button
+            title='Button1'
               onClick={() => setSidebarOpen(false)}
               className="lg:hidden text-white hover:text-yellow-400 transition-colors"
             >
@@ -272,6 +274,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             {/* Mobile Menu Button */}
             <div className="flex items-center justify-between gap-4">
               <button
+              title='Button2'
                 onClick={() => setSidebarOpen(true)}
                 className="lg:hidden text-white hover:text-yellow-400 transition-colors"
               >
@@ -312,6 +315,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                         onBlur={() => setTimeout(() => setSearchOpen(false), 200)}
                       />
                       <button
+                      title='Button3'
                         onClick={() => setSearchOpen(false)}
                         className="text-white/70 hover:text-white"
                       >
@@ -385,6 +389,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 {/* Profile Dropdown */}
                 <div className="relative" ref={profileRef}>
                   <button
+                  title='Button4'
                     onClick={() => setProfileOpen(!profileOpen)}
                     className="flex items-center gap-2 p-1.5 rounded-full hover:bg-white/5 transition-colors"
                   >

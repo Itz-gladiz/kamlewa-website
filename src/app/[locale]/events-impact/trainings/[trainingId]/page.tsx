@@ -36,10 +36,32 @@ function getFapshiUrl(title: string): string {
   return '';
 }
 
+// ── NEW: send confirmation email via Resend ──────────────────────────────────
+async function sendTrainingEnrollmentEmail(data: {
+  full_name: string;
+  email: string;
+  phone: string;
+  location: string;
+  message: string;
+  trainingTitle: string;
+  trainingLevel: string;
+  trainingDuration?: string;
+  trainingFormat?: string;
+  trainingInstructor?: string;
+  trainingPrice?: string;
+}) {
+  await fetch('/api/training-enrollment', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data),
+  });
+}
+// ─────────────────────────────────────────────────────────────────────────────
+
 export default function TrainingDetailsPage() {
   const params = useParams();
   const t = useTranslations('eventsImpact');
-  const locale = useLocale(); // ✅
+  const locale = useLocale();
 
   const [training, setTraining] = useState<Training | null>(null);
   const [loading, setLoading] = useState(true);
@@ -55,7 +77,6 @@ export default function TrainingDetailsPage() {
       try {
         setLoading(true);
         const dbTraining = await getTrainingById(params.trainingId as string);
-        // ✅ Pass locale to mapper
         const mappedTraining = mapDbTrainingToTraining(dbTraining, locale);
         setTraining(mappedTraining);
       } catch (error) {
@@ -67,7 +88,7 @@ export default function TrainingDetailsPage() {
       }
     };
     if (params.trainingId) loadTraining();
-  }, [params.trainingId, locale]); // ✅ Re-run when locale changes
+  }, [params.trainingId, locale]);
 
   const handleOpenModal = () => {
     setRegisterForm({ full_name: '', email: '', phone: '', location: '', message: '' });
@@ -108,6 +129,20 @@ export default function TrainingDetailsPage() {
             }),
           })
         : Promise.resolve(),
+      // ── NEW: confirmation email (only for non-Fapshi trainings) ──
+      sendTrainingEnrollmentEmail({
+        full_name: registerForm.full_name,
+        email: registerForm.email,
+        phone: registerForm.phone,
+        location: registerForm.location,
+        message: registerForm.message,
+        trainingTitle: training.title,
+        trainingLevel: training.level,
+        trainingDuration: training.duration,
+        trainingFormat: training.format,
+        trainingInstructor: training.instructor,
+        trainingPrice: training.price,
+      }),
     ]);
 
     toast.success('Registration submitted! We will contact you soon.', { id: loadingToast });
@@ -184,7 +219,7 @@ export default function TrainingDetailsPage() {
     <>
       <main className="relative bg-black text-white">
 
-        {/* Registration Modal */}
+        {/* Registration Modal — only shown for non-Fapshi trainings */}
         <AnimatePresence>
           {isModalOpen && (
             <motion.div
