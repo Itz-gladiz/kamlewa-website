@@ -475,6 +475,21 @@
       "feedback": "Positive Feedback",
       "hours": "Training Hours"
     },
+    "searchPlaceholder": "Search...",
+    "searchResults": "Found {{count}} result(s) for '{{query}}'",
+    "noResults": "No results found. Try a different search term.",
+    "noItems": "No items available yet.",
+    "formatLabel": "Format",
+    "status": {
+      "active": "Active",
+      "completed": "Completed",
+      "upcoming": "Upcoming"
+    },
+    "levels": {
+      "beginner": "Beginner",
+      "intermediate": "Intermediate",
+      "advanced": "Advanced"
+    },
     "upcomingEvents": {
       "heading": "Upcoming Events",
       "description": "Join us for upcoming seminars, workshops, and community outreach programs.",
@@ -650,7 +665,16 @@
   },
   
   "common": {
+    "backToHome": "Back to Home",
     "backToCommunity": "Back to Community",
+    "backToEvents": "Back to Events",
+    "backToEventsAndImpact": "Back to Events & Impact",
+    "backToPrograms": "Back to Programs",
+    "backToProjects": "Back to Projects",
+    "backToTrainings": "Back to Trainings",
+    "backToReports": "Back to Reports",
+    "backToSite": "Back to Site",
+    "backToPublicSite": "Back to Public Site",
     "kamlewa": "KAMLEWA Community",
     "join": "Join",
     "fillDetails": "Fill in your details and we will get back to you shortly.",

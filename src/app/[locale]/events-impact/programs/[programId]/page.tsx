@@ -20,6 +20,7 @@ export default function ProgramDetailsPage() {
   const params = useParams();
   const t = useTranslations('programs');
   const tPage = useTranslations('eventsImpact');
+  const tCommon = useTranslations('common');
   const locale = useLocale(); // ✅
 
   const [program, setProgram] = useState<Program | null>(null);
@@ -62,7 +63,7 @@ export default function ProgramDetailsPage() {
         <div className="min-h-screen bg-black text-white flex items-center justify-center">
           <div className="text-center">
             <h1 className="text-2xl font-bold mb-4">Program Not Found</h1>
-            <Link href="/events-impact"><Button variant="primary">Back to Programs</Button></Link>
+            <Link href="/events-impact"><Button variant="primary">{tCommon('backToPrograms')}</Button></Link>
           </div>
         </div>
         <Footer />
@@ -110,7 +111,7 @@ export default function ProgramDetailsPage() {
 
         <div className="max-w-7xl mx-auto px-6 md:px-12 lg:px-16 pt-8">
           <Link href="/events-impact">
-            <Button variant="outline-white" className="mb-8"><HiArrowLeft className="w-5 h-5" />Back to Programs</Button>
+            <Button variant="outline-white" className="mb-8"><HiArrowLeft className="w-5 h-5" />{tCommon('backToPrograms')}</Button>
           </Link>
         </div>
 

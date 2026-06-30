@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 import Footer from '@/components/Footer';
 import PageBanner from '@/components/PageBanner';
 import Button from '@/components/Button';
@@ -20,6 +21,7 @@ const getReportPdfUrl = (report: Report) =>
 
 export default function ReportDetailsPage() {
   const params = useParams();
+  const t = useTranslations('common');
   const reportId = params.reportId as string;
   const [report, setReport] = useState<Report | null>(null);
   const [loading, setLoading] = useState(true);
@@ -68,7 +70,7 @@ export default function ReportDetailsPage() {
           <div className="text-center">
             <h1 className="text-2xl font-bold mb-4">Report Not Found</h1>
             <Link href="/events-impact">
-              <Button variant="primary">Back to Events & Impact</Button>
+              <Button variant="primary">{t('backToEventsAndImpact')}</Button>
             </Link>
           </div>
         </main>
@@ -95,7 +97,7 @@ export default function ReportDetailsPage() {
             <Link href="/events-impact">
               <Button variant="outline-white" className="mb-10">
                 <HiArrowLeft className="h-5 w-5" />
-                Back to Reports
+                {t('backToReports')}
               </Button>
             </Link>
 

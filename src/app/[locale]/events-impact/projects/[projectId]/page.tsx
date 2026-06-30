@@ -19,6 +19,7 @@ import { Link } from '@/i18n/routing';
 export default function ProjectDetailsPage() {
   const params = useParams();
   const t = useTranslations('eventsImpact');
+  const tCommon = useTranslations('common');
   const locale = useLocale(); // ✅
 
   const [project, setProject] = useState<Project | null>(null);
@@ -61,7 +62,7 @@ export default function ProjectDetailsPage() {
         <div className="min-h-screen bg-black text-white flex items-center justify-center">
           <div className="text-center">
             <h1 className="text-2xl font-bold mb-4">Project Not Found</h1>
-            <Link href="/events-impact"><Button variant="primary">Back to Projects</Button></Link>
+            <Link href="/events-impact"><Button variant="primary">{tCommon('backToProjects')}</Button></Link>
           </div>
         </div>
         <Footer />
@@ -111,7 +112,7 @@ export default function ProjectDetailsPage() {
 
         <div className="max-w-7xl mx-auto px-6 md:px-12 lg:px-16 pt-8">
           <Link href="/events-impact">
-            <Button variant="outline-white" className="mb-8"><HiArrowLeft className="w-5 h-5" />Back to Events</Button>
+            <Button variant="outline-white" className="mb-8"><HiArrowLeft className="w-5 h-5" />{tCommon('backToEvents')}</Button>
           </Link>
         </div>
 

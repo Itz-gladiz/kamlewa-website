@@ -483,6 +483,21 @@
       "feedback": "Retour Positif",
       "hours": "Heures de Formation"
     },
+    "searchPlaceholder": "Rechercher...",
+    "searchResults": "{{count}} résultat(s) trouvé(s) pour '{{query}}'",
+    "noResults": "Aucun résultat trouvé. Essayez un autre terme de recherche.",
+    "noItems": "Aucun élément disponible pour le moment.",
+    "formatLabel": "Format",
+    "status": {
+      "active": "Actif",
+      "completed": "Terminé",
+      "upcoming": "À venir"
+    },
+    "levels": {
+      "beginner": "Débutant",
+      "intermediate": "Intermédiaire",
+      "advanced": "Avancé"
+    },
     "upcomingEvents": {
       "heading": "Événements à Venir",
       "description": "Rejoignez-nous pour les prochains séminaires, ateliers et programmes de sensibilisation communautaire.",
@@ -658,7 +673,16 @@
   },
   
   "common": {
+    "backToHome": "Retour à l'accueil",
     "backToCommunity": "Retour à la Communauté",
+    "backToEvents": "Retour aux événements",
+    "backToEventsAndImpact": "Retour aux événements & impact",
+    "backToPrograms": "Retour aux programmes",
+    "backToProjects": "Retour aux projets",
+    "backToTrainings": "Retour aux formations",
+    "backToReports": "Retour aux rapports",
+    "backToSite": "Retour au site",
+    "backToPublicSite": "Retour au site public",
     "kamlewa": "Communauté KAMLEWA",
     "join": "Rejoindre",
     "fillDetails": "Remplissez vos coordonnées et nous vous répondrons sous peu.",

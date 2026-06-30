@@ -7,6 +7,7 @@ import Button from '@/components/Button';
 import Loader from '@/components/Loader';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
+import { useTranslations } from 'next-intl';
 import { HiArrowLeft, HiClock, HiDownload } from 'react-icons/hi';
 import { HiOutlineClipboardDocumentList } from 'react-icons/hi2';
 import toast from 'react-hot-toast';
@@ -18,6 +19,7 @@ const getReportPdfUrl = (report: Report) =>
   report.pdf_url || `/reports/${report.start_year}-${report.end_year}-report.pdf`;
 
 export default function ReportsArchivePage() {
+  const t = useTranslations('common');
   const [reports, setReports] = useState<Report[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -52,7 +54,7 @@ export default function ReportsArchivePage() {
             <Link href="/events-impact">
               <Button variant="outline-white" className="mb-10">
                 <HiArrowLeft className="h-5 w-5" />
-                Back to Events & Impact
+                {t('backToEventsAndImpact')}
               </Button>
             </Link>
 
