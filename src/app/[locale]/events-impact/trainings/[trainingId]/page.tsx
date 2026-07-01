@@ -20,7 +20,7 @@ import { createTrainingRegistration } from '@/lib/supabase/submissions';
 import Loader from '@/components/Loader';
 import toast from 'react-hot-toast';
 import { Link } from '@/i18n/routing';
-
+import { supabase } from '@/lib/supabase/supabaseClient';
 const GOOGLE_SHEETS_URL = process.env.NEXT_PUBLIC_GOOGLE_SHEETS_URL;
 
 function usesFapshi(title: string): boolean {
@@ -36,7 +36,6 @@ function getFapshiUrl(title: string): string {
   return '';
 }
 
-// ── NEW: send confirmation email via Resend ──────────────────────────────────
 async function sendTrainingEnrollmentEmail(data: {
   full_name: string;
   email: string;
@@ -49,14 +48,34 @@ async function sendTrainingEnrollmentEmail(data: {
   trainingFormat?: string;
   trainingInstructor?: string;
   trainingPrice?: string;
-}) {
-  await fetch('/api/training-enrollment', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(data),
-  });
+}): Promise<boolean> {
+  try {
+    const res = await fetch('/api/training-enrollment', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    });
+    const result = await res.json();
+    return result.success === true;
+  } catch { return false; }
 }
-// ─────────────────────────────────────────────────────────────────────────────
+
+
+async function validateEmail(email: string): Promise<boolean> {
+  try {
+    const res = await fetch(
+      `https://emailvalidation.abstractapi.com/v1/?api_key=${process.env.NEXT_PUBLIC_ABSTRACT_API_KEY}&email=${encodeURIComponent(email)}`
+    );
+    const data = await res.json();
+    return (
+      data.deliverability === 'DELIVERABLE' &&
+      data.is_valid_format?.value === true &&
+      data.is_mx_found?.value === true
+    );
+  } catch {
+    return true;
+  }
+}
 
 export default function TrainingDetailsPage() {
   const params = useParams();
@@ -97,59 +116,91 @@ export default function TrainingDetailsPage() {
   };
   const handleCloseModal = () => setIsModalOpen(false);
 
-  const handleRegisterSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!training) return;
-    setIsSubmitting(true);
-    const loadingToast = toast.loading('Submitting registration...');
+const handleRegisterSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
+  if (!training) return;
+  setIsSubmitting(true);
 
-    await Promise.allSettled([
-      createTrainingRegistration({
-        training_id: training.id,
-        training_name: training.title,
-        full_name: registerForm.full_name,
-        email: registerForm.email,
-        phone: registerForm.phone || undefined,
-        location: registerForm.location || undefined,
-        message: registerForm.message || undefined,
-      }),
-      GOOGLE_SHEETS_URL
-        ? fetch(GOOGLE_SHEETS_URL, {
-            method: 'POST',
-            mode: 'no-cors',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              sheetName: 'Training Registrations',
-              trainingId: training.id,
-              trainingName: training.title,
-              fullName: registerForm.full_name,
-              email: registerForm.email,
-              phone: registerForm.phone || 'N/A',
-              location: registerForm.location || 'N/A',
-              message: registerForm.message || 'N/A',
-            }),
-          })
-        : Promise.resolve(),
-      // ── NEW: confirmation email (only for non-Fapshi trainings) ──
-      sendTrainingEnrollmentEmail({
-        full_name: registerForm.full_name,
-        email: registerForm.email,
-        phone: registerForm.phone,
-        location: registerForm.location,
-        message: registerForm.message,
-        trainingTitle: training.title,
-        trainingLevel: training.level,
-        trainingDuration: training.duration,
-        trainingFormat: training.format,
-        trainingInstructor: training.instructor,
-        trainingPrice: training.price,
-      }),
-    ]);
-
-    toast.success('Registration submitted! We will contact you soon.', { id: loadingToast });
-    setIsModalOpen(false);
+  // Validate email
+  const emailValid = await validateEmail(registerForm.email);
+  if (!emailValid) {
+    toast.error('This email address does not appear to be valid. Please check and try again.');
     setIsSubmitting(false);
-  };
+    return;
+  }
+
+  // Check duplicate
+  const { data: existing } = await supabase
+    .from('training_registrations')
+    .select('id')
+    .eq('email', registerForm.email)
+    .eq('training_id', training.id)
+    .maybeSingle();
+
+  if (existing) {
+    toast.error('You have already registered for this training with this email.');
+    setIsSubmitting(false);
+    return;
+  }
+
+  //Send confirmation email
+  const emailSent = await sendTrainingEnrollmentEmail({
+    full_name: registerForm.full_name,
+    email: registerForm.email,
+    phone: registerForm.phone,
+    location: registerForm.location,
+    message: registerForm.message,
+    trainingTitle: training.title,
+    trainingLevel: training.level,
+    trainingDuration: training.duration,
+    trainingFormat: training.format,
+    trainingInstructor: training.instructor,
+    trainingPrice: training.price,
+  });
+
+  if (!emailSent) {
+    toast.error('Could not send confirmation email. Please check your email address.');
+    setIsSubmitting(false);
+    return;
+  }
+
+  // Save to Supabase + Sheets
+  const loadingToast = toast.loading('Submitting registration...');
+
+  await Promise.allSettled([
+    createTrainingRegistration({
+      training_id: training.id,
+      training_name: training.title,
+      full_name: registerForm.full_name,
+      email: registerForm.email,
+      phone: registerForm.phone || undefined,
+      location: registerForm.location || undefined,
+      message: registerForm.message || undefined,
+    }),
+    GOOGLE_SHEETS_URL
+      ? fetch(GOOGLE_SHEETS_URL, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            sheetName: 'Training Registrations',
+            trainingId: training.id,
+            trainingName: training.title,
+            fullName: registerForm.full_name,
+            email: registerForm.email,
+            phone: registerForm.phone || 'N/A',
+            location: registerForm.location || 'N/A',
+            message: registerForm.message || 'N/A',
+          }),
+        })
+      : Promise.resolve(),
+  ]);
+
+  toast.success('Registration submitted! Check your email for confirmation.', { id: loadingToast });
+  setIsModalOpen(false);
+  setIsSubmitting(false);
+  setRegisterForm({ full_name: '', email: '', phone: '', location: '', message: '' });
+};
 
   const handleShare = async () => {
     if (!training) return;

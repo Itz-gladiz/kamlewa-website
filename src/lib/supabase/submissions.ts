@@ -1,6 +1,6 @@
 import { supabase } from './supabaseClient';
 
-// ─── Contact Submissions ───────────────────────────────────────────────────
+// ─── Contact Submissions 
 
 export async function createContactSubmission(data: {
   name: string;
@@ -19,7 +19,7 @@ export async function createContactSubmission(data: {
   if (error) throw error;
 }
 
-// ─── Volunteer Applications ────────────────────────────────────────────────
+// ─── Volunteer Applications 
 
 export async function createVolunteerApplication(data: {
   name: string;
@@ -40,7 +40,7 @@ export async function createVolunteerApplication(data: {
   if (error) throw error;
 }
 
-// ─── Partnership Inquiries ─────────────────────────────────────────────────
+// ─── Partnership Inquiries
 
 export async function createPartnershipInquiry(data: {
   name: string;
@@ -79,6 +79,23 @@ export async function createTrainingRegistration(data: {
     email: data.email,
     phone: data.phone || null,
     location: data.location || null,
+    message: data.message || null,
+  });
+  if (error) throw error;
+}
+
+export async function createCommunityApplication(data: {
+  community: string;
+  name: string;
+  email: string;
+  phone?: string;
+  message?: string;
+}) {
+  const { error } = await supabase.from('community_applications').insert({
+    community: data.community,
+    name: data.name,
+    email: data.email,
+    phone: data.phone || null,
     message: data.message || null,
   });
   if (error) throw error;

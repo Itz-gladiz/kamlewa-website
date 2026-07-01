@@ -19,8 +19,8 @@ import { Link } from '@/i18n/routing';
 import { mapDbEventToEvent, mapDbRegistrationToParticipant } from '@/utils/eventMapper';
 import { getEventById, getEventRegistrations, registerForEvent } from '@/lib/supabase/events';
 import Loader from '@/components/Loader';
+import { supabase } from '@/lib/supabase/supabaseClient';
 
-// ── NEW: send confirmation email via Resend ──────────────────────────────────
 async function sendEventRegistrationEmail(data: {
   name: string;
   email: string;
@@ -29,14 +29,33 @@ async function sendEventRegistrationEmail(data: {
   eventDate: string;
   eventLocation: string;
   eventTime?: string;
-}) {
-  await fetch('/api/event-registration', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(data),
-  });
+}): Promise<boolean> {
+  try {
+    const res = await fetch('/api/event-registration', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    });
+    const result = await res.json();
+    return result.success === true;
+  } catch { return false; }
 }
-// ─────────────────────────────────────────────────────────────────────────────
+
+async function validateEmail(email: string): Promise<boolean> {
+  try {
+    const res = await fetch(
+      `https://emailvalidation.abstractapi.com/v1/?api_key=${process.env.NEXT_PUBLIC_ABSTRACT_API_KEY}&email=${encodeURIComponent(email)}`
+    );
+    const data = await res.json();
+    return (
+      data.deliverability === 'DELIVERABLE' &&
+      data.is_valid_format?.value === true &&
+      data.is_mx_found?.value === true
+    );
+  } catch {
+    return true;
+  }
+}
 
 export default function EventDetailsPage() {
   const params = useParams();
@@ -117,50 +136,78 @@ export default function EventDetailsPage() {
   const isFull = event.maxParticipants ? registeredCount >= event.maxParticipants : false;
   const spotsLeft = event.maxParticipants ? event.maxParticipants - registeredCount : null;
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (isFull) { toast.error(t('registration.full')); return; }
-    if (!event) return;
-    setIsSubmitting(true);
-    try {
-      const registration = await registerForEvent({
-        event_id: event.id,
-        name: formData.name,
-        email: formData.email,
-        phone: formData.phone || null,
-        status: 'confirmed',
-      });
-      const newParticipant = mapDbRegistrationToParticipant(registration);
-      setEvent({
-        ...event,
-        registeredParticipants: [...(event.registeredParticipants || []), newParticipant],
-      });
+ const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
+  if (isFull) { toast.error(t('registration.full')); return; }
+  if (!event) return;
+  setIsSubmitting(true);
 
-      // ── NEW: send confirmation email ──
-      const eventTime = event.startTime
-        ? `${new Date(event.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}${event.endTime ? ` - ${new Date(event.endTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}` : ''}`
-        : undefined;
+  //Validate email
+  const emailValid = await validateEmail(formData.email);
+  if (!emailValid) {
+    toast.error('This email address does not appear to be valid. Please check and try again.');
+    setIsSubmitting(false);
+    return;
+  }
 
-      await sendEventRegistrationEmail({
-        name: formData.name,
-        email: formData.email,
-        phone: formData.phone,
-        eventTitle: event.title,
-        eventDate: event.date,
-        eventLocation: event.location,
-        eventTime,
-      });
-      // ─────────────────────────────────
+  //Check duplicate
+  const { data: existing } = await supabase
+    .from('event_registrations')
+    .select('id')
+    .eq('email', formData.email)
+    .eq('event_id', event.id)
+    .maybeSingle();
 
-      toast.success(t('registration.success'));
-      setFormData({ name: '', email: '', phone: '' });
-    } catch (error) {
-      console.error('Registration error:', error);
-      toast.error(t('registration.error'));
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
+  if (existing) {
+    toast.error('You have already registered for this event with this email.');
+    setIsSubmitting(false);
+    return;
+  }
+
+  //Send confirmation email
+  const eventTime = event.startTime
+    ? `${new Date(event.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}${event.endTime ? ` - ${new Date(event.endTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}` : ''}`
+    : undefined;
+
+  const emailSent = await sendEventRegistrationEmail({
+    name: formData.name,
+    email: formData.email,
+    phone: formData.phone,
+    eventTitle: event.title,
+    eventDate: event.date,
+    eventLocation: event.location,
+    eventTime,
+  });
+
+  if (!emailSent) {
+    toast.error('Could not send confirmation email. Please check your email address.');
+    setIsSubmitting(false);
+    return;
+  }
+
+  //Register to Supabase
+  try {
+    const registration = await registerForEvent({
+      event_id: event.id,
+      name: formData.name,
+      email: formData.email,
+      phone: formData.phone || null,
+      status: 'confirmed',
+    });
+    const newParticipant = mapDbRegistrationToParticipant(registration);
+    setEvent({
+      ...event,
+      registeredParticipants: [...(event.registeredParticipants || []), newParticipant],
+    });
+    toast.success('Registration confirmed! Check your email.');
+    setFormData({ name: '', email: '', phone: '' });
+  } catch (error) {
+    console.error('Registration error:', error);
+    toast.error(t('registration.error'));
+  } finally {
+    setIsSubmitting(false);
+  }
+};
 
   const handleShare = async () => {
     const shareUrl = event.shareLink || `${window.location.origin}/events-impact/${event.id}`;

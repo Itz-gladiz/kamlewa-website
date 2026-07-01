@@ -69,7 +69,7 @@ export default function Navbar({ serverLabels }: { serverLabels?: ServerLabels }
     setHasMounted(true);
   }, []);
 
-  // ✅ Fixed: use next-intl router with locale param — correct and no hydration issues
+  
   const switchLocale = (newLocale: string) => {
     router.replace(pathname, { locale: newLocale });
   };

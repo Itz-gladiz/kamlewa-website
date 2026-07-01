@@ -31,7 +31,7 @@ async function sendToSheets(payload: Record<string, string>) {
   });
 }
 
-// ─── NEW: send confirmation email via Resend API route ───────────────────────
+//send confirmation email via Resend API route
 async function sendVolunteerEmail(data: {
   name: string;
   email: string;
@@ -39,12 +39,16 @@ async function sendVolunteerEmail(data: {
   expertise: string;
   availability: string;
   message: string;
-}) {
-  await fetch('/api/volunteer', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(data),
-  });
+}) : Promise<boolean> {
+  try {
+    const res = await fetch('/api/volunteer', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    });
+    const result = await res.json();
+    return result.success === true;
+  } catch { return false; }
 }
 
 async function sendPartnershipEmail(data: {
@@ -54,14 +58,32 @@ async function sendPartnershipEmail(data: {
   organization: string;
   partnershipType: string;
   message: string;
-}) {
-  await fetch('/api/partnership', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(data),
-  });
+}) : Promise<boolean> {
+  try {
+    const res = await fetch('/api/partnership', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    });
+    const result = await res.json();
+    return result.success === true;
+  } catch { return false; }
 }
-// ─────────────────────────────────────────────────────────────────────────────
+async function validateEmail(email: string): Promise<boolean> {
+  try {
+    const res = await fetch(
+      `https://emailvalidation.abstractapi.com/v1/?api_key=${process.env.NEXT_PUBLIC_ABSTRACT_API_KEY}&email=${encodeURIComponent(email)}`
+    );
+    const data = await res.json();
+    return (
+      data.deliverability === 'DELIVERABLE' &&
+      data.is_valid_format?.value === true &&
+      data.is_mx_found?.value === true
+    );
+  } catch {
+    return true;
+  }
+}
 
 export default function CommunityPage() {
   const locale = useLocale();
@@ -148,84 +170,115 @@ export default function CommunityPage() {
     { value: 'ngo', label: tPage('partnerships.form.partnershipTypes.ngo') },
     { value: 'other', label: tPage('partnerships.form.partnershipTypes.other') },
   ];
+const handleVolunteerSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
+  setIsSubmittingVolunteer(true);
+  const loadingToast = toast.loading(tPage('volunteering.form.submitting'));
 
-  const handleVolunteerSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmittingVolunteer(true);
-    const loadingToast = toast.loading(tPage('volunteering.form.submitting'));
-
-    await Promise.allSettled([
-      createVolunteerApplication({
-        name: volunteerForm.name,
-        email: volunteerForm.email,
-        phone: volunteerForm.phone || undefined,
-        expertise: volunteerForm.expertise || undefined,
-        availability: volunteerForm.availability || undefined,
-        message: volunteerForm.message,
-      }),
-      sendToSheets({
-        sheetName: 'Volunteers',
-        name: volunteerForm.name,
-        email: volunteerForm.email,
-        phone: volunteerForm.phone || 'N/A',
-        expertise: volunteerForm.expertise || 'N/A',
-        availability: volunteerForm.availability || 'N/A',
-        message: volunteerForm.message,
-      }),
-      // ── NEW: confirmation email to the applicant ──
-      sendVolunteerEmail({
-        name: volunteerForm.name,
-        email: volunteerForm.email,
-        phone: volunteerForm.phone,
-        expertise: volunteerForm.expertise,
-        availability: volunteerForm.availability,
-        message: volunteerForm.message,
-      }),
-    ]);
-
-    toast.success(tPage('volunteering.form.success'), { id: loadingToast });
-    setVolunteerForm({ name: '', email: '', phone: '', expertise: '', availability: '', message: '' });
+  // ── Step 1: Validate email ──
+  const emailValid = await validateEmail(volunteerForm.email);
+  if (!emailValid) {
+    toast.error('This email address does not appear to be valid. Please check and try again.', { id: loadingToast });
     setIsSubmittingVolunteer(false);
-  };
+    return;
+  }
 
-  const handlePartnershipSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmittingPartnership(true);
-    const loadingToast = toast.loading(tPage('partnerships.form.submitting'));
+  // ── Step 2: Send confirmation email ──
+  const emailSent = await sendVolunteerEmail({
+    name: volunteerForm.name,
+    email: volunteerForm.email,
+    phone: volunteerForm.phone,
+    expertise: volunteerForm.expertise,
+    availability: volunteerForm.availability,
+    message: volunteerForm.message,
+  });
 
-    await Promise.allSettled([
-      createPartnershipInquiry({
-        name: partnershipForm.name,
-        email: partnershipForm.email,
-        phone: partnershipForm.phone || undefined,
-        organization: partnershipForm.organization,
-        partnership_type: partnershipForm.partnershipType || undefined,
-        message: partnershipForm.message,
-      }),
-      sendToSheets({
-        sheetName: 'Partnerships',
-        name: partnershipForm.name,
-        email: partnershipForm.email,
-        phone: partnershipForm.phone || 'N/A',
-        organization: partnershipForm.organization,
-        partnershipType: partnershipForm.partnershipType || 'N/A',
-        message: partnershipForm.message,
-      }),
-      // ── NEW: confirmation email to the inquiry sender ──
-      sendPartnershipEmail({
-        name: partnershipForm.name,
-        email: partnershipForm.email,
-        phone: partnershipForm.phone,
-        organization: partnershipForm.organization,
-        partnershipType: partnershipForm.partnershipType,
-        message: partnershipForm.message,
-      }),
-    ]);
+  if (!emailSent) {
+    toast.error('Could not send confirmation email. Please check your email address.', { id: loadingToast });
+    setIsSubmittingVolunteer(false);
+    return;
+  }
 
-    toast.success(tPage('partnerships.form.success'), { id: loadingToast });
-    setPartnershipForm({ name: '', email: '', phone: '', organization: '', partnershipType: '', message: '' });
+  // ── Step 3: Save to Supabase + Sheets ──
+  await Promise.allSettled([
+    createVolunteerApplication({
+      name: volunteerForm.name,
+      email: volunteerForm.email,
+      phone: volunteerForm.phone || undefined,
+      expertise: volunteerForm.expertise || undefined,
+      availability: volunteerForm.availability || undefined,
+      message: volunteerForm.message,
+    }),
+    sendToSheets({
+      sheetName: 'Volunteers',
+      name: volunteerForm.name,
+      email: volunteerForm.email,
+      phone: volunteerForm.phone || 'N/A',
+      expertise: volunteerForm.expertise || 'N/A',
+      availability: volunteerForm.availability || 'N/A',
+      message: volunteerForm.message,
+    }),
+  ]);
+
+  toast.success('Application submitted! Check your email for confirmation.', { id: loadingToast });
+  setVolunteerForm({ name: '', email: '', phone: '', expertise: '', availability: '', message: '' });
+  setIsSubmittingVolunteer(false);
+};
+
+const handlePartnershipSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
+  setIsSubmittingPartnership(true);
+  const loadingToast = toast.loading(tPage('partnerships.form.submitting'));
+
+  // ── Step 1: Validate email ──
+  const emailValid = await validateEmail(partnershipForm.email);
+  if (!emailValid) {
+    toast.error('This email address does not appear to be valid. Please check and try again.', { id: loadingToast });
     setIsSubmittingPartnership(false);
-  };
+    return;
+  }
+
+  // ── Step 2: Send confirmation email ──
+  const emailSent = await sendPartnershipEmail({
+    name: partnershipForm.name,
+    email: partnershipForm.email,
+    phone: partnershipForm.phone,
+    organization: partnershipForm.organization,
+    partnershipType: partnershipForm.partnershipType,
+    message: partnershipForm.message,
+  });
+
+  if (!emailSent) {
+    toast.error('Could not send confirmation email. Please check your email address.', { id: loadingToast });
+    setIsSubmittingPartnership(false);
+    return;
+  }
+
+  // ── Step 3: Save to Supabase + Sheets ──
+  await Promise.allSettled([
+    createPartnershipInquiry({
+      name: partnershipForm.name,
+      email: partnershipForm.email,
+      phone: partnershipForm.phone || undefined,
+      organization: partnershipForm.organization,
+      partnership_type: partnershipForm.partnershipType || undefined,
+      message: partnershipForm.message,
+    }),
+    sendToSheets({
+      sheetName: 'Partnerships',
+      name: partnershipForm.name,
+      email: partnershipForm.email,
+      phone: partnershipForm.phone || 'N/A',
+      organization: partnershipForm.organization,
+      partnershipType: partnershipForm.partnershipType || 'N/A',
+      message: partnershipForm.message,
+    }),
+  ]);
+
+  toast.success('Inquiry submitted! Check your email for confirmation.', { id: loadingToast });
+  setPartnershipForm({ name: '', email: '', phone: '', organization: '', partnershipType: '', message: '' });
+  setIsSubmittingPartnership(false);
+};
 
   return (
     <main className="relative">

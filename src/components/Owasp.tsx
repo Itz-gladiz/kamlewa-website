@@ -6,16 +6,48 @@ import Image from 'next/image';
 import { HiArrowRight, HiX } from 'react-icons/hi';
 import { MdBugReport } from 'react-icons/md';
 import { motion, AnimatePresence } from 'framer-motion';
-import { createClient } from '@supabase/supabase-js';
 import { useTranslations } from 'next-intl';
+import { createCommunityApplication } from '@/lib/supabase/submissions';
+import { supabase } from '@/lib/supabase/supabaseClient';
+import toast from 'react-hot-toast';
 
 const GOOGLE_SHEETS_URL = process.env.NEXT_PUBLIC_GOOGLE_SHEETS_URL;
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-);
+async function sendCommunityApplicationEmail(data: {
+  name: string;
+  email: string;
+  phone: string;
+  message: string;
+  community: string;
+}): Promise<boolean> {
+  try {
+    const res = await fetch('/api/community-application', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    });
+    const result = await res.json();
+    return result.success === true;
+  } catch {
+    return false;
+  }
+}
 
+async function validateEmail(email: string): Promise<boolean> {
+  try {
+    const res = await fetch(
+      `https://emailvalidation.abstractapi.com/v1/?api_key=${process.env.NEXT_PUBLIC_ABSTRACT_API_KEY}&email=${encodeURIComponent(email)}`
+    );
+    const data = await res.json();
+    return (
+      data.deliverability === 'DELIVERABLE' &&
+      data.is_valid_format?.value === true &&
+      data.is_mx_found?.value === true
+    );
+  } catch {
+    return true;
+  }
+}
 const OWASP_YELLOW = '#f7c600';
 
 function ZigzagLine({ className = '' }: { className?: string }) {
@@ -81,42 +113,79 @@ export default function OwaspPage() {
     { href: '/hackthebox', label: t('navHackthebox') },
   ];
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
+ const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
+  setIsSubmitting(true);
 
-    await Promise.allSettled([
-      GOOGLE_SHEETS_URL
-        ? fetch(GOOGLE_SHEETS_URL, {
-            method: 'POST',
-            mode: 'no-cors',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              sheetName: 'Community Applications',
-              community: 'OWASP Buea',
-              name: form.name,
-              email: form.email,
-              phone: form.phone,
-              message: form.message,
-            }),
-          })
-        : Promise.resolve(),
-
-      supabase.from('community_applications').insert({
-        community: 'OWASP Buea',
-        name: form.name,
-        email: form.email,
-        phone: form.phone,
-        message: form.message,
-      }),
-    ]);
-
+  // Validate email
+  const emailValid = await validateEmail(form.email);
+  if (!emailValid) {
+    toast.error('This email address does not appear to be valid. Please check and try again.');
     setIsSubmitting(false);
-    setIsModalOpen(false);
-    setForm({ name: '', email: '', phone: '', message: '' });
-    alert(tc('successAlert'));
-  };
+    return;
+  }
 
+  // Check duplicate 
+  const { data: existing } = await supabase
+    .from('community_applications')
+    .select('id')
+    .eq('email', form.email)
+    .eq('community', 'OWASP Buea') 
+    .maybeSingle();
+
+  if (existing) {
+    toast.error('You have already applied to this community with this email.');
+    setIsSubmitting(false);
+    return;
+  }
+
+  // Send confirmation email
+  const emailSent = await sendCommunityApplicationEmail({
+    name: form.name,
+    email: form.email,
+    phone: form.phone,
+    message: form.message,
+    community: 'OWASP Buea', 
+  });
+
+  if (!emailSent) {
+    toast.error('Could not send confirmation email. Please check your email address.');
+    setIsSubmitting(false);
+    return;
+  }
+
+  //  Save to Supabase + Sheets 
+  await Promise.allSettled([
+    createCommunityApplication({
+      community: 'OWASP Buea', 
+      name: form.name,
+      email: form.email,
+      phone: form.phone,
+      message: form.message,
+    }),
+    GOOGLE_SHEETS_URL
+      ? fetch(GOOGLE_SHEETS_URL, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            sheetName: 'Community Applications',
+            community: 'OWASP Buea', // change per page
+            name: form.name,
+            email: form.email,
+            phone: form.phone,
+            message: form.message,
+          }),
+        })
+      : Promise.resolve(),
+  ]);
+
+  setIsSubmitting(false);
+  setIsModalOpen(false);
+  setForm({ name: '', email: '', phone: '', message: '' });
+  toast.success('Application submitted! Check your email for confirmation.');
+};
+  
   return (
     <section className="bg-black text-white overflow-hidden">
       {/* Join Modal */}
@@ -135,7 +204,10 @@ export default function OwaspPage() {
               exit={{ opacity: 0, y: 40, scale: 0.95 }}
               className="relative bg-[#111] border border-white/10 w-full max-w-md p-8"
             >
-              <button title="Close" onClick={() => setIsModalOpen(false)} className="absolute top-4 right-4 text-gray-400 hover:text-white">
+              <button title="Close" onClick={() => {
+               setIsModalOpen(false);
+                  setForm({ name: '', email: '', phone: '', message: '' });
+                  }} className="absolute top-4 right-4 text-gray-400 hover:text-white">
                 <HiX className="w-6 h-6" />
               </button>
               <p className="text-yellow-400 text-sm font-semibold uppercase tracking-wider mb-1">{tc('join')}</p>
@@ -147,7 +219,10 @@ export default function OwaspPage() {
                 <input placeholder={tc('phoneOptional')} value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} className="w-full px-4 py-2 bg-white/5 border border-white/20 rounded text-white placeholder-gray-500 focus:outline-none focus:border-yellow-400 text-sm" />
                 <textarea placeholder={tc('whyJoin')} value={form.message} onChange={(e) => setForm({ ...form, message: e.target.value })} rows={3} className="w-full px-4 py-2 bg-white/5 border border-white/20 rounded text-white placeholder-gray-500 focus:outline-none focus:border-yellow-400 text-sm resize-none" />
                 <div className="flex gap-3 pt-2">
-                  <button type="button" onClick={() => setIsModalOpen(false)} className="flex-1 px-4 py-2 border border-white/20 text-white text-sm hover:bg-white hover:text-black transition-colors">{tc('cancel')}</button>
+                  <button type="button" onClick={() => {
+                     setIsModalOpen(false);
+                     setForm({ name: '', email: '', phone: '', message: '' });
+                      }} className="flex-1 px-4 py-2 border border-white/20 text-white text-sm hover:bg-white hover:text-black transition-colors">{tc('cancel')}</button>
                   <button type="submit" disabled={isSubmitting} className="flex-1 px-4 py-2 bg-yellow-400 text-black font-bold text-sm hover:bg-white transition-colors disabled:opacity-50">
                     {isSubmitting ? tc('submitting') : tc('submit')}
                   </button>
