@@ -32,23 +32,15 @@ export async function POST() {
     const email = 'admin@kamlewa.org';
     const password = 'Admin123!@#Kamlewa';
 
-<<<<<<< HEAD
     // Check if user already exists and reset password if needed
     const { data: existingUsers, error: listError } = await supabaseAdmin.auth.admin.listUsers();
     
-=======
-    // Check if user already exists
-    const { data: existingUsers, error: listError } =
-      await supabaseAdmin.auth.admin.listUsers();
-
->>>>>>> c671d257cb5f28f0e8a34c23db1b6130dcd8ee9f
     if (listError) {
       console.error('Error listing users:', listError);
     } else {
       const existingUser = existingUsers?.users?.find(
         (user) => user.email === email
       );
-<<<<<<< HEAD
       
       if (existingUser) {
         const { data: updatedUser, error: updateError } = await supabaseAdmin.auth.admin.updateUserById(existingUser.id, {
@@ -68,10 +60,6 @@ export async function POST() {
           );
         }
 
-=======
-
-      if (userExists) {
->>>>>>> c671d257cb5f28f0e8a34c23db1b6130dcd8ee9f
         return NextResponse.json({
           success: true,
           message: 'User already exists; password reset successfully',
@@ -106,16 +94,11 @@ export async function POST() {
       });
     }
 
-<<<<<<< HEAD
     return NextResponse.json(
       { error: 'Failed to create user' },
       { status: 500 }
     );
   } catch (error) {
-=======
-    return NextResponse.json({ error: 'Failed to create user' }, { status: 500 });
-  } catch (error: any) {
->>>>>>> c671d257cb5f28f0e8a34c23db1b6130dcd8ee9f
     console.error('Error in create-admin-user API:', error);
     return NextResponse.json(
       { error: (error as any)?.message || 'Internal server error' },
