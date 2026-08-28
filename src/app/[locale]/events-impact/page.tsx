@@ -55,67 +55,67 @@ const getReportPdfUrl = (report: Report) =>
 
 const secureByDesignItems: SecureByDesignItem[] = [
   {
-    image: '/images/KAMLEWA%20-%20THE%20SECURE%20BY%20DESIGN%20MOVEMENT/1.png',
+    image: '/images/KAMLEWA - THE SECURE BY DESIGN MOVEMENT/1.png',
     title: 'Secure by Design Movement',
     brief: 'A community-centered movement helping young people understand that security should be planned from the beginning, not added after harm is done.',
   },
   {
-    image: '/images/KAMLEWA%20-%20THE%20SECURE%20BY%20DESIGN%20MOVEMENT/2.png',
+    image: '/images/KAMLEWA - THE SECURE BY DESIGN MOVEMENT/2.png',
     title: 'Cyber Safety First',
     brief: 'We introduce practical cyber safety habits that help students, creators, and communities protect their digital identity and online spaces.',
   },
   {
-    image: '/images/KAMLEWA%20-%20THE%20SECURE%20BY%20DESIGN%20MOVEMENT/3.png',
+    image: '/images/KAMLEWA - THE SECURE BY DESIGN MOVEMENT/3.png',
     title: 'Building Awareness',
     brief: 'The movement uses visual storytelling, workshops, and outreach to make secure technology choices easier to understand and apply.',
   },
   {
-    image: '/images/KAMLEWA%20-%20THE%20SECURE%20BY%20DESIGN%20MOVEMENT/4.png',
+    image: '/images/KAMLEWA - THE SECURE BY DESIGN MOVEMENT/4.png',
     title: 'Designing With Responsibility',
     brief: 'Participants learn to think about privacy, trust, safety, and user protection while designing digital products and services.',
   },
   {
-    image: '/images/KAMLEWA%20-%20THE%20SECURE%20BY%20DESIGN%20MOVEMENT/5.png',
+    image: '/images/KAMLEWA - THE SECURE BY DESIGN MOVEMENT/5.png',
     title: 'Community Conversations',
     brief: 'We create room for open conversations about cyber risks, responsible technology use, and the choices that make online communities safer.',
   },
   {
-    image: '/images/KAMLEWA%20-%20THE%20SECURE%20BY%20DESIGN%20MOVEMENT/6.png',
+    image: '/images/KAMLEWA - THE SECURE BY DESIGN MOVEMENT/6.png',
     title: 'Youth-Led Security Culture',
     brief: 'Young people are encouraged to become champions of secure behavior in schools, homes, startups, and local technology communities.',
   },
   {
-    image: '/images/KAMLEWA%20-%20THE%20SECURE%20BY%20DESIGN%20MOVEMENT/7.png',
+    image: '/images/KAMLEWA - THE SECURE BY DESIGN MOVEMENT/7.png',
     title: 'Practical Digital Protection',
     brief: 'The program connects security principles with daily actions like stronger authentication, safer sharing, device hygiene, and scam awareness.',
   },
   {
-    image: '/images/KAMLEWA%20-%20THE%20SECURE%20BY%20DESIGN%20MOVEMENT/8.png',
+    image: '/images/KAMLEWA - THE SECURE BY DESIGN MOVEMENT/8.png',
     title: 'Inclusive Technology Safety',
     brief: 'Secure by design also means making safety knowledge accessible to communities that are often left out of technical conversations.',
   },
   {
-    image: '/images/KAMLEWA%20-%20THE%20SECURE%20BY%20DESIGN%20MOVEMENT/9.png',
+    image: '/images/KAMLEWA - THE SECURE BY DESIGN MOVEMENT/9.png',
     title: 'From Awareness to Action',
     brief: 'Beyond learning concepts, participants are guided to apply secure thinking in real projects, online behavior, and community initiatives.',
   },
   {
-    image: '/images/KAMLEWA%20-%20THE%20SECURE%20BY%20DESIGN%20MOVEMENT/10.png',
+    image: '/images/KAMLEWA - THE SECURE BY DESIGN MOVEMENT/10.png',
     title: 'Safer Digital Products',
     brief: 'We promote product thinking where developers and entrepreneurs consider user safety, abuse prevention, and data protection from day one.',
   },
   {
-    image: '/images/KAMLEWA%20-%20THE%20SECURE%20BY%20DESIGN%20MOVEMENT/11.png',
+    image: '/images/KAMLEWA - THE SECURE BY DESIGN MOVEMENT/11.png',
     title: 'Shared Responsibility',
     brief: 'Security belongs to everyone: learners, builders, leaders, families, and institutions all have a role in building safer digital spaces.',
   },
   {
-    image: '/images/KAMLEWA%20-%20THE%20SECURE%20BY%20DESIGN%20MOVEMENT/12.png',
+    image: '/images/KAMLEWA - THE SECURE BY DESIGN MOVEMENT/12.png',
     title: 'Trust Through Education',
     brief: 'The movement strengthens digital trust by giving people the confidence to recognize risks and make informed security decisions.',
   },
   {
-    image: '/images/KAMLEWA%20-%20THE%20SECURE%20BY%20DESIGN%20MOVEMENT/13.png',
+    image: '/images/KAMLEWA - THE SECURE BY DESIGN MOVEMENT/13.png',
     title: 'A Safer Digital Future',
     brief: 'KAMLEWA uses this movement to inspire safer innovation and a future where communities feel protected, empowered, and connected online.',
   },

@@ -230,7 +230,7 @@ export default function ProgramsPreview() {
         id: report.id,
         title: report.title,
         description: report.description,
-        image: report.image || '/images/2023%202025%20IMPACT%20REPORT/cover%20page.png',
+        image: report.image || '/images/2023 2025 IMPACT REPORT/cover page.png',
       }))
     : [];
 
