@@ -115,11 +115,11 @@ export default function CommunityPreview() {
                   </div>
 
                   {/* Hover Overlay - Description */}
-                  <div className={`absolute inset-0 bg-black/90 p-6 flex flex-col justify-center transition-opacity duration-300 ${isActive ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}>
-                    <h3 className="text-xl md:text-2xl font-bold text-yellow-400 mb-4" style={{ fontFamily: 'var(--font-basement), sans-serif' }}>
+                  <div className={`absolute inset-0 bg-black/90 p-6 flex flex-col justify-end overflow-hidden transition-opacity duration-300 ${isActive ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}>
+                    <h3 className="text-xl md:text-2xl font-bold text-yellow-400 mb-3 line-clamp-2 shrink-0" style={{ fontFamily: 'var(--font-basement), sans-serif' }}>
                       {community.name}
                     </h3>
-                    <p className="text-gray-300 text-sm md:text-base leading-relaxed mb-6">
+                    <p className="text-gray-300 text-sm md:text-base leading-relaxed mb-4 line-clamp-3 md:line-clamp-4 overflow-hidden">
                       {community.description}
                     </p>
                     {index === 0 && (

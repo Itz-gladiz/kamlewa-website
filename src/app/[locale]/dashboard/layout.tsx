@@ -59,8 +59,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         } else {
           router.push('/dashboard/login');
         }
-      } catch (error) {
-        console.error('Error checking auth:', error);
+      } catch {
         router.push('/dashboard/login');
       } finally {
         setCheckingAuth(false);
@@ -96,9 +95,9 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       toast.success('Logged out successfully');
       router.push('/dashboard/login');
       setProfileOpen(false);
-    } catch (error: any) {
-      console.error('Logout error:', error);
-      toast.error(error.message || 'Failed to logout');
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : 'Failed to logout';
+      toast.error(message);
     }
   };
 
@@ -174,21 +173,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
   return (
     <div className="flex h-screen bg-black text-white overflow-hidden">
-      {/* Loading/Auth Check Screen */}
-      {checkingAuth && (
-        <div className="w-full h-full flex items-center justify-center">
-          <div className="text-center">
-            <Loader size={128} className="mx-auto mb-4" />
-            <p className="text-gray-400">Verifying access...</p>
-          </div>
-        </div>
-      )}
-
-      {/* Protected Dashboard Content - Only show if authenticated */}
-      {!checkingAuth && isAuthenticated && (
-        <>
           {/* Sidebar */}
-      <aside className={`fixed lg:static inset-y-0 left-0 z-50 w-64 bg-black border-r border-white/10 transform transition-transform duration-300 ease-in-out ${
+      <aside className={`fixed lg:static inset-y-0 left-0 z-50 w-72 bg-black border-r border-white/10 transform transition-transform duration-300 ease-in-out ${
         sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
       }`}>
         <div className="flex flex-col h-full">
@@ -239,7 +225,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                   onClick={() => setSidebarOpen(false)}
                 >
                   <Icon className="w-5 h-5" />
-                  <span className="text-sm font-medium">{item.label}</span>
+                  <span className="text-base font-medium">{item.label}</span>
                 </Link>
               );
             })}
@@ -436,12 +422,10 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         </header>
 
         {/* Content Area */}
-        <section className="flex-1 overflow-y-auto p-6 md:p-12">
+        <section className="flex-1 overflow-y-auto p-6 md:p-10 lg:p-12 text-base">
           {children}
         </section>
       </main>
-        </>
-      )}
     </div>
   );
 }

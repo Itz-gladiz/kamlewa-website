@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from '@/i18n/routing';
-import { useTranslations } from 'next-intl';
 import Button from '@/components/Button';
 import Input from '@/components/Input';
 import { supabase } from '@/lib/supabase/supabaseClient';
@@ -13,7 +12,6 @@ import { motion } from 'framer-motion';
 import Loader from '@/components/Loader';
 
 export default function LoginPage() {
-  const t = useTranslations('dashboard');
   const router = useRouter();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -22,28 +20,21 @@ export default function LoginPage() {
   const [checkingAuth, setCheckingAuth] = useState(true);
 
   useEffect(() => {
-    // Check if user is already logged in and create default user if needed
-    const checkSessionAndCreateDefaultUser = async () => {
+    const checkSession = async () => {
       try {
         const { data: { session } } = await supabase.auth.getSession();
         if (session) {
           router.push('/dashboard');
-          setCheckingAuth(false);
-          return;
         }
-
-        // Create default user if it doesn't exist
-        await createDefaultUserIfNeeded();
-      } catch (error) {
-        console.error('Error checking session:', error);
+      } catch {
+        // Session check failed — stay on login page
       } finally {
         setCheckingAuth(false);
       }
     };
 
-    checkSessionAndCreateDefaultUser();
+    checkSession();
 
-    // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       if (session) {
         router.push('/dashboard');
@@ -55,81 +46,9 @@ export default function LoginPage() {
     };
   }, [router]);
 
-  const DEFAULT_ADMIN_EMAIL = 'admin@kamlewa.org';
-  const DEFAULT_ADMIN_PASSWORD = 'Admin123!@#Kamlewa';
-
-  const createDefaultUserIfNeeded = async () => {
-    try {
-      const email = DEFAULT_ADMIN_EMAIL;
-      const password = DEFAULT_ADMIN_PASSWORD;
-
-      // Try to sign in first to check if user exists
-      const { error: signInError } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      });
-
-      // If sign in succeeds, user exists - sign out immediately
-      if (!signInError) {
-        await supabase.auth.signOut();
-        console.log('✅ Default admin user already exists');
-        toast.success('Default admin user is ready!', { duration: 3000 });
-        return true;
-      }
-
-      // If error is not "Invalid login credentials", something else went wrong
-      if (signInError && !signInError.message.includes('Invalid login') && !signInError.message.includes('Invalid') && !signInError.message.includes('Email not confirmed')) {
-        console.error('Error checking user:', signInError);
-        return false;
-      }
-
-      // User doesn't exist or credentials need reset, create/update via API route
-      console.log('Creating or resetting default admin user...');
-      const loadingToast = toast.loading('Creating default admin user...');
-      
-      const response = await fetch('/api/create-admin-user', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-
-      const result = await response.json();
-
-      if (!response.ok) {
-        if (result.error?.includes('already exists') || result.error?.includes('already registered')) {
-          toast.success('Default admin user already exists!', { id: loadingToast });
-          console.log('Default admin user already exists');
-          return true;
-        }
-
-        toast.error(`Error: ${result.error || 'Failed to create user'}`, { id: loadingToast });
-        console.error('Error creating default user:', result.error);
-        return false;
-      }
-
-      if (result.success) {
-        toast.success(
-          `✅ Default admin user created and confirmed!\n\nEmail: ${email}\nPassword: ${password}\n\nYou can now log in!`,
-          { id: loadingToast, duration: 8000 }
-        );
-        console.log('✅ Default admin user created successfully!');
-        console.log('Email: admin@kamlewa.org');
-        console.log('Password: Admin123!@#Kamlewa');
-        return true;
-      }
-
-      return false;
-    } catch (error: any) {
-      console.error('Error in createDefaultUserIfNeeded:', error);
-      toast.error(`Error: ${error.message || 'Failed to create user'}`);
-      return false;
-    }
-  };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!email || !password) {
       toast.error('Please fill in all fields');
       return;
@@ -145,30 +64,6 @@ export default function LoginPage() {
       });
 
       if (error) {
-        if (
-          email === DEFAULT_ADMIN_EMAIL &&
-          password === DEFAULT_ADMIN_PASSWORD &&
-          error.message?.includes('Invalid')
-        ) {
-          const created = await createDefaultUserIfNeeded();
-          if (created) {
-            const { data: retryData, error: retryError } = await supabase.auth.signInWithPassword({
-              email,
-              password,
-            });
-
-            if (retryError) {
-              throw retryError;
-            }
-
-            if (retryData.session) {
-              toast.success('Welcome back!', { id: loadingToast });
-              router.push('/dashboard');
-              return;
-            }
-          }
-        }
-
         throw error;
       }
 
@@ -176,9 +71,9 @@ export default function LoginPage() {
         toast.success('Welcome back!', { id: loadingToast });
         router.push('/dashboard');
       }
-    } catch (error: any) {
-      console.error('Login error:', error);
-      toast.error(error.message || 'Invalid email or password', { id: loadingToast });
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : 'Invalid email or password';
+      toast.error(message, { id: loadingToast });
     } finally {
       setLoading(false);
     }
@@ -189,45 +84,42 @@ export default function LoginPage() {
       <div className="min-h-screen bg-black flex items-center justify-center">
         <div className="text-center">
           <Loader size={128} className="mx-auto mb-4" />
-          <p className="text-gray-400">Loading...</p>
+          <p className="text-gray-400 text-lg">Loading...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-black flex items-center justify-center p-4">
+    <div className="min-h-screen bg-black flex items-center justify-center p-6">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="w-full max-w-md"
+        className="w-full max-w-lg"
       >
-        {/* Logo and Header */}
-        <div className="text-center mb-8">
-          <div className="flex items-center justify-center gap-3 mb-4">
-            <div className="relative w-12 h-16">
-              <Image src="/images/logo.png" alt="Kamlewa Logo" fill sizes="100vw" className="object-contain" />
+        <div className="text-center mb-10">
+          <div className="flex items-center justify-center gap-4 mb-6">
+            <div className="relative w-16 h-20">
+              <Image src="/images/logo.png" alt="Kamlewa Logo" fill sizes="64px" className="object-contain" />
             </div>
             <div className="flex flex-col items-start">
-              <h1 className="text-2xl font-bold text-white uppercase" style={{ fontFamily: 'var(--font-nourd), sans-serif' }}>
+              <h1 className="text-3xl font-bold text-white uppercase" style={{ fontFamily: 'var(--font-nourd), sans-serif' }}>
                 KAMLEWA
               </h1>
-              <p className="tagline text-yellow-400 text-sm font-semibold">Admin Dashboard</p>
+              <p className="tagline text-yellow-400 text-base font-semibold">Admin Dashboard</p>
             </div>
           </div>
-          <h2 className="text-3xl font-bold text-white mb-2" style={{ fontFamily: 'var(--font-nourd), sans-serif' }}>
+          <h2 className="text-4xl font-bold text-white mb-3" style={{ fontFamily: 'var(--font-nourd), sans-serif' }}>
             Welcome Back
           </h2>
-          <p className="text-gray-400">Sign in to access the admin dashboard</p>
+          <p className="text-gray-400 text-lg">Sign in to access the admin dashboard</p>
         </div>
 
-        {/* Login Form */}
-        <div className="bg-gradient-to-br from-white/5 to-white/[0.02] border border-white/10 rounded-lg p-8 shadow-2xl">
+        <div className="bg-gradient-to-br from-white/5 to-white/[0.02] border border-white/10 rounded-lg p-8 md:p-10 shadow-2xl">
           <form onSubmit={handleSubmit} className="space-y-6">
-            {/* Email Field */}
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-white/70 mb-2">
+              <label htmlFor="email" className="block text-base font-medium text-white/70 mb-2">
                 Email Address
               </label>
               <div className="relative">
@@ -239,17 +131,16 @@ export default function LoginPage() {
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="admin@kamlewa.org"
-                  className="w-full pl-12 bg-white/10 border-white/30 placeholder-gray-500 focus:border-yellow-400"
+                  placeholder="you@kamlewa.org"
+                  className="w-full pl-12 text-base bg-white/10 border-white/30 placeholder-gray-500 focus:border-yellow-400"
                   required
                   disabled={loading}
                 />
               </div>
             </div>
 
-            {/* Password Field */}
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-white/70 mb-2">
+              <label htmlFor="password" className="block text-base font-medium text-white/70 mb-2">
                 Password
               </label>
               <div className="relative">
@@ -262,7 +153,7 @@ export default function LoginPage() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="Enter your password"
-                  className="w-full pl-12 pr-12 bg-white/10 border-white/30 placeholder-gray-500 focus:border-yellow-400"
+                  className="w-full pl-12 pr-12 text-base bg-white/10 border-white/30 placeholder-gray-500 focus:border-yellow-400"
                   required
                   disabled={loading}
                 />
@@ -271,21 +162,17 @@ export default function LoginPage() {
                   onClick={() => setShowPassword(!showPassword)}
                   className="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-400 hover:text-yellow-400 transition-colors"
                   disabled={loading}
+                  aria-label={showPassword ? 'Hide password' : 'Show password'}
                 >
-                  {showPassword ? (
-                    <HiEyeOff className="w-5 h-5" />
-                  ) : (
-                    <HiEye className="w-5 h-5" />
-                  )}
+                  {showPassword ? <HiEyeOff className="w-5 h-5" /> : <HiEye className="w-5 h-5" />}
                 </button>
               </div>
             </div>
 
-            {/* Submit Button */}
             <Button
               type="submit"
               variant="primary"
-              className="w-full justify-center"
+              className="w-full justify-center text-base py-4"
               disabled={loading}
             >
               {loading ? (
@@ -299,47 +186,23 @@ export default function LoginPage() {
             </Button>
           </form>
 
-          {/* Footer Note */}
-          <div className="mt-6 pt-6 border-t border-white/10">
-            <p className="text-xs text-gray-500 text-center">
+          <div className="mt-8 pt-6 border-t border-white/10">
+            <p className="text-sm text-gray-500 text-center">
               Secure admin access only. Unauthorized access is prohibited.
             </p>
           </div>
         </div>
 
-        {/* Create User Button & Info */}
-        <div className="text-center mt-6 space-y-4">
-          <div className="bg-yellow-400/10 border border-yellow-400/30 p-4 rounded-lg">
-            <p className="text-sm text-yellow-400 font-semibold mb-2">Default Admin Credentials:</p>
-            <div className="text-xs text-gray-300 space-y-1">
-              <p><strong>Email:</strong> admin@kamlewa.org</p>
-              <p><strong>Password:</strong> Admin123!@#Kamlewa</p>
-            </div>
-            <p className="text-xs text-yellow-400/80 mt-3">
-              ⚠️ User is created automatically. If login fails, check Supabase Dashboard.
-            </p>
-          </div>
-          
-          <Button
-            onClick={createDefaultUserIfNeeded}
-            variant="outline-yellow"
-            className="text-sm"
+        <div className="text-center mt-8">
+          <a
+            href="/"
+            className="text-base text-gray-400 hover:text-yellow-400 transition-colors inline-flex items-center gap-2"
           >
-            Manually Create Default User
-          </Button>
-
-          <div className="pt-4 border-t border-white/10">
-            <a
-              href="/"
-              className="text-sm text-gray-400 hover:text-yellow-400 transition-colors inline-flex items-center gap-2"
-            >
-              <span>←</span>
-              Back to Public Site
-            </a>
-          </div>
+            <span>←</span>
+            Back to Public Site
+          </a>
         </div>
       </motion.div>
     </div>
   );
 }
-

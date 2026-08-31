@@ -64,8 +64,8 @@ export default function DashboardPage() {
         setEvents(eventsData);
         setTrainings(trainingsData);
         setProjects(projectsData);
-      } catch (error) {
-        console.error('Error loading dashboard data:', error);
+      } catch {
+        toast.error('Failed to load dashboard data');
       } finally {
         setLoading(false);
       }

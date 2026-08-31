@@ -5,7 +5,7 @@ import { useTranslations } from 'next-intl';
 import Button from '@/components/Button';
 import Input from '@/components/Input';
 import { supabase } from '@/lib/supabase/supabaseClient';
-import { HiUser, HiLockClosed, HiMail, HiKey, HiShieldCheck, HiEye, HiEyeOff, HiCheckCircle, HiXCircle } from 'react-icons/hi';
+import { HiUser, HiLockClosed, HiMail, HiKey, HiEye, HiEyeOff, HiCheckCircle, HiXCircle } from 'react-icons/hi';
 import toast from 'react-hot-toast';
 import { motion } from 'framer-motion';
 import DashboardModal from '@/components/DashboardModal';
@@ -44,53 +44,7 @@ export default function SettingsPage() {
 
   useEffect(() => {
     loadUsers();
-    // Auto-create default user on first load if no users exist
-    checkAndCreateDefaultUser();
   }, []);
-
-  const checkAndCreateDefaultUser = async () => {
-    try {
-      // Check if default user exists by trying to sign in
-      const { data: { session } } = await supabase.auth.getSession();
-      
-      // If no session, check if we can create default user
-      if (!session) {
-        const email = 'admin@kamlewa.org';
-        const password = 'Admin123!@#Kamlewa';
-        
-        // Try to sign in first to see if user exists
-        const { error: signInError } = await supabase.auth.signInWithPassword({
-          email,
-          password,
-        });
-
-        // If sign in fails and it's not a password error, user doesn't exist
-        if (signInError && signInError.message.includes('Invalid login')) {
-          // User doesn't exist, create it
-          const { error: createError } = await supabase.auth.signUp({
-            email,
-            password,
-            options: {
-              emailRedirectTo: `${typeof window !== 'undefined' ? window.location.origin : ''}/dashboard/login`,
-            },
-          });
-
-          if (createError && !createError.message.includes('already registered')) {
-            console.log('Could not auto-create default user:', createError.message);
-          } else if (!createError) {
-            console.log('Default admin user created automatically');
-            // Sign out immediately after creation
-            await supabase.auth.signOut();
-          }
-        } else if (!signInError) {
-          // User exists, sign out
-          await supabase.auth.signOut();
-        }
-      }
-    } catch (error) {
-      console.error('Error checking default user:', error);
-    }
-  };
 
   const loadUsers = async () => {
     try {
@@ -114,8 +68,7 @@ export default function SettingsPage() {
         created_at: user.created_at || '',
         last_sign_in_at: user.last_sign_in_at || null,
       }] : []);
-    } catch (error) {
-      console.error('Error loading users:', error);
+    } catch {
       toast.error('Failed to load user information');
     } finally {
       setLoading(false);
@@ -168,9 +121,9 @@ export default function SettingsPage() {
         setNewUserForm({ email: '', password: '', confirmPassword: '' });
         await loadUsers();
       }
-    } catch (error: any) {
-      console.error('Error creating user:', error);
-      toast.error(error.message || 'Failed to create user', { id: loadingToast });
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : 'Failed to create user';
+      toast.error(message, { id: loadingToast });
     }
   };
 
@@ -215,50 +168,9 @@ export default function SettingsPage() {
       toast.success('Password changed successfully!', { id: loadingToast });
       setIsPasswordModalOpen(false);
       setPasswordForm({ currentPassword: '', newPassword: '', confirmPassword: '' });
-    } catch (error: any) {
-      console.error('Error changing password:', error);
-      toast.error(error.message || 'Failed to change password', { id: loadingToast });
-    }
-  };
-
-  const handleSetupDefaultUser = async () => {
-    const email = 'admin@kamlewa.org';
-    const password = 'Admin123!@#Kamlewa';
-    
-    if (!confirm(`This will create a default admin user:\n\nEmail: ${email}\nPassword: ${password}\n\n⚠️ IMPORTANT: Change this password immediately after first login!\n\nContinue?`)) {
-      return;
-    }
-
-    const loadingToast = toast.loading('Creating default admin user...');
-
-    try {
-      const response = await fetch('/api/create-admin-user', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-
-      const result = await response.json();
-
-      if (!response.ok) {
-        if (result.error?.includes('already exists') || result.error?.includes('already registered')) {
-          toast.error('Default admin user already exists. Please use the login page.', { id: loadingToast });
-          return;
-        }
-        throw new Error(result.error || 'Failed to create user');
-      }
-
-      if (result.success) {
-        toast.success(
-          `Default admin user created and confirmed!\n\nEmail: ${email}\nPassword: ${password}\n\n⚠️ Change this password immediately!`,
-          { id: loadingToast, duration: 10000 }
-        );
-        await loadUsers();
-      }
-    } catch (error: any) {
-      console.error('Error creating default user:', error);
-      toast.error(error.message || 'Failed to create default user', { id: loadingToast });
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : 'Failed to change password';
+      toast.error(message, { id: loadingToast });
     }
   };
 
@@ -282,43 +194,6 @@ export default function SettingsPage() {
         </h1>
         <p className="text-gray-400">Manage your account and user access</p>
       </div>
-
-      {/* Default User Setup Section */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="bg-gradient-to-br from-white/5 to-white/[0.02] border border-white/10 rounded-lg p-6"
-      >
-        <div className="flex items-start gap-4">
-          <div className="p-3 bg-yellow-400/10 rounded-lg border border-yellow-400/20">
-            <HiShieldCheck className="w-6 h-6 text-yellow-400" />
-          </div>
-          <div className="flex-1">
-            <h2 className="text-xl font-bold mb-2">Default Admin User</h2>
-            <p className="text-gray-400 text-sm mb-4">
-              Create a default admin user account for initial access to the dashboard. This is recommended for first-time setup.
-            </p>
-            <div className="bg-yellow-400/10 border border-yellow-400/30 p-4 rounded-lg mb-4">
-              <p className="text-sm text-yellow-400 font-semibold mb-2">Default Credentials:</p>
-              <div className="space-y-1 text-sm text-gray-300">
-                <p><strong>Email:</strong> admin@kamlewa.org</p>
-                <p><strong>Password:</strong> Admin123!@#Kamlewa</p>
-              </div>
-              <p className="text-xs text-yellow-400/80 mt-3">
-                ⚠️ <strong>Important:</strong> Change this password immediately after first login!
-              </p>
-            </div>
-            <Button
-              onClick={handleSetupDefaultUser}
-              variant="primary"
-              className="flex items-center gap-2"
-            >
-              <HiKey className="w-5 h-5" />
-              Create Default Admin User
-            </Button>
-          </div>
-        </div>
-      </motion.div>
 
       {/* Current User Profile */}
       <motion.div
