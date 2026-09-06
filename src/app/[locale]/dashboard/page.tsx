@@ -17,6 +17,7 @@ import { getProjects } from '@/lib/supabase/projects';
 import { Database } from '@/lib/supabase/types';
 import CircularProgress from '@/components/CircularProgress';
 import Loader from '@/components/Loader';
+import toast from 'react-hot-toast';
 
 type Program = Database['public']['Tables']['programs']['Row'];
 type Event = Database['public']['Tables']['events']['Row'];
