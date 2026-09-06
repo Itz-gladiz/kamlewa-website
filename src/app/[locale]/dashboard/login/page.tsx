@@ -24,7 +24,8 @@ export default function LoginPage() {
       try {
         const { data: { session } } = await supabase.auth.getSession();
         if (session) {
-          router.push('/dashboard');
+          window.location.assign('/dashboard');
+          return;
         }
       } catch {
         // Session check failed — stay on login page
@@ -37,7 +38,7 @@ export default function LoginPage() {
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       if (session) {
-        router.push('/dashboard');
+        window.location.assign('/dashboard');
       }
     });
 
@@ -69,7 +70,9 @@ export default function LoginPage() {
 
       if (data.session) {
         toast.success('Welcome back!', { id: loadingToast });
-        router.push('/dashboard');
+        // Hard navigation so the proxy sees the new auth cookies
+        window.location.assign('/dashboard');
+        return;
       }
     } catch (error: unknown) {
       const message = error instanceof Error ? error.message : 'Invalid email or password';

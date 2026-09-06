@@ -22,53 +22,53 @@ export default async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const hasLocalePrefix = /^\/(en|fr)(\/|$)/.test(pathname);
 
+  // Let next-intl add/normalize the locale first
   if (!hasLocalePrefix) {
     return intlMiddleware(request);
   }
 
-  if (isDashboardPath(pathname)) {
-    let response = NextResponse.next({ request });
+  let response = intlMiddleware(request);
 
-    const supabase = createServerClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-      {
-        cookies: {
-          getAll() {
-            return request.cookies.getAll();
-          },
-          setAll(cookiesToSet) {
-            cookiesToSet.forEach(({ name, value }) => request.cookies.set(name, value));
-            response = NextResponse.next({ request });
-            cookiesToSet.forEach(({ name, value, options }) =>
-              response.cookies.set(name, value, options)
-            );
-          },
-        },
-      }
-    );
-
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-
-    if (!user) {
-      const locale = getLocaleFromPath(pathname);
-      const loginUrl = request.nextUrl.clone();
-      loginUrl.pathname = `/${locale}/dashboard/login`;
-      const redirectResponse = NextResponse.redirect(loginUrl);
-      response.cookies.getAll().forEach((cookie) => {
-        redirectResponse.cookies.set(cookie.name, cookie.value);
-      });
-      redirectResponse.headers.set('Cache-Control', 'private, no-store');
-      return redirectResponse;
-    }
-
-    response.headers.set('Cache-Control', 'private, no-store');
+  if (!isDashboardPath(pathname)) {
     return response;
   }
 
-  return intlMiddleware(request);
+  const supabase = createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      cookies: {
+        getAll() {
+          return request.cookies.getAll();
+        },
+        setAll(cookiesToSet) {
+          cookiesToSet.forEach(({ name, value }) => request.cookies.set(name, value));
+          cookiesToSet.forEach(({ name, value, options }) =>
+            response.cookies.set(name, value, options)
+          );
+        },
+      },
+    }
+  );
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    const locale = getLocaleFromPath(pathname);
+    const loginUrl = request.nextUrl.clone();
+    loginUrl.pathname = `/${locale}/dashboard/login`;
+    const redirectResponse = NextResponse.redirect(loginUrl);
+    response.cookies.getAll().forEach((cookie) => {
+      redirectResponse.cookies.set(cookie.name, cookie.value);
+    });
+    redirectResponse.headers.set('Cache-Control', 'private, no-store');
+    return redirectResponse;
+  }
+
+  response.headers.set('Cache-Control', 'private, no-store');
+  return response;
 }
 
 export const config = {

@@ -93,8 +93,9 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       const { error } = await supabase.auth.signOut();
       if (error) throw error;
       toast.success('Logged out successfully');
-      router.push('/dashboard/login');
       setProfileOpen(false);
+      window.location.assign('/dashboard/login');
+      return;
     } catch (error: unknown) {
       const message = error instanceof Error ? error.message : 'Failed to logout';
       toast.error(message);
